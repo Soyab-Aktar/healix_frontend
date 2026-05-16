@@ -8,6 +8,13 @@ const DoctorsList = () => {
     queryFn: () => getDoctors(),
   })
   console.log(data);
+
+  //Non Pre Fetched Data Example
+  // const { data: nonPrefetchedData } = useQuery({
+  //   queryKey: ["doctors"],
+  //   queryFn: () => getDoctors(),
+  // });
+  // console.log("NonPreFetchedData: ", nonPrefetchedData);
   return (
     <div>
       {data.data.map((doctor: any) => (
