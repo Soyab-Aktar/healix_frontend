@@ -59,7 +59,8 @@ export const getRouteOwner = (pathname: string): "SUPER_ADMIN" | "ADMIN" | "DOCT
 
 export const getDefaultDashboardRoute = (role: UserRole) => {
   if (role === "ADMIN" || role === "SUPER_ADMIN") {
-    return "/admin/dashboard"; //TODO
+    //TODO : Need to work on super admin
+    return "/admin/dashboard";
   }
   if (role === 'DOCTOR') {
     return "/doctor/dashboard";
@@ -67,4 +68,18 @@ export const getDefaultDashboardRoute = (role: UserRole) => {
   if (role === 'PATIENT') {
     return "/dashboard";
   }
+}
+
+export const isValidRedirectRole = (redirectPath: string, role: UserRole) => {
+  const routeOwner = getRouteOwner(redirectPath);
+
+  if (routeOwner === null || routeOwner === "COMMON") {
+    return true;
+  }
+  const unifySuperAdminandAdminRole = role === "SUPER_ADMIN" ? "ADMIN" : role;
+  role = unifySuperAdminandAdminRole;
+  if (routeOwner === role) {
+    return true;
+  }
+  return false;
 }
