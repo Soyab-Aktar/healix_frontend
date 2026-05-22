@@ -75,6 +75,11 @@ export async function proxy(request: NextRequest) {
       //* Case 1 - User has needPasswordChange true
       if (accessToken && email) {
         const userInfo = await getUserinfo();
+        if (!userInfo) {
+          const loginURL = new URL("/login", request.url);
+          loginURL.searchParams.set("redirect", pathname);
+          return NextResponse.redirect(loginURL);
+        }
         if (userInfo.needPasswordChange) {
           return NextResponse.next();
         } else {
@@ -102,6 +107,12 @@ export async function proxy(request: NextRequest) {
     //? -> Enforcing user to stay in reset password on verify email page if their needPasswordChange && isEmailVerified flags are not satisfied respectevly 
     if (accessToken) {
       const userInfo = await getUserinfo();
+
+      if (!userInfo) {
+        const loginURL = new URL("/login", request.url);
+        loginURL.searchParams.set("redirect", pathname);
+        return NextResponse.redirect(loginURL);
+      }
 
       if (userInfo?.emailVerified === false) {
         if (pathname !== "/verify-email") {

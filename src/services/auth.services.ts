@@ -11,26 +11,34 @@ if (!BASE_API_URL) {
 
 export async function getNewTokenWithRefreshToken(refreshToken: string): Promise<boolean> {
   try {
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get("better-auth.session_token")?.value;
+
+    if (!sessionToken) {
+      console.error("Failed to refresh token: missing session token cookie");
+      return false;
+    }
+
     const res = await fetch(`${BASE_API_URL}/auth/refresh-token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Cookie: `refreshToken=${refreshToken}`,
+        Cookie: `refreshToken=${refreshToken}; better-auth.session_token=${sessionToken}`,
       }
     });
     if (!res.ok) {
       return false;
     }
     const { data } = await res.json();
-    const { accessToken, refrshToken: newRefreshToken, token } = data;
+    const { accessToken, refreshToken: newRefreshToken, sessionToken: newSessionToken } = data;
     if (accessToken) {
       await setTokenInCookies("accessToken", accessToken);
     }
     if (newRefreshToken) {
-      await setTokenInCookies("refreshToken", refreshToken);
+      await setTokenInCookies("refreshToken", newRefreshToken);
     }
-    if (token) {
-      await setTokenInCookies("better-auth.session_token", token, 24 * 60 * 60);
+    if (newSessionToken) {
+      await setTokenInCookies("better-auth.session_token", newSessionToken, 24 * 60 * 60);
     }
     return true;
   } catch (err) {
@@ -43,8 +51,9 @@ export async function getUserinfo() {
   try {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
+    const sessionToken = cookieStore.get("better-auth.session_token")?.value;
 
-    if (!accessToken) {
+    if (!accessToken || !sessionToken) {
       return null;
     }
 
@@ -52,7 +61,7 @@ export async function getUserinfo() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Cookie: `accessToken=${accessToken}`
+        Cookie: `accessToken=${accessToken}; better-auth.session_token=${sessionToken}`
       }
     });
 
