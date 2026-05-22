@@ -1,10 +1,10 @@
 export type UserRole = "SUPER_ADMIN" | "ADMIN" | "DOCTOR" | "PATIENT";
+export const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email"];
 export type RouteConfig = {
   exact: string[],
   pattern: RegExp[],
 }
 
-export const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email"];
 
 export const isAuthRoute = (pathname: string) => {
   return authRoutes.some((router: string) => router === pathname);
@@ -68,16 +68,18 @@ export const getDefaultDashboardRoute = (role: UserRole) => {
   if (role === 'PATIENT') {
     return "/dashboard";
   }
+
+  return "/";
 }
 
 export const isValidRedirectRole = (redirectPath: string, role: UserRole) => {
+  const unifySuperAdminandAdminRole = role === "SUPER_ADMIN" ? "ADMIN" : role;
+  role = unifySuperAdminandAdminRole;
   const routeOwner = getRouteOwner(redirectPath);
 
   if (routeOwner === null || routeOwner === "COMMON") {
     return true;
   }
-  const unifySuperAdminandAdminRole = role === "SUPER_ADMIN" ? "ADMIN" : role;
-  role = unifySuperAdminandAdminRole;
   if (routeOwner === role) {
     return true;
   }

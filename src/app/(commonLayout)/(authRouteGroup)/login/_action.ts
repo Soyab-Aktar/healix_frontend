@@ -19,14 +19,12 @@ export const loginAction = async (payload: ILoginPayload, redirectPath?: string)
   try {
     const response = await httpClient.post<ILoginResponse>("/auth/login", payload);
     const { accessToken, refreshToken, token, user } = response.data;
-    const { role, emailVerified, needPasswordChange, email } = user;
+    const { role, needPasswordChange, email } = user;
     await setTokenInCookies("accessToken", accessToken);
     await setTokenInCookies("refreshToken", refreshToken);
     await setTokenInCookies("better-auth.session_token", token);
 
-    if (!emailVerified) {
-      redirect("/verify-email");
-    } else if (needPasswordChange) {
+    if (needPasswordChange) {
       //TODO: Refactoring Needed
       redirect(`/reset-password?email=${email}`);
     } else {
@@ -36,6 +34,9 @@ export const loginAction = async (payload: ILoginPayload, redirectPath?: string)
   } catch (error: any) {
     if (error && typeof error === "object" && "digest" in error && typeof error.digest === "string" && error.digest.startsWith("NEXT_REDIRECT")) {
       throw error;
+    }
+    if (error && error.response && error.response.data.message === 'Email not verified') {
+      redirect("/verify-email");
     }
     return {
       success: false,
