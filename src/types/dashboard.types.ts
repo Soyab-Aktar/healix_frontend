@@ -29,5 +29,6 @@ export interface IAdminDashboardData {
   userCount: number;
   totalRevenue: number;
   barChartData: BarChartData[];
-  pieChartData: PieChartData[];
+  pieChartData?: PieChartData[];
+  piChartData?: PieChartData[];
 }

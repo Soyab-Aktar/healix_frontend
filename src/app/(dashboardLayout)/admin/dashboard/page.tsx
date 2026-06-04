@@ -5,14 +5,16 @@ import { IAdminDashboardData } from '@/types/dashboard.types';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import React from 'react';
 
-const AdminDashboradPage = async () => {
+const AdminDashboardPage = async () => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["admin-dashboard-data"],
     queryFn: getDashboardData,
+    staleTime: 30 * 1000,
+    gcTime: 5 * 60 * 1000,
   })
-  const dashboardData = queryClient.getQueryData(["admin-dashboard-data"]) as ApiResponse<IAdminDashboardData>;
-  console.log(dashboardData, "Dashboard data of Admin");
+  // const dashboardData = queryClient.getQueryData(["admin-dashboard-data"]) as ApiResponse<IAdminDashboardData>;
+  // console.log(dashboardData.data, "Dashboard data of Admin");
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <AdminDashboardContent />
@@ -20,4 +22,4 @@ const AdminDashboradPage = async () => {
   );
 };
 
-export default AdminDashboradPage;
+export default AdminDashboardPage;
