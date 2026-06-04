@@ -3,36 +3,56 @@ import axios from "axios";
 import { isTokenExpiringSoon } from "../tokenUtils";
 import { cookies, headers } from "next/headers";
 import { getNewTokenWithRefreshToken } from "@/services/auth.services";
+import { setTokenInCookies } from "../tokenUtils";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 if (!API_BASE_URL) {
   throw new Error("API_BASE_URL is not defined in environment variables");
 }
 
-async function tryRefreshToken(accessToken: string, refreshToken: string): Promise<void> {
-  if (!isTokenExpiringSoon(accessToken)) {
-    return;
+async function tryRefreshToken(
+  accessToken: string,
+  refreshToken: string,
+  sessionToken?: string,
+): Promise<string | null> {
+  if (!(await isTokenExpiringSoon(accessToken)) || !sessionToken) {
+    return null;
   }
+
   const requestHeaders = await headers();
   if (requestHeaders.get("x-token-refreshed") === "1") {
-    return; // this is for to avoid multiple refresh attempts in the same request lifecycle
+    return null; // avoid multiple refresh attempts in the same request lifecycle
   }
+
   try {
-    await getNewTokenWithRefreshToken(refreshToken);
+    const tokens = await getNewTokenWithRefreshToken(refreshToken, sessionToken);
+
+    if (!tokens) {
+      return null;
+    }
+
+    await setTokenInCookies("accessToken", tokens.accessToken);
+    await setTokenInCookies("refreshToken", tokens.refreshToken, 7 * 24 * 60 * 60);
+    await setTokenInCookies("better-auth.session_token", tokens.sessionToken);
+
+    return tokens.accessToken;
   } catch (err) {
     console.error("Refresh Token Error: ", err);
-    return;
+    return null;
   }
 }
 
 const axiosInstance = async () => {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value;
-  const refreshToken = cookieStore.get("refreshToken")?.value;
+  const initialCookieStore = await cookies();
+  const accessToken = initialCookieStore.get("accessToken")?.value;
+  const refreshToken = initialCookieStore.get("refreshToken")?.value;
+  const sessionToken = initialCookieStore.get("better-auth.session_token")?.value;
 
-  if (accessToken && refreshToken) {
-    await tryRefreshToken(accessToken, refreshToken);
+  if (accessToken && refreshToken && sessionToken) {
+    await tryRefreshToken(accessToken, refreshToken, sessionToken);
   }
+
+  const cookieStore = await cookies();
   const cookieHeader = cookieStore
     .getAll()
     .map((cookie) => `${cookie.name}=${cookie.value}`)

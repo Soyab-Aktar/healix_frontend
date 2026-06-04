@@ -1,5 +1,6 @@
 "use server"
 import { cookies } from "next/headers"
+import { NextResponse } from "next/server";
 
 export const setCookie = async (
   name: string,
@@ -15,6 +16,21 @@ export const setCookie = async (
     maxAge: maxAgeInSeconds,
   });
 
+}
+
+export const setResponseCookie = async (
+  response: NextResponse,
+  name: string,
+  value: string,
+  maxAgeInSeconds: number,
+) => {
+  response.cookies.set(name, value, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    path: "/",
+    maxAge: maxAgeInSeconds,
+  });
 }
 
 export const getCookie = async (name: string) => {

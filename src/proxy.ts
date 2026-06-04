@@ -2,18 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtUtils } from "./lib/jwtUtils";
 import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from "./lib/authUtils";
 import { getNewTokenWithRefreshToken, getUserinfo } from "./services/auth.services";
-import { isTokenExpiringSoon } from "./lib/tokenUtils";
+import { getTokenSecondsRemaining, isTokenExpiringSoon } from "./lib/tokenUtils";
+import { setResponseCookie } from "./lib/cookieUtils";
 
-async function refrshTokenMiddleware(refreshToken: string): Promise<boolean> {
+async function refrshTokenMiddleware(refreshToken: string, sessionToken: string) {
   try {
-    const refresh = await getNewTokenWithRefreshToken(refreshToken);
-    if (!refresh) {
-      return false;
-    }
-    return true;
+    const tokens = await getNewTokenWithRefreshToken(refreshToken, sessionToken);
+    if (!tokens) return null;
+
+    return tokens;
   } catch (err) {
     console.error("Error Refreshing token in middleware:", err);
-    return false;
+    return null;
   }
 }
 
@@ -40,28 +40,47 @@ export async function proxy(request: NextRequest) {
     const isAuth = isAuthRoute(pathname);
 
     if (isValidAccessToken && refreshToken && (await isTokenExpiringSoon(accessToken))) {
-      const requestHeaders = new Headers(request.headers);
-      const response = NextResponse.next({
-        request: {
-          headers: requestHeaders
-        },
+      // const requestHeaders = new Headers(request.headers);
+      // const response = NextResponse.next({
+      //   request: {
+      //     headers: requestHeaders
+      //   },
 
-      });
+      // });
+      // try {
+      //   const refreshed = await refrshTokenMiddleware(refreshToken);
+      //   if (refreshed) {
+      //     requestHeaders.set("x-token-refreshed", "1");
+      //   }
+      //   return NextResponse.next({
+      //     request: {
+      //       headers: requestHeaders
+      //     },
+      //     headers: response.headers
+      //   })
+      // } catch (err) {
+      //   console.error("Error Refreshing Token :", err);
+      // }
+      // return response;
+      const response = NextResponse.next();
+
       try {
-        const refreshed = await refrshTokenMiddleware(refreshToken);
-        if (refreshed) {
-          requestHeaders.set("x-token-refreshed", "1");
+        const sessionToken = request.cookies.get("better-auth.session_token")?.value ?? "";
+        const tokens = await refrshTokenMiddleware(refreshToken, sessionToken);
+
+        if (tokens) {
+          const accessTokenMaxAge = await getTokenSecondsRemaining(tokens.accessToken);
+
+          await setResponseCookie(response, "accessToken", tokens.accessToken, accessTokenMaxAge);
+          await setResponseCookie(response, "refreshToken", tokens.refreshToken, 7 * 24 * 60 * 60);
+          await setResponseCookie(response, "better-auth.session_token", tokens.sessionToken, 24 * 60 * 60);
+          response.headers.set("x-token-refreshed", "1");
         }
-        return NextResponse.next({
-          request: {
-            headers: requestHeaders
-          },
-          headers: response.headers
-        })
       } catch (err) {
-        console.error("Error Refreshing Token :", err);
+        console.error("Error Refreshing Token:", err);
       }
-      return response;
+
+      return response; // ✅ single response with cookies set
     }
 
     //? -> User is logged in (has access token) and trying to access auth route -> allow

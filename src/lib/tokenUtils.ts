@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { setCookie } from "./cookieUtils";
 
 
-const getTokenSecondsRemaining = (token: string): number => {
+export const getTokenSecondsRemaining = async (token: string) => {
   if (!token) return 0;
 
   try {
@@ -28,16 +28,16 @@ export const setTokenInCookies = async (
 ) => {
   let maxAgeInSeconds;
   if (name !== "better-auth.session_token") {
-    maxAgeInSeconds = getTokenSecondsRemaining(token);
+    maxAgeInSeconds = await getTokenSecondsRemaining(token);
   }
   await setCookie(name, token, maxAgeInSeconds || fallbackMaxAgeInSeconds);
 }
 
 export async function isTokenExpiringSoon(token: string, thresholdInSeconds = 300): Promise<boolean> {
-  const remainingSeconds = getTokenSecondsRemaining(token);
+  const remainingSeconds = await getTokenSecondsRemaining(token);
   return remainingSeconds > 0 && remainingSeconds <= thresholdInSeconds;
 }
 export async function isTokenExpired(token: string): Promise<boolean> {
-  const remainingSeconds = getTokenSecondsRemaining(token);
+  const remainingSeconds = await getTokenSecondsRemaining(token);
   return remainingSeconds === 0;
-} 
+}

@@ -1,6 +1,5 @@
 "use server";
 
-import { setTokenInCookies } from "@/lib/tokenUtils";
 import { cookies } from "next/headers";
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -9,14 +8,14 @@ if (!BASE_API_URL) {
   throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
 }
 
-export async function getNewTokenWithRefreshToken(refreshToken: string): Promise<boolean> {
+export async function getNewTokenWithRefreshToken(
+  refreshToken: string,
+  sessionToken: string, // ✅ pass it in from middleware
+) {
   try {
-    const cookieStore = await cookies();
-    const sessionToken = cookieStore.get("better-auth.session_token")?.value;
-
     if (!sessionToken) {
       console.error("Failed to refresh token: missing session token cookie");
-      return false;
+      return null;
     }
 
     const res = await fetch(`${BASE_API_URL}/auth/refresh-token`, {
@@ -24,26 +23,26 @@ export async function getNewTokenWithRefreshToken(refreshToken: string): Promise
       headers: {
         "Content-Type": "application/json",
         Cookie: `refreshToken=${refreshToken}; better-auth.session_token=${sessionToken}`,
-      }
+      },
     });
-    if (!res.ok) {
-      return false;
-    }
+
+    if (!res.ok) return null;
+
     const { data } = await res.json();
-    const { accessToken, refreshToken: newRefreshToken, sessionToken: newSessionToken } = data;
-    if (accessToken) {
-      await setTokenInCookies("accessToken", accessToken);
-    }
-    if (newRefreshToken) {
-      await setTokenInCookies("refreshToken", newRefreshToken);
-    }
-    if (newSessionToken) {
-      await setTokenInCookies("better-auth.session_token", newSessionToken, 24 * 60 * 60);
-    }
-    return true;
+    const {
+      accessToken,
+      refreshToken: newRefreshToken,
+      sessionToken: newSessionToken,
+    } = data;
+
+    return {
+      accessToken,
+      refreshToken: newRefreshToken,
+      sessionToken: newSessionToken,
+    };
   } catch (err) {
-    console.error("Error Refresh Token :", err);
-    return false;
+    console.error("Error Refresh Token:", err);
+    return null;
   }
 }
 
