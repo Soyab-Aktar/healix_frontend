@@ -7,10 +7,10 @@ import { IDoctor } from "@/types/doctor.types";
 import DataTable from "@/components/shared/table/DataTable";
 import { doctorColumns } from "./doctorsColumns";
 
-const DoctorsTable = () => {
+const DoctorsTable = ({ queryString, queryParamsObjects }: { queryString: string, queryParamsObjects: { [key: string]: string | string[] | undefined } }) => {
   const { data: doctorDataResponse, isLoading } = useQuery({
-    queryKey: ["doctors"],
-    queryFn: getDoctors,
+    queryKey: ["doctors", queryParamsObjects],
+    queryFn: () => getDoctors(queryString),
     refetchOnWindowFocus: "always",
   })
   const { data: doctors } = doctorDataResponse! || [];
