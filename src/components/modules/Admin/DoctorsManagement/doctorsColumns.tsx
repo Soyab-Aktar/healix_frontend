@@ -56,6 +56,7 @@ export const doctorColumns: ColumnDef<IDoctor>[] = [
     id: "contactNumber",
     accessorKey: "contactNumber",
     header: "Contact Number",
+    enableSorting: false,
     cell: ({ row }) => (
       <div className="flex flex-col">
         <span className="text-sm">{row.original?.contactNumber || "N/A"}</span>
@@ -105,6 +106,7 @@ export const doctorColumns: ColumnDef<IDoctor>[] = [
     id: "gender",
     accessorKey: "gender",
     header: "Gender",
+    enableSorting: false,
     cell: ({ row }) => {
       return (
         <span className="text-sm capitalize">
@@ -117,6 +119,8 @@ export const doctorColumns: ColumnDef<IDoctor>[] = [
     id: "status",
     accessorKey: "user.status",
     header: "Status",
+    enableSorting: false,
+
     cell: ({ row }) => {
       return (
         <StatusBadgeCell status={row.original.user.status} />

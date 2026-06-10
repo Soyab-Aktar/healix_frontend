@@ -127,17 +127,17 @@ const httpPut = async <TData>(endPoint: string, data: unknown, options?: ApiRequ
     throw err;
   }
 }
-const httpDelete = async <TData>(endPoint: string, data: unknown, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
+const httpDelete = async <TData>(endpoint: string, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
   try {
     const instance = await axiosInstance();
-    const response = await instance.delete<ApiResponse<TData>>(endPoint, {
+    const response = await instance.delete<ApiResponse<TData>>(endpoint, {
       params: options?.params,
       headers: options?.headers,
     });
     return response.data;
-  } catch (err) {
-    console.error(`Delete Request to ${endPoint} failed: `, err);
-    throw err;
+  } catch (error) {
+    console.error(`DELETE request to ${endpoint} failed:`, error);
+    throw error;
   }
 }
 export const httpClient = {
