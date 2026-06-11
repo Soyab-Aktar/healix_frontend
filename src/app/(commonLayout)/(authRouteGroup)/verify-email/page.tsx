@@ -1,10 +1,12 @@
-import React from 'react';
+import VerifyEmailForm from "@/components/modules/Auth/VerifyEmailForm";
+import { Suspense } from "react";
 
+// VerifyEmailForm uses useSearchParams → must be wrapped in Suspense
 const VerifyEmailPage = () => {
   return (
-    <div>
-
-    </div>
+    <Suspense fallback={null}>
+      <VerifyEmailForm />
+    </Suspense>
   );
 };
 

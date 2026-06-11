@@ -5,7 +5,6 @@ export default function CommonLayout({
 }>) {
   return (
     <>
-      <h5>Common Layout</h5>
       {children}
     </>
   );
