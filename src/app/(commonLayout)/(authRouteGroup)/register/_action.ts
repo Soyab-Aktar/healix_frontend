@@ -25,14 +25,37 @@ export interface IRegisterResponse {
   };
 }
 
+/** Maps raw backend/Prisma error messages to user-friendly strings */
+const mapRegisterError = (raw: string): string => {
+  const lower = raw.toLowerCase();
+
+  if (
+    lower.includes("unique constraint") ||
+    lower.includes("already exists") ||
+    lower.includes("duplicate") ||
+    lower.includes("prisma client known request error") // backend rollback bug on duplicate email
+  ) {
+    return "An account with this email already exists. Please log in or use a different email.";
+  }
+
+  if (lower.includes("invalid email")) return "Please enter a valid email address.";
+  if (lower.includes("password")) return "Password does not meet requirements.";
+  if (lower.includes("network") || lower.includes("econnrefused")) {
+    return "Unable to reach the server. Please try again later.";
+  }
+
+  return raw || "Registration failed. Please try again.";
+};
+
 export const registerAction = async (
   payload: IRegisterPayload
 ): Promise<ApiErrorResponse> => {
   const parsedPayload = registerZodSchema.safeParse(payload);
   if (!parsedPayload.success) {
-    const firstError =
-      parsedPayload.error.issues[0].message || "Invalid input";
-    return { success: false, message: firstError };
+    return {
+      success: false,
+      message: parsedPayload.error.issues[0].message || "Invalid input",
+    };
   }
 
   const { confirmPassword: _confirm, ...apiPayload } = parsedPayload.data;
@@ -46,14 +69,11 @@ export const registerAction = async (
 
     const email = response.data?.user?.email;
 
-    // ✅ Do NOT set any auth cookies here.
-    // The user is not considered logged in until they verify their email
-    // and explicitly log in. Setting cookies here causes a redirect loop
-    // because middleware sees a valid token but emailVerified=false and
-    // bounces between /verify-email and the dashboard infinitely.
-
+    // Do NOT set auth cookies — user must verify email then log in explicitly.
+    // Setting cookies here causes middleware redirect loops.
     redirect(`/verify-email?email=${encodeURIComponent(email)}`);
   } catch (error: unknown) {
+    // Re-throw Next.js redirects
     if (
       error &&
       typeof error === "object" &&
@@ -65,15 +85,18 @@ export const registerAction = async (
     }
 
     const axiosError = error as {
-      response?: { data?: { message?: string } };
+      response?: { data?: { message?: string; success?: boolean } };
       message?: string;
     };
 
-    const message =
+    const rawMessage =
       axiosError?.response?.data?.message ||
       axiosError?.message ||
       "Registration failed";
 
-    return { success: false, message };
+    return {
+      success: false,
+      message: mapRegisterError(rawMessage),
+    };
   }
 };

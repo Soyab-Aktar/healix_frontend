@@ -5,7 +5,6 @@ export default function PatientDashboardLayout({
 }>) {
   return (
     <>
-      <h5>Patient Dashboard Layout</h5>
       {children}
     </>
   );

@@ -1,4 +1,4 @@
-import Navbar from '@/components/modules/Home/Navbar';
+// import Navbar from '@/components/modules/Home/Navbar';
 import HeroSection from '@/components/modules/Home/HeroSection';
 import HowItWorksSection from '@/components/modules/Home/HowItWorksSection';
 import FeaturedDoctors from '@/components/modules/Home/FeaturedDoctors';
@@ -10,7 +10,6 @@ import Footer from '@/components/modules/Home/Footer';
 export default function Home() {
   return (
     <>
-      <Navbar />
       <main>
         <HeroSection />
         {/* <StatsSection /> */}

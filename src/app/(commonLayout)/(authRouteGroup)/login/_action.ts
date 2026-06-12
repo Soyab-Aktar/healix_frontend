@@ -12,14 +12,59 @@ import { ILoginResponse } from "@/types/auth.types";
 import { ILoginPayload, loginZodSchema } from "@/zod/auth.validation";
 import { redirect } from "next/navigation";
 
+/** Maps raw backend error messages to user-friendly strings */
+const mapLoginError = (raw: string, email: string): { message: string; redirect?: string } => {
+  const lower = raw.toLowerCase();
+
+  if (
+    lower.includes("invalid password") ||
+    lower.includes("incorrect password") ||
+    lower.includes("wrong password") ||
+    lower.includes("password") ||
+    lower.includes("credentials")
+  ) {
+    return { message: "Incorrect password. Please try again." };
+  }
+
+  if (
+    lower.includes("user not found") ||
+    lower.includes("no user") ||
+    lower.includes("not found") ||
+    lower.includes("does not exist")
+  ) {
+    return {
+      message: "No account found with this email. Please register first.",
+    };
+  }
+
+  if (lower.includes("email not verified")) {
+    return {
+      message: "Please verify your email before logging in.",
+      redirect: `/verify-email?email=${encodeURIComponent(email)}`,
+    };
+  }
+
+  if (lower.includes("account") && lower.includes("disabled")) {
+    return { message: "Your account has been disabled. Please contact support." };
+  }
+
+  if (lower.includes("network") || lower.includes("econnrefused")) {
+    return { message: "Unable to reach the server. Please try again later." };
+  }
+
+  return { message: raw || "Login failed. Please check your credentials." };
+};
+
 export const loginAction = async (
   payload: ILoginPayload,
   redirectPath?: string
 ): Promise<ILoginResponse | ApiErrorResponse> => {
   const parsedPayload = loginZodSchema.safeParse(payload);
   if (!parsedPayload.success) {
-    const firstError = parsedPayload.error.issues[0].message || "Invalid input";
-    return { success: false, message: firstError };
+    return {
+      success: false,
+      message: parsedPayload.error.issues[0].message || "Invalid input",
+    };
   }
 
   try {
@@ -57,17 +102,21 @@ export const loginAction = async (
       message?: string;
     };
 
-    // Email not verified — redirect with email so verify page shows it
-    if (axiosError?.response?.data?.message === "Email not verified") {
-      // We need the email from the original payload
-      redirect(
-        `/verify-email?email=${encodeURIComponent(payload.email)}`
-      );
+    const rawMessage =
+      axiosError?.response?.data?.message ||
+      axiosError?.message ||
+      "Login failed";
+
+    const mapped = mapLoginError(rawMessage, payload.email);
+
+    // Email not verified → redirect to verify page
+    if (mapped.redirect) {
+      redirect(mapped.redirect);
     }
 
     return {
       success: false,
-      message: `Login failed: ${axiosError?.message}`,
+      message: mapped.message,
     };
   }
 };

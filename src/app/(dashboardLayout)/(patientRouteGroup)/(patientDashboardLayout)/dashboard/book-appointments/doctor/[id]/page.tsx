@@ -1,23 +1,14 @@
-import { getDoctorById } from '@/services/doctor.services';
-import { IDoctorDetails } from '@/types/doctor.types';
-import { getReviewsByDoctorId } from '@/services/review.services';
-import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import DoctorReviews from '@/components/modules/Consultation/DoctorReviews';
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import {
-  Star,
-  Briefcase,
-  MapPin,
-  Phone,
-  Mail,
-  Award,
-  IndianRupee,
-  ChevronLeft,
-  Calendar,
-  User,
-} from 'lucide-react';
+import DoctorReviews from "@/components/modules/Consultation/DoctorReviews";
+import BookAppointmentButton from "@/components/modules/Consultation/BookAppointmentButton";
+import { getDoctorById } from "@/services/doctor.services";
+import { getReviewsByDoctorId } from "@/services/review.services";
+import { IDoctorDetails } from "@/types/doctor.types";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { Award, Briefcase, ChevronLeft, IndianRupee, Mail, MapPin, Phone, Star, User } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
 
 interface ConsultationDoctorByIdPageProps {
   params: Promise<{ id: string }>;
@@ -59,7 +50,7 @@ const ConsultationDoctorByIdPage = async ({ params }: ConsultationDoctorByIdPage
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Back link */}
       <Link
-        href="/consultation"
+        href="/dashboard/book-appointments"
         className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 mb-6 transition-colors"
       >
         <ChevronLeft className="h-4 w-4" />
@@ -101,10 +92,12 @@ const ConsultationDoctorByIdPage = async ({ params }: ConsultationDoctorByIdPage
               </div>
             </div>
 
-            <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors shrink-0">
-              <Calendar className="h-4 w-4" />
-              Book Appointment
-            </button>
+            <BookAppointmentButton
+              doctorId={doctor.id}
+              doctorName={doctor.name}
+              appointmentFee={doctor.appointmentFee}
+              doctorSchedules={doctor.doctorSchedules}
+            />
           </div>
 
           {/* Fee */}
