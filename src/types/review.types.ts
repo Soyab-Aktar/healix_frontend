@@ -2,16 +2,34 @@ export interface IReview {
   id: string;
   rating: number;
   comment: string;
+
   appointmentId: string;
   patientId: string;
   doctorId: string;
-  createdAt: string | Date;
-  updatedAt?: string | Date;
+
+  createdAt: string;
+  updatedAt: string;
+
   patient?: {
     id: string;
     name: string;
-    email?: string;
+    email: string;
     profilePhoto?: string;
+  };
+
+  doctor?: {
+    id: string;
+    name: string;
+    email: string;
+    profilePhoto?: string;
+  };
+
+  appointment?: {
+    id: string;
+    scheduledDate?: string;
+    createdAt?: string;
+    paymentStatus?: string;
+    status?: string;
   };
 }
 
