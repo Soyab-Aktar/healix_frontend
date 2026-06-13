@@ -16,39 +16,47 @@ const getErrorMessage = (error: unknown): string => {
   return String(error);
 }
 
-
 type AppFieldProps = {
   field: AnyFieldApi;
   label: string;
-  type?: "text" | "email" | "password" | "number";
+  type?: "text" | "email" | "password" | "number" | "date" | "time";
   placeholder?: string;
   append?: React.ReactNode;
   prepend?: React.ReactNode;
   className?: string;
   disabled?: boolean;
-};
+}
 
-// src/components/shared/form/AppField.tsx
+const AppField = ({
+  field,
+  label,
+  type = "text",
+  placeholder,
+  append,
+  prepend,
+  className,
+  disabled = false,
+}: AppFieldProps) => {
 
-const AppField = ({ field, label, type = "text", placeholder, append, prepend, className, disabled = false }: AppFieldProps) => {
-  const firstError = field.state.meta.isTouched && field.state.meta.errors.length > 0
-    ? getErrorMessage(field.state.meta.errors[0])
-    : null;
+  const firstError = field.state.meta.isTouched && field.state.meta.errors.length > 0 ? getErrorMessage(field.state.meta.errors[0]) : null;
+
   const hasError = firstError !== null;
 
   return (
     <div className={cn("space-y-1.5", className)}>
-      <Label htmlFor={field.name} className={cn(hasError && "text-destructive")}>
+      <Label
+        htmlFor={field.name}
+        className={cn(hasError && "text-destructive")}
+      >
         {label}
       </Label>
 
       <div className="relative">
-        {prepend && (
-          // ✅ Fix: removed pointer-events-none, added flex
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 z-10">
+        {
+          prepend && (<div className="absolute inset-y-0 left-0 items-center pl-3 pointer-events-none z-10">
             {prepend}
-          </div>
-        )}
+          </div>)
+        }
 
         <Input
           id={field.name}
@@ -68,24 +76,26 @@ const AppField = ({ field, label, type = "text", placeholder, append, prepend, c
           )}
         />
 
-        {append && (
-          // ✅ Fix: removed pointer-events-none, added flex
-          <div className="absolute inset-y-0 right-0 flex items-center pr-1 z-10">
+        {
+          append && (<div className="absolute inset-y-0 right-0 items-center pr-3 pointer-events-none z-10">
             {append}
-          </div>
-        )}
+          </div>)
+        }
+
+        {
+          hasError && (
+            <p
+              id={`${field.name}-error`}
+              role="alert"
+              className="text-sm text-destructive"
+            >
+              {firstError}
+            </p>
+          )
+        }
       </div>
-
-      {/* ✅ Fix: moved error outside the relative wrapper so it doesn't overlap */}
-      {hasError && (
-        <p id={`${field.name}-error`} role="alert" className="text-sm text-destructive">
-          {firstError}
-        </p>
-      )}
     </div>
-  );
-};
+  )
+}
 
-export default AppField;
-
-
+export default AppField

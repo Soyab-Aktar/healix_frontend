@@ -60,7 +60,7 @@ const ConsultationDoctorByIdPage = async ({ params }: ConsultationDoctorByIdPage
       {/* Profile Card */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-6">
         {/* Top gradient band */}
-        <div className="h-24 bg-gradient-to-r from-blue-500 to-blue-700" />
+        <div className="h-24 bg-linear-to-r from-blue-500 to-blue-700" />
 
         <div className="px-6 pb-6">
           {/* Avatar + name row */}

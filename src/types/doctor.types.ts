@@ -10,25 +10,9 @@ export enum UserStatus {
   DELETED = "DELETED",
 }
 
-export interface IDoctorUserSummary {
-  status: UserStatus;
-}
-
-export interface IDoctorSpecialty {
-  id: string;
-  title: string;
-  icon?: string;
-}
-
-export interface IDoctorSpecialtyRelation {
-  specialtyId: string;
-  doctorId: string;
-  specialty: IDoctorSpecialty;
-}
-
 
 export interface IDoctor {
-  id: string;
+  id: number;
   name: string;
   email: string;
   profilePhoto?: string;
@@ -43,8 +27,18 @@ export interface IDoctor {
   designation: string;
   averageRating: number;
   createdAt: Date;
-  user: IDoctorUserSummary;
-  specialties: IDoctorSpecialtyRelation[];
+  user: {
+    status: UserStatus
+  };
+  specialties: Array<{
+    specialtyId: string;
+    doctorId: string;
+    specialty: {
+      id: string;
+      title: string;
+      icon: string;
+    }
+  }>
 }
 
 export interface ICreateDoctorPayload {
@@ -86,11 +80,12 @@ export interface IUpdateDoctorPayload {
   specialties?: IUpdateDoctorSpecialtyChange[];
 }
 
-export interface IDoctorUserDetails extends IDoctorUserSummary {
+export interface IDoctorUserDetails {
   id?: string;
   email?: string;
   name?: string;
   role?: string;
+  status?: string;
   emailVerified?: boolean;
   image?: string;
   isDeleted?: boolean;
@@ -136,9 +131,8 @@ export interface IDoctorAppointmentItem {
   } | null;
 }
 
-export interface IDoctorDetails extends Omit<IDoctor, "user" | "specialties"> {
-  user?: IDoctorUserDetails | null;
-  specialties?: Array<IDoctorSpecialtyRelation | IDoctorSpecialty>;
+export interface IDoctorDetails extends IDoctor {
+  user: IDoctorUserDetails;
   appointments?: IDoctorAppointmentItem[];
   doctorSchedules?: IDoctorScheduleItem[];
   reviews?: IDoctorReview[];
