@@ -58,3 +58,15 @@ export const getMySingleAppointment = async (appointmentId: string) => {
     throw error
   }
 }
+
+export const changeAppointmentStatus = async (appointmentId: string, status: string) => {
+  try {
+    return await httpClient.patch<IAppointment>(
+      `/appointments/change-appointment-status/${appointmentId}`,
+      { status },
+    )
+  } catch (error) {
+    console.log("Error changing appointment status:", error)
+    throw error
+  }
+}

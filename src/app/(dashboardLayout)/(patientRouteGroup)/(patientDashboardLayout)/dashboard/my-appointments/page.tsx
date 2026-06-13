@@ -1,10 +1,11 @@
-import React from 'react';
+import MyAppointmentsView from "@/components/modules/Patient/Appointments/Myappointmentsview";
+import React, { Suspense } from "react";
 
 const MyAppointmentPage = () => {
   return (
-    <div>
-
-    </div>
+    <Suspense fallback={<p>Loading appointments...</p>}>
+      <MyAppointmentsView />
+    </Suspense>
   );
 };
 

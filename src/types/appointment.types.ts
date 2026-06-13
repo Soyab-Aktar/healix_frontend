@@ -67,3 +67,7 @@ export interface IBookAppointmentResult {
 export interface IInitiatePaymentResult {
   paymentUrl: string
 }
+
+export interface IChangeAppointmentStatusPayload {
+  status: AppointmentStatus
+}

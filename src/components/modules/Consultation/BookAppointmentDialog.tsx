@@ -15,10 +15,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Calendar, Clock, CreditCard, Wallet, Loader2, CalendarX2 } from "lucide-react";
+import { Calendar, Clock, Wallet, Loader2, CalendarX2 } from "lucide-react";
 import { toast } from "sonner";
 import { IDoctorScheduleItem } from "@/types/doctor.types";
-import { bookAppointment, bookAppointmentWithPayLater } from "@/services/appointment.services";
+import { bookAppointmentWithPayLater } from "@/services/appointment.services";
 
 interface BookAppointmentDialogProps {
   open: boolean;
@@ -113,33 +113,18 @@ export default function BookAppointmentDialog({
     onOpenChange(false);
   };
 
-  const payNowMutation = useMutation({
-    mutationFn: () => bookAppointment({ doctorId, scheduleId: selectedScheduleId! }),
-    onSuccess: (response) => {
-      const paymentUrl = response?.data?.paymentUrl;
-      if (paymentUrl) {
-        toast.success("Redirecting to payment...");
-        window.location.href = paymentUrl;
-      } else {
-        toast.success("Appointment booked successfully!");
-        resetAndClose();
-        router.push("/dashboard/my-appointments");
-      }
-    },
-    onError: (error: unknown) => {
-      const message =
-        (error as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-        "Failed to book appointment. Please try again.";
-      toast.error(message);
-    },
-  });
-
   const payLaterMutation = useMutation({
     mutationFn: () => bookAppointmentWithPayLater({ doctorId, scheduleId: selectedScheduleId! }),
-    onSuccess: () => {
-      toast.success("Appointment booked! You can pay later from My Appointments.");
+    onSuccess: (response) => {
+      if (!response?.success) {
+        toast.error(response?.message || "Failed to book appointment. Please try again.");
+        return;
+      }
+
+      toast.success("Appointment booked! You can pay anytime from My Appointments.");
       resetAndClose();
       router.push("/dashboard/my-appointments");
+      router.refresh();
     },
     onError: (error: unknown) => {
       const message =
@@ -149,7 +134,7 @@ export default function BookAppointmentDialog({
     },
   });
 
-  const isSubmitting = payNowMutation.isPending || payLaterMutation.isPending;
+  const isSubmitting = payLaterMutation.isPending;
 
   return (
     <Dialog open={open} onOpenChange={(next) => !isSubmitting && (next ? onOpenChange(next) : resetAndClose())}>
@@ -190,8 +175,8 @@ export default function BookAppointmentDialog({
                           disabled={isSubmitting}
                           onClick={() => setSelectedScheduleId(slot.scheduleId)}
                           className={`flex items-center justify-center gap-1.5 rounded-lg border px-2 py-2 text-xs font-medium transition-colors ${isSelected
-                              ? "border-blue-600 bg-blue-50 text-blue-700"
-                              : "border-gray-200 text-gray-600 hover:border-blue-200 hover:bg-blue-50/50"
+                            ? "border-blue-600 bg-blue-50 text-blue-700"
+                            : "border-gray-200 text-gray-600 hover:border-blue-200 hover:bg-blue-50/50"
                             } disabled:opacity-50 disabled:cursor-not-allowed`}
                         >
                           <Clock className="h-3 w-3" />
@@ -213,26 +198,19 @@ export default function BookAppointmentDialog({
               <span className="text-gray-500">Consultation Fee</span>
               <span className="font-semibold text-gray-900">₹{appointmentFee}</span>
             </div>
+            <div className="flex items-center justify-between">
+              <Badge variant="secondary" className="text-xs">
+                Online payment coming soon — Pay Later for now
+              </Badge>
+            </div>
           </>
         )}
 
         <DialogFooter className="flex-col sm:flex-col gap-2">
           <Button
-            className="w-full"
-            disabled={!selectedScheduleId || isSubmitting}
-            onClick={() => payNowMutation.mutate()}
-          >
-            {payNowMutation.isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <CreditCard className="h-4 w-4" />
-            )}
-            Pay Now &amp; Confirm
-          </Button>
-          <Button
             variant="outline"
             className="w-full"
-            disabled={!selectedScheduleId || isSubmitting}
+            disabled={!selectedScheduleId || isSubmitting || !hasAvailableSlots}
             onClick={() => payLaterMutation.mutate()}
           >
             {payLaterMutation.isPending ? (
