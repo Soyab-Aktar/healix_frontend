@@ -9,11 +9,14 @@ import {
 } from "@/hooks/useServerManagedDataTableFilters";
 import { useServerManagedDataTableSearch } from "@/hooks/useServerManagedDataTableSearch";
 import { getMyAppointments } from "@/services/appointment.services";
+import { getMyPrescriptions } from "@/services/prescription.services";
 import { IAppointment } from "@/types/appointment.types";
+import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { doctorAppointmentsColumns } from "./doctorAppointmentsColumns";
+import { useMemo, useState } from "react";
+
 import ManageAppointmentModal from "./ManageAppointmentModal";
+import { getDoctorAppointmentsColumns } from "./doctorAppointmentsColumns";
 import CreatePrescriptionModal from "../Prescriptions/CreatePrescriptionModal";
 
 
@@ -32,9 +35,6 @@ const PAYMENT_STATUS_FILTER_OPTIONS = [
 
 const DoctorAppointmentsView = () => {
   const searchParams = useSearchParams();
-
-  const [appointments, setAppointments] = useState<IAppointment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   const [prescriptionAppointment, setPrescriptionAppointment] = useState<IAppointment | null>(null);
   const [isPrescriptionModalOpen, setIsPrescriptionModalOpen] = useState(false);
@@ -66,24 +66,34 @@ const DoctorAppointmentsView = () => {
       enableDelete: false,
     });
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        setIsLoading(true);
-        const response = await getMyAppointments();
-        setAppointments(response?.data ?? []);
-      } catch (error) {
-        console.error("Error fetching my appointments:", error);
-        setAppointments([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const {
+    data: appointmentsResponse,
+    isLoading: isAppointmentsLoading,
+    isFetching: isAppointmentsFetching,
+  } = useQuery({
+    queryKey: ["my-appointments"],
+    queryFn: () => getMyAppointments(),
+  });
 
-    fetchAppointments();
-    // Re-fetch whenever the URL query (search/sort/filter/pagination) changes.
-    // Backend currently returns all appointments regardless of params.
-  }, [searchParams]);
+  const {
+    data: prescriptionsResponse,
+    isLoading: isPrescriptionsLoading,
+  } = useQuery({
+    queryKey: ["my-prescriptions"],
+    queryFn: () => getMyPrescriptions(),
+  });
+
+  const appointments = appointmentsResponse?.data ?? [];
+
+  const prescribedAppointmentIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const prescription of prescriptionsResponse?.data ?? []) {
+      if (prescription.appointmentId) {
+        ids.add(prescription.appointmentId);
+      }
+    }
+    return ids;
+  }, [prescriptionsResponse?.data]);
 
   // Client-side application of search/sort/filter/pagination as a fallback
   // since the backend does not yet support these query params for this endpoint.
@@ -162,6 +172,15 @@ const DoctorAppointmentsView = () => {
     }
   };
 
+  const columns = useMemo(
+    () => getDoctorAppointmentsColumns(prescribedAppointmentIds),
+    [prescribedAppointmentIds],
+  );
+
+  const isLoading = isAppointmentsLoading || isPrescriptionsLoading || isAppointmentsFetching;
+
+  const viewingItemHasPrescription = viewingItem ? prescribedAppointmentIds.has(viewingItem.id) : false;
+
   return (
     <div className="space-y-4">
       <div>
@@ -173,7 +192,7 @@ const DoctorAppointmentsView = () => {
 
       <DataTable
         data={paginatedAppointments}
-        columns={doctorAppointmentsColumns}
+        columns={columns}
         actions={{
           onView: tableActions.onView,
         }}
@@ -224,6 +243,7 @@ const DoctorAppointmentsView = () => {
         open={isViewDialogOpen}
         onOpenChange={onViewOpenChange}
         onCreatePrescription={handleOpenCreatePrescription}
+        hasPrescription={viewingItemHasPrescription}
       />
 
       <CreatePrescriptionModal

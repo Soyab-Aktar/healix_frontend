@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { IAppointment, AppointmentStatus, PaymentStatus } from "@/types/appointment.types";
 import { ColumnDef } from "@tanstack/react-table";
+import { FileCheck2, FileX2 } from "lucide-react";
 
 const formatDateTime = (value?: string | Date) => {
   if (!value) return "-";
@@ -24,7 +25,11 @@ const paymentBadgeVariant: Record<PaymentStatus, "default" | "secondary" | "dest
   FAILED: "destructive",
 };
 
-export const doctorAppointmentsColumns: ColumnDef<IAppointment>[] = [
+// `prescribedAppointmentIds` is injected via column meta so the cell can check
+// whether a prescription already exists for this appointment.
+export const getDoctorAppointmentsColumns = (
+  prescribedAppointmentIds: Set<string>,
+): ColumnDef<IAppointment>[] => [
   {
     accessorKey: "patient.name",
     header: "Patient",
@@ -70,6 +75,30 @@ export const doctorAppointmentsColumns: ColumnDef<IAppointment>[] = [
       return (
         <Badge variant={paymentBadgeVariant[paymentStatus] ?? "outline"}>
           {paymentStatus}
+        </Badge>
+      );
+    },
+  },
+  {
+    id: "prescription",
+    header: "Prescription",
+    enableSorting: false,
+    cell: ({ row }) => {
+      const hasPrescription = prescribedAppointmentIds.has(row.original.id);
+
+      if (hasPrescription) {
+        return (
+          <Badge variant="outline" className="gap-1 text-emerald-600 border-emerald-200 bg-emerald-50">
+            <FileCheck2 className="h-3.5 w-3.5" />
+            Sent
+          </Badge>
+        );
+      }
+
+      return (
+        <Badge variant="outline" className="gap-1 text-muted-foreground">
+          <FileX2 className="h-3.5 w-3.5" />
+          Not Sent
         </Badge>
       );
     },

@@ -150,7 +150,7 @@ const CreatePrescriptionModal = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="followUpDate">Follow-up Date (optional)</Label>
+            <Label htmlFor="followUpDate">Follow-up Date</Label>
             <Input
               id="followUpDate"
               type="date"

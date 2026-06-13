@@ -6,4 +6,11 @@ export const createPrescriptionFormZodSchema = z.object({
   followUpDate: z.string().optional(),
 })
 
+export const updatePrescriptionSchema = z.object({
+  instructions: z.string().min(1, "Instructions are required"),
+  followUpDate: z.string().optional(),
+});
+
+export type UpdatePrescriptionFormValues = z.infer<typeof updatePrescriptionSchema>;
+
 export type ICreatePrescriptionFormValues = z.infer<typeof createPrescriptionFormZodSchema>

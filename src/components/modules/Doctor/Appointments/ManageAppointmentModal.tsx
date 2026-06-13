@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { changeAppointmentStatus } from "@/services/appointment.services";
 import { AppointmentStatus, IAppointment } from "@/types/appointment.types";
-import { FileText, Loader2 } from "lucide-react";
+import { FileCheck2, FileText, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -29,6 +29,7 @@ interface ManageAppointmentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCreatePrescription: (appointment: IAppointment) => void;
+  hasPrescription: boolean;
 }
 
 const formatDateTime = (value?: string | Date) => {
@@ -59,6 +60,7 @@ const ManageAppointmentModal = ({
   open,
   onOpenChange,
   onCreatePrescription,
+  hasPrescription,
 }: ManageAppointmentModalProps) => {
   const router = useRouter();
   const [selectedStatus, setSelectedStatus] = useState<string>("");
@@ -137,6 +139,20 @@ const ManageAppointmentModal = ({
           </div>
 
           <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">Prescription</span>
+            {hasPrescription ? (
+              <Badge variant="outline" className="gap-1 text-emerald-600 border-emerald-200 bg-emerald-50">
+                <FileCheck2 className="h-3.5 w-3.5" />
+                Sent
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="text-muted-foreground">
+                Not Sent
+              </Badge>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Booked On</span>
             <span>{formatDateTime(appointment.createdAt)}</span>
           </div>
@@ -166,10 +182,15 @@ const ManageAppointmentModal = ({
               variant="secondary"
               className="w-full"
               onClick={() => onCreatePrescription(appointment)}
-              disabled={isUpdating}
+              disabled={isUpdating || hasPrescription}
+              title={hasPrescription ? "Prescription already sent for this appointment" : undefined}
             >
-              <FileText className="h-4 w-4" />
-              Create Prescription
+              {hasPrescription ? (
+                <FileCheck2 className="h-4 w-4" />
+              ) : (
+                <FileText className="h-4 w-4" />
+              )}
+              {hasPrescription ? "Prescription Already Sent" : "Create Prescription"}
             </Button>
           )}
 
