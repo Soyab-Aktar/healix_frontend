@@ -109,16 +109,6 @@ export const adminNavItems: NavSection[] = [
         icon: "Hospital",
       },
       {
-        title: "Doctor Schedules",
-        href: "/admin/dashboard/doctor-schedules-managament",
-        icon: "CalendarClock",
-      },
-      {
-        title: "Doctor Specialties",
-        href: "/admin/dashboard/doctor-specialties-management",
-        icon: "Stethoscope",
-      },
-      {
         title: "Payments",
         href: "/admin/dashboard/payments-management",
         icon: "CreditCard",

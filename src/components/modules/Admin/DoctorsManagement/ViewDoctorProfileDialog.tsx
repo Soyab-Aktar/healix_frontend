@@ -125,7 +125,7 @@ const ViewDoctorProfileDialog = ({
                 </div>
 
                 <div className="rounded-lg border p-4">
-                    <h3 className="mb-3 text-sm font-semibold">Specialties</h3>
+                  <h3 className="mb-3 text-sm font-semibold">Specialties</h3>
                   <div className="flex flex-wrap gap-2">
                     {doctorDetails.specialties?.length ? (
                       doctorDetails.specialties.map((item: NonNullable<IDoctorDetails["specialties"]>[number]) => {
@@ -180,7 +180,7 @@ const ViewDoctorProfileDialog = ({
                   </div>
                 </div>
 
-                <div className="rounded-lg border p-4">
+                {/* <div className="rounded-lg border p-4">
                   <h3 className="mb-3 text-sm font-semibold">Appointments</h3>
                   <div className="space-y-2">
                     {(doctorDetails.appointments ?? []).slice(0, 10).map((appointment: NonNullable<IDoctorDetails["appointments"]>[number], index: number) => (
@@ -196,7 +196,7 @@ const ViewDoctorProfileDialog = ({
                       <p className="text-sm text-muted-foreground">No appointments available.</p>
                     )}
                   </div>
-                </div>
+                </div> */}
               </>
             )}
           </div>

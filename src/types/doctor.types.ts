@@ -10,6 +10,11 @@ export enum UserStatus {
   DELETED = "DELETED",
 }
 
+export interface IDoctorSpecialty {
+  id: string;
+  title: string;
+  icon?: string;
+}
 
 export interface IDoctor {
   id: number;
@@ -85,7 +90,7 @@ export interface IDoctorUserDetails {
   email?: string;
   name?: string;
   role?: string;
-  status?: string;
+  status?: UserStatus;
   emailVerified?: boolean;
   image?: string;
   isDeleted?: boolean;

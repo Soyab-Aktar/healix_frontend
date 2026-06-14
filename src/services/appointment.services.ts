@@ -58,6 +58,14 @@ export const getMySingleAppointment = async (appointmentId: string) => {
     throw error
   }
 }
+export const getAllAppointments = async (appointmentId: string) => {
+  try {
+    return await httpClient.get<IAppointment>(`/appointments`)
+  } catch (error) {
+    console.log("Error fetching appointment details:", error)
+    throw error
+  }
+}
 
 export const changeAppointmentStatus = async (appointmentId: string, status: string) => {
   try {
