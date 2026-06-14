@@ -15,10 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Calendar, Clock, Wallet, Loader2, CalendarX2 } from "lucide-react";
+import { Calendar, Clock, Wallet, Loader2, CalendarX2, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { IDoctorScheduleItem } from "@/types/doctor.types";
 import { bookAppointmentWithPayLater } from "@/services/appointment.services";
+import { bookAppointmentAction } from "@/app/_actions/appointment.actions";
 
 interface BookAppointmentDialogProps {
   open: boolean;
@@ -134,7 +135,29 @@ export default function BookAppointmentDialog({
     },
   });
 
-  const isSubmitting = payLaterMutation.isPending;
+  const payNowMutation = useMutation({
+    mutationFn: () => bookAppointmentAction({ doctorId, scheduleId: selectedScheduleId! }),
+    onSuccess: (response) => {
+      if (!response?.success) {
+        toast.error(response?.message || "Failed to book appointment. Please try again.");
+        return;
+      }
+      if (!('data' in response) || !response.data?.paymentUrl) {
+        toast.error("Payment link is unavailable right now");
+        return;
+      }
+      toast.success("Redirecting to payment gateway...");
+      window.location.assign(response.data.paymentUrl);
+    },
+    onError: (error: unknown) => {
+      const message =
+        (error as { response?: { data?: { message?: string } } })?.response?.data?.message ??
+        "Failed to book appointment. Please try again.";
+      toast.error(message);
+    },
+  });
+
+  const isSubmitting = payLaterMutation.isPending || payNowMutation.isPending;
 
   return (
     <Dialog open={open} onOpenChange={(next) => !isSubmitting && (next ? onOpenChange(next) : resetAndClose())}>
@@ -200,13 +223,25 @@ export default function BookAppointmentDialog({
             </div>
             <div className="flex items-center justify-between">
               <Badge variant="secondary" className="text-xs">
-                Online payment coming soon — Pay Later for now
+                Stripe payment gateway supported
               </Badge>
             </div>
           </>
         )}
 
-        <DialogFooter className="flex-col sm:flex-col gap-2">
+        <DialogFooter className="flex flex-col sm:flex-col gap-2">
+          <Button
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            disabled={!selectedScheduleId || isSubmitting || !hasAvailableSlots}
+            onClick={() => payNowMutation.mutate()}
+          >
+            {payNowMutation.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <CreditCard className="h-4 w-4" />
+            )}
+            Confirm &amp; Pay Now
+          </Button>
           <Button
             variant="outline"
             className="w-full"

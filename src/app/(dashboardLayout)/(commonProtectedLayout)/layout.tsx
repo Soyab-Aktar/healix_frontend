@@ -5,8 +5,8 @@ export default function CommonProtectedLayout({
 }>) {
   return (
     <>
-      <h5>Common Protected Layout</h5>
       {children}
     </>
   );
 }
+

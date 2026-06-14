@@ -203,7 +203,7 @@ const AppointmentBookingConfirmation = ({
           <CardContent className="space-y-4">
             <div className="rounded-2xl border bg-muted/20 p-4">
               <p className="text-sm text-muted-foreground">Consultation fee</p>
-              <p className="mt-1 text-3xl font-semibold">৳{appointmentFee?.toFixed(2) ?? "0.00"}</p>
+              <p className="mt-1 text-3xl font-semibold">₹{appointmentFee?.toFixed(2) ?? "0.00"}</p>
             </div>
 
             <Alert>

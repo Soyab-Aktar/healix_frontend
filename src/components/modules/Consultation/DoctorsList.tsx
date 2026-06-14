@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getDoctors, getAllSpecialties } from "@/services/doctor.services";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCallback, useState, useEffect, useRef } from "react";
 import { IDoctor } from "@/types/doctor.types";
 import DoctorCard from "./DoctorCard";
@@ -32,6 +32,9 @@ export default function DoctorsList({
 }: DoctorsListProps = {}) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
+  const isPatientRoute = pathname ? pathname.startsWith("/dashboard") : false;
+  const isUserAuthenticated = isAuthenticated ?? isPatientRoute;
 
   // Read all filter state from URL
   const page = Number(searchParams.get("page") ?? "1");
@@ -436,7 +439,7 @@ export default function DoctorsList({
       {!isLoading && !isError && doctors.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {doctors.map((doctor) => (
-            <DoctorCard key={doctor.id} doctor={doctor} />
+            <DoctorCard key={doctor.id} doctor={doctor} isAuthenticated={isUserAuthenticated} />
           ))}
         </div>
       )}

@@ -158,7 +158,7 @@ const PatientAppointmentsList = ({
                         <CircleDollarSign className="size-4" />
                         Payment
                       </div>
-                      <p className="font-medium">৳{appointment.doctor?.appointmentFee?.toFixed(2) ?? appointment.payment?.amount?.toFixed(2) ?? "0.00"}</p>
+                      <p className="font-medium">₹{appointment.doctor?.appointmentFee?.toFixed(2) ?? appointment.payment?.amount?.toFixed(2) ?? "0.00"}</p>
                       <p className="text-muted-foreground">Transaction {appointment.payment?.transactionId || "Pending"}</p>
                     </div>
                   </div>

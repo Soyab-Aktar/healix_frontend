@@ -5,16 +5,21 @@ import { Star, MapPin, Briefcase, IndianRupee } from "lucide-react";
 
 interface DoctorCardProps {
   doctor: IDoctor;
+  isAuthenticated?: boolean;
 }
 
-export default function DoctorCard({ doctor }: DoctorCardProps) {
+export default function DoctorCard({ doctor, isAuthenticated }: DoctorCardProps) {
   const specialties = doctor.specialties
     ?.slice(0, 2)
     .map((s) => s.specialty?.title)
     .filter(Boolean);
 
+  const href = isAuthenticated 
+    ? `/dashboard/book-appointments/doctor/${doctor.id}`
+    : `/consultation/doctor/${doctor.id}`;
+
   return (
-    <Link href={`/dashboard/book-appointments/doctor/${doctor.id}`}>
+    <Link href={href}>
       <div className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md hover:border-blue-200 transition-all duration-200 cursor-pointer group h-full flex flex-col">
         {/* Top: Avatar + Name */}
         <div className="flex items-start gap-4 mb-4">

@@ -5,8 +5,8 @@ export default function AdminDashboardLayout({
 }>) {
   return (
     <>
-      <h5>Admin Dashboard Layout</h5>
       {children}
     </>
   );
 }
+
