@@ -72,6 +72,14 @@ export async function getUserinfo() {
     const { data } = await res.json();
     return data;
   } catch (error) {
+    if (
+      error &&
+      typeof error === "object" &&
+      (("digest" in error && error.digest === "DYNAMIC_SERVER_USAGE") ||
+        ("name" in error && error.name === "DynamicServerError"))
+    ) {
+      throw error;
+    }
     console.error("Error fetching user info:", error);
     return null;
   }

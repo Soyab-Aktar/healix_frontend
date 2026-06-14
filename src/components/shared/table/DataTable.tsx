@@ -164,7 +164,6 @@ const DataTable = <TData,>({ data = [] as TData[], columns, actions, toolbarActi
         <div className="mb-4 flex flex-wrap items-start gap-3">
           {search && (
             <DataTableSearch
-              key={search.initialValue ?? ""}
               initialValue={search.initialValue}
               placeholder={search.placeholder}
               debounceMs={search.debounceMs}

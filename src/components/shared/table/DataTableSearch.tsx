@@ -24,6 +24,15 @@ const DataTableSearch = ({
   const skipNextDebounceRef = useRef(false);
 
   useEffect(() => {
+    setValue((prev) => {
+      if (prev.trim() !== initialValue.trim()) {
+        return initialValue;
+      }
+      return prev;
+    });
+  }, [initialValue]);
+
+  useEffect(() => {
     if (skipNextDebounceRef.current) {
       skipNextDebounceRef.current = false;
       return;

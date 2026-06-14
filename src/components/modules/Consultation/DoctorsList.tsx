@@ -19,7 +19,17 @@ const SORT_OPTIONS = [
   { label: "Rating: Highest", value: "averageRating:desc" },
 ];
 
-export default function DoctorsList() {
+interface DoctorsListProps {
+  initialQueryString?: string;
+  isAuthenticated?: boolean;
+  viewerRole?: any;
+}
+
+export default function DoctorsList({
+  initialQueryString,
+  isAuthenticated,
+  viewerRole,
+}: DoctorsListProps = {}) {
   const searchParams = useSearchParams();
   const router = useRouter();
 

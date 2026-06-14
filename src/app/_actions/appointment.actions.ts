@@ -4,12 +4,14 @@ import {
   bookAppointment,
   bookAppointmentWithPayLater,
   initiateAppointmentPayment,
+  changeAppointmentStatus,
 } from "@/services/appointment.services"
 import { type ApiErrorResponse, type ApiResponse } from "@/types/api.types"
 import {
   type IBookAppointmentPayload,
   type IBookAppointmentResult,
   type IInitiatePaymentResult,
+  type IAppointment,
 } from "@/types/appointment.types"
 import { bookAppointmentServerZodSchema } from "@/zod/appointment.validation"
 
@@ -96,6 +98,27 @@ export const initiateAppointmentPaymentAction = async (
     return {
       success: false,
       message: getActionErrorMessage(error, "Failed to initiate payment"),
+    }
+  }
+}
+
+export const changeAppointmentStatusAction = async (
+  appointmentId: string,
+  status: string,
+): Promise<ApiResponse<IAppointment> | ApiErrorResponse> => {
+  if (!appointmentId || !status) {
+    return {
+      success: false,
+      message: "Invalid appointment selection or status",
+    }
+  }
+
+  try {
+    return await changeAppointmentStatus(appointmentId, status)
+  } catch (error: unknown) {
+    return {
+      success: false,
+      message: getActionErrorMessage(error, "Failed to update appointment status"),
     }
   }
 }

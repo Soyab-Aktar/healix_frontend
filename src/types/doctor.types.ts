@@ -17,7 +17,7 @@ export interface IDoctorSpecialty {
 }
 
 export interface IDoctor {
-  id: number;
+  id: string;
   name: string;
   email: string;
   profilePhoto?: string;
@@ -90,7 +90,7 @@ export interface IDoctorUserDetails {
   email?: string;
   name?: string;
   role?: string;
-  status?: UserStatus;
+  status: UserStatus;
   emailVerified?: boolean;
   image?: string;
   isDeleted?: boolean;

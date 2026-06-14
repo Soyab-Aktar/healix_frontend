@@ -23,3 +23,13 @@ export const getMyPrescriptions = async () => {
     throw error
   }
 }
+
+export const getAllPrescriptions = async (queryString?: string) => {
+  try {
+    const url = queryString ? `/prescriptions?${queryString}` : "/prescriptions"
+    return await httpClient.get<IPrescription[]>(url)
+  } catch (error) {
+    console.log("Error fetching all prescriptions:", error)
+    throw error
+  }
+}
