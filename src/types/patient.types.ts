@@ -7,11 +7,21 @@ export interface IPatientHealthData {
   bloodGroup?: string | null
   height?: string | null
   weight?: string | null
+  smokingStatus?: boolean | null
+  pregnancyStatus?: boolean | null
+  hasAllergies?: boolean | null
+  hasDiabetes?: boolean | null
+  dietaryPreferences?: string | null
+  mentalHealthHistory?: string | null
+  immunizationStatus?: string | null
+  hasPastSurgeries?: boolean | null
+  recentAnxiety?: boolean | null
+  recentDepression?: boolean | null
+  maritalStatus?: string | null
+  // Compatibility fields
   isSmoking?: boolean | null
   isAlcoholic?: boolean | null
-  hasAllergies?: boolean | null
   hasPregnancy?: boolean | null
-  hasDiabetes?: boolean | null
   hasCardiovascularDisease?: boolean | null
   hasRenalDisease?: boolean | null
   hasCancer?: boolean | null

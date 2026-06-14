@@ -123,41 +123,39 @@ const ViewPatientDialog = ({
                   <h4 className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Lifestyle</h4>
                   <div className="flex justify-between items-center">
                     <span>Smoking</span>
-                    {yesNoBadge(health?.isSmoking)}
+                    {yesNoBadge(health?.smokingStatus)}
                   </div>
+                  {health?.gender === "FEMALE" && (
+                    <div className="flex justify-between items-center">
+                      <span>Pregnancy</span>
+                      {yesNoBadge(health?.pregnancyStatus)}
+                    </div>
+                  )}
                   <div className="flex justify-between items-center">
-                    <span>Alcoholic</span>
-                    {yesNoBadge(health?.isAlcoholic)}
+                    <span>Allergies</span>
+                    {yesNoBadge(health?.hasAllergies)}
                   </div>
                 </div>
 
                 {/* Chronic conditions */}
                 <div className="space-y-3 p-4 border rounded-xl bg-muted/10 sm:col-span-2">
-                  <h4 className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Diagnosed Conditions</h4>
+                  <h4 className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Clinical Indicators</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2.5">
                     <div className="flex justify-between items-center">
                       <span>Diabetes</span>
                       {yesNoBadge(health?.hasDiabetes)}
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>Asthma</span>
-                      {yesNoBadge(health?.hasAsthma)}
+                      <span>Past Surgeries</span>
+                      {yesNoBadge(health?.hasPastSurgeries)}
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>Hypertension</span>
-                      {yesNoBadge(health?.hasHypertension)}
+                      <span>Recent Anxiety</span>
+                      {yesNoBadge(health?.recentAnxiety)}
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>Renal Disease</span>
-                      {yesNoBadge(health?.hasRenalDisease)}
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Cardiovascular Disease</span>
-                      {yesNoBadge(health?.hasCardiovascularDisease)}
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Cancer Diagnosis</span>
-                      {yesNoBadge(health?.hasCancer)}
+                      <span>Recent Depression</span>
+                      {yesNoBadge(health?.recentDepression)}
                     </div>
                   </div>
                 </div>

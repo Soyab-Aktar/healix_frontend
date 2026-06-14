@@ -45,3 +45,13 @@ export const changeAdminStatus = async (userId: string, userStatus: string) => {
     throw error
   }
 }
+
+export const updateAdmin = async (id: string, payload: any) => {
+  try {
+    const response = await httpClient.patch<any>(`/admins/${id}`, payload)
+    return response
+  } catch (error) {
+    console.log("Error updating admin:", error)
+    throw error
+  }
+}
