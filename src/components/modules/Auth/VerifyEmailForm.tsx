@@ -6,37 +6,29 @@ import {
 } from "@/app/(commonLayout)/(authRouteGroup)/verify-email/_action";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useMutation } from "@tanstack/react-query";
 import { CheckCircle2, Loader2, Mail, RotateCcw } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import AuthLayout from "./AuthLayout";
+import AuthCard from "./AuthCard";
 
 const OTP_LENGTH = 6;
 
 const VerifyEmailForm = () => {
   const searchParams = useSearchParams();
-  // email can come from ?email=... query param (set by register redirect)
   const emailFromQuery = searchParams.get("email") ?? "";
-
   const router = useRouter();
 
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [serverError, setServerError] = useState<string | null>(null);
   const [resendMessage, setResendMessage] = useState<string | null>(null);
-  const [resendCooldown, setResendCooldown] = useState(0);
+  
+  // Directly initialize to 60 to avoid synchronous setState inside on-mount useEffect
+  const [resendCooldown, setResendCooldown] = useState(60);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
-  // Start a 60s cooldown on mount so user can't spam resend immediately
-  useEffect(() => {
-    setResendCooldown(60);
-  }, []);
 
   useEffect(() => {
     if (resendCooldown <= 0) return;
@@ -57,7 +49,6 @@ const VerifyEmailForm = () => {
       if (result && !result.success) {
         setServerError(result.message || "Verification failed");
       }
-      // On success Next.js redirect fires — no further handling needed
     },
     onError: (err: unknown) => {
       const e = err as { message?: string };
@@ -80,15 +71,12 @@ const VerifyEmailForm = () => {
     },
   });
 
-  // --- OTP input handlers ---
   const handleChange = (index: number, value: string) => {
-    // Allow only digits
     const digit = value.replace(/\D/g, "").slice(-1);
     const next = [...otp];
     next[index] = digit;
     setOtp(next);
 
-    // Auto-advance
     if (digit && index < OTP_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -123,7 +111,6 @@ const VerifyEmailForm = () => {
       next[i] = char;
     });
     setOtp(next);
-    // Focus the last filled input or the next empty one
     const focusIndex = Math.min(pasted.length, OTP_LENGTH - 1);
     inputRefs.current[focusIndex]?.focus();
   };
@@ -142,26 +129,21 @@ const VerifyEmailForm = () => {
   const isComplete = otpString.length === OTP_LENGTH;
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-md">
-      <CardHeader className="text-center">
-        <div className="flex justify-center mb-3">
-          <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center">
-            <Mail className="h-7 w-7 text-blue-600" />
+    <AuthLayout activeStep={0}>
+      <AuthCard
+        title="Check your email"
+        description={
+          emailFromQuery
+            ? `We sent a 6-digit verification code to ${emailFromQuery}. Enter it below to verify your account.`
+            : "We sent a 6-digit verification code to your email address. Enter it below to verify your account."
+        }
+      >
+        <div className="flex justify-center mb-6">
+          <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
+            <Mail className="h-6 w-6 text-blue-600" />
           </div>
         </div>
-        <CardTitle className="text-2xl font-bold">Check your email</CardTitle>
-        <CardDescription className="mt-1">
-          We sent a 6-digit verification code to{" "}
-          {emailFromQuery ? (
-            <span className="font-medium text-gray-700">{emailFromQuery}</span>
-          ) : (
-            "your email address"
-          )}
-          . Enter it below to verify your account.
-        </CardDescription>
-      </CardHeader>
 
-      <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* OTP Inputs */}
           <div
@@ -181,53 +163,71 @@ const VerifyEmailForm = () => {
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 aria-label={`OTP digit ${index + 1}`}
-                className={`
-                  w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold
-                  border-2 rounded-lg outline-none transition-all duration-150
-                  focus:border-blue-500 focus:ring-2 focus:ring-blue-200
-                  ${digit ? "border-blue-400 bg-blue-50" : "border-gray-300 bg-white"}
-                  ${serverError ? "border-destructive" : ""}
-                `}
+                className={cn(
+                  "w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold border rounded-xl outline-none transition-all duration-150",
+                  digit
+                    ? "border-blue-500 bg-blue-50/20 text-blue-900"
+                    : "border-slate-300 bg-white text-slate-900 focus-visible:ring-3 focus-visible:ring-blue-500/10 focus-visible:border-blue-500/80",
+                  serverError && "border-destructive text-destructive focus-visible:ring-destructive/10 focus-visible:border-destructive/80"
+                )}
               />
             ))}
           </div>
 
           {serverError && (
-            <Alert variant="destructive">
-              <AlertDescription>{serverError}</AlertDescription>
-            </Alert>
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <Alert variant="destructive" className="rounded-xl border-destructive/20 bg-destructive/5 text-destructive p-3">
+                <AlertDescription className="text-xs font-medium leading-relaxed">
+                  {serverError}
+                </AlertDescription>
+              </Alert>
+            </motion.div>
           )}
 
           {resendMessage && (
-            <Alert className="border-green-200 bg-green-50 text-green-800">
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
-              <AlertDescription>{resendMessage}</AlertDescription>
-            </Alert>
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <Alert className="border-green-200 bg-green-50 text-green-800 rounded-xl p-3">
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <AlertDescription className="text-xs font-medium leading-relaxed">{resendMessage}</AlertDescription>
+              </Alert>
+            </motion.div>
           )}
 
           {/* Verify button */}
-          <Button
-            type="submit"
-            disabled={!isComplete || isVerifying}
-            className="w-full"
+          <motion.div
+            whileHover={{ scale: !isComplete || isVerifying ? 1 : 1.012 }}
+            whileTap={{ scale: !isComplete || isVerifying ? 1 : 0.988 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
           >
-            {isVerifying ? (
-              <>
-                <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                Verifying...
-              </>
-            ) : (
-              "Verify Email"
-            )}
-          </Button>
+            <Button
+              type="submit"
+              disabled={!isComplete || isVerifying}
+              className="w-full h-11 rounded-xl text-white font-semibold bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/10 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+            >
+              {isVerifying ? (
+                <>
+                  <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                  Verifying...
+                </>
+              ) : (
+                "Verify Email"
+              )}
+            </Button>
+          </motion.div>
 
-          {/* Resend */}
-          <div className="text-center text-sm text-muted-foreground">
+          {/* Resend Code Section */}
+          <div className="text-center text-sm text-slate-500">
             Didn&apos;t receive the code?{" "}
             {resendCooldown > 0 ? (
-              <span className="text-gray-400">
+              <span className="text-slate-400">
                 Resend in{" "}
-                <span className="font-medium text-gray-600 tabular-nums">
+                <span className="font-semibold text-slate-600 tabular-nums">
                   {resendCooldown}s
                 </span>
               </span>
@@ -236,12 +236,12 @@ const VerifyEmailForm = () => {
                 type="button"
                 onClick={() => resendEmail()}
                 disabled={isResending}
-                className="inline-flex items-center gap-1 text-primary font-medium hover:underline underline-offset-4 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 text-blue-600 font-semibold hover:underline underline-offset-4 disabled:opacity-50 transition-colors cursor-pointer"
               >
                 {isResending ? (
-                  <Loader2 className="h-3 w-3 animate-spin" />
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 ) : (
-                  <RotateCcw className="h-3 w-3" />
+                  <RotateCcw className="h-3.5 w-3.5" />
                 )}
                 Resend code
               </button>
@@ -249,18 +249,18 @@ const VerifyEmailForm = () => {
           </div>
 
           {/* Back to login */}
-          <div className="text-center text-sm">
+          <div className="text-center text-sm border-t border-slate-100 pt-4">
             <button
               type="button"
               onClick={() => router.push("/login")}
-              className="text-muted-foreground hover:text-gray-800 transition-colors"
+              className="text-slate-500 hover:text-slate-900 font-medium transition-colors cursor-pointer hover:underline underline-offset-2"
             >
               ← Back to login
             </button>
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </AuthCard>
+    </AuthLayout>
   );
 };
 
