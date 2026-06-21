@@ -40,13 +40,18 @@ const PaymentsManagementPage = async ({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Payments Management</h1>
-          <p className="text-muted-foreground">
-            Track and monitor patient billing logs, invoice details, and stripe transaction records.
-          </p>
+        <div className="flex items-start gap-3">
+          <div className="h-10 w-1 bg-gradient-to-b from-[#0d9488] to-[#047857] rounded-full shrink-0 mt-1" />
+          <div>
+            <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-[#0d9488] to-[#047857] bg-clip-text text-transparent">Payments Management</h1>
+            <p className="text-sm text-slate-500 font-medium mt-1">
+              Track and monitor patient billing logs, invoice details, and stripe transaction records.
+            </p>
+          </div>
         </div>
-        <PaymentsTable initialQueryString={queryString} />
+        <div className="rounded-[24px] border border-slate-200/60 bg-white shadow-sm overflow-hidden p-2">
+          <PaymentsTable initialQueryString={queryString} />
+        </div>
       </div>
     </HydrationBoundary>
   )

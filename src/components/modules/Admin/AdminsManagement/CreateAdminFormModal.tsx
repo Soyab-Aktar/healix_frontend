@@ -78,7 +78,7 @@ const CreateAdminFormModal = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
+        <Button className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg px-5 py-2 shadow-sm transition-all duration-300 gap-2 cursor-pointer">
           <Plus className="h-4 w-4" /> Add Admin
         </Button>
       </DialogTrigger>
@@ -99,6 +99,7 @@ const CreateAdminFormModal = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={isPending}
+              className="rounded-lg focus-visible:border-[#047857] focus-visible:ring-emerald-500/20"
             />
           </div>
 
@@ -111,6 +112,7 @@ const CreateAdminFormModal = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isPending}
+              className="rounded-lg focus-visible:border-[#047857] focus-visible:ring-emerald-500/20"
             />
           </div>
 
@@ -122,6 +124,7 @@ const CreateAdminFormModal = () => {
               value={contactNumber}
               onChange={(e) => setContactNumber(e.target.value)}
               disabled={isPending}
+              className="rounded-lg focus-visible:border-[#047857] focus-visible:ring-emerald-500/20"
             />
           </div>
 
@@ -134,6 +137,7 @@ const CreateAdminFormModal = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isPending}
+              className="rounded-lg focus-visible:border-[#047857] focus-visible:ring-emerald-500/20"
             />
           </div>
 
@@ -143,10 +147,15 @@ const CreateAdminFormModal = () => {
               variant="outline"
               onClick={() => setOpen(false)}
               disabled={isPending}
+              className="rounded-lg"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending}>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg transition-all duration-300 cursor-pointer"
+            >
               {isPending ? "Creating..." : "Create Admin"}
             </Button>
           </DialogFooter>

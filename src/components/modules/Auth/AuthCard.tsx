@@ -18,10 +18,10 @@ const AuthCard = ({ title, description, children }: AuthCardProps) => {
       className="w-full flex flex-col"
     >
       <div className="space-y-1.5 text-center pb-6">
-        <h3 className="text-2xl font-semibold tracking-tight text-white">
+        <h3 className="text-2xl font-extrabold tracking-tight text-slate-800">
           {title}
         </h3>
-        <p className="text-sm text-zinc-400">
+        <p className="text-sm text-slate-500 font-medium">
           {description}
         </p>
       </div>

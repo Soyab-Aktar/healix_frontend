@@ -83,7 +83,7 @@ export const prescriptionColumns: ColumnDef<IPrescription>[] = [
     cell: ({ row }) => {
       const pdfUrl = row.original.pdfUrl;
       return pdfUrl ? (
-        <Button variant="outline" size="sm" className="h-8 gap-1 border-primary/30 text-primary hover:bg-primary/5" asChild>
+        <Button variant="outline" size="sm" className="h-8 gap-1 border-emerald-600/30 text-emerald-700 hover:bg-emerald-50/50 hover:text-emerald-800 hover:border-emerald-500 rounded-lg cursor-pointer font-bold" asChild>
           <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
             <Download className="h-3.5 w-3.5" /> PDF
           </a>

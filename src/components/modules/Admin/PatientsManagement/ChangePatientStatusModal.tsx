@@ -80,18 +80,18 @@ const ChangePatientStatusModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="sm:max-w-md border-slate-200/80">
         <DialogHeader>
-          <DialogTitle>Moderate Patient Status</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-xl font-bold bg-gradient-to-r from-teal-800 to-emerald-700 bg-clip-text text-transparent">Moderate Patient Status</DialogTitle>
+          <DialogDescription className="text-slate-500 font-medium">
             Activate or suspend this patient's system credentials. Suspended
             (blocked) patients won't be able to log in or schedule consultations.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+        <form onSubmit={handleSubmit} className="space-y-4 py-3">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
+            <label className="text-sm font-semibold text-slate-700">
               Account Status
             </label>
             <Select
@@ -99,7 +99,7 @@ const ChangePatientStatusModal = ({
               onValueChange={setStatus}
               disabled={isPending}
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
@@ -109,16 +109,21 @@ const ChangePatientStatusModal = ({
             </Select>
           </div>
 
-          <DialogFooter className="pt-4 border-t">
+          <DialogFooter className="pt-4 border-t border-slate-100 gap-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={isPending}
+              className="rounded-lg cursor-pointer"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending}>
+            <Button 
+              type="submit" 
+              disabled={isPending}
+              className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg transition-all duration-300 cursor-pointer"
+            >
               {isPending ? "Updating..." : "Update Status"}
             </Button>
           </DialogFooter>

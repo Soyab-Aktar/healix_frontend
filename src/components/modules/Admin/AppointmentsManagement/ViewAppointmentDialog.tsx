@@ -6,8 +6,10 @@ import {
 } from "@/components/ui/dialog";
 import { IAppointment } from "@/types/appointment.types";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Calendar, User, Video, CreditCard, Stethoscope } from "lucide-react";
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface ViewAppointmentDialogProps {
   open: boolean;
@@ -29,130 +31,147 @@ const ViewAppointmentDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-primary" />
-            Appointment Details
+      <DialogContent className="sm:max-w-3xl max-h-[90vh] flex flex-col gap-0 p-0 overflow-hidden border-slate-200/80">
+        <DialogHeader className="px-6 py-5 border-b shrink-0 bg-slate-50/50">
+          <DialogTitle className="text-xl font-extrabold flex items-center gap-2.5 text-slate-800">
+            <Calendar className="h-5.5 w-5.5 text-[#047857]" />
+            <span className="bg-gradient-to-r from-teal-800 to-emerald-700 bg-clip-text text-transparent">Appointment Details</span>
           </DialogTitle>
         </DialogHeader>
 
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Appointment Meta */}
-          <div className="space-y-4">
-            <div className="rounded-lg border bg-muted/40 p-4">
-              <h3 className="font-semibold text-sm text-muted-foreground mb-2">Overview</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">ID:</span>
-                  <span className="font-mono text-xs">{appointment.id}</span>
+        <ScrollArea className="flex-1 overflow-y-auto max-h-[calc(90vh-8rem)]">
+          <div className="px-6 py-5 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Appointment Meta */}
+              <div className="space-y-4">
+                <div className="rounded-xl border border-slate-200/60 bg-slate-50/15 p-4 space-y-3">
+                  <h3 className="font-bold text-sm text-slate-800 border-b border-slate-100 pb-1.5 flex items-center gap-2">
+                    Overview
+                  </h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400 font-semibold">Appointment ID:</span>
+                      <span className="font-mono text-xs font-semibold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">{appointment.id}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400 font-semibold">Status:</span>
+                      <Badge variant="outline" className={cn(
+                        "capitalize font-semibold rounded-full px-2.5 py-0.5 text-xs",
+                        appointment.status === "COMPLETED" && "bg-emerald-50 text-emerald-700 border-emerald-100",
+                        appointment.status === "CANCELED" && "bg-rose-50 text-rose-700 border-rose-100",
+                        appointment.status === "INPROGRESS" && "bg-amber-50 text-amber-750 border-amber-100",
+                        appointment.status === "SCHEDULED" && "bg-sky-50 text-sky-700 border-sky-100"
+                      )}>
+                        {appointment.status?.toLowerCase()}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400 font-semibold">Payment Status:</span>
+                      <Badge variant="outline" className={cn(
+                        "capitalize font-semibold rounded-full px-2.5 py-0.5 text-xs",
+                        appointment.paymentStatus === "PAID" && "bg-emerald-50 text-emerald-700 border-emerald-100",
+                        appointment.paymentStatus === "UNPAID" && "bg-amber-50 text-amber-700 border-amber-100",
+                        appointment.paymentStatus === "FAILED" && "bg-rose-50 text-rose-750 border-rose-100"
+                      )}>
+                        {appointment.paymentStatus?.toLowerCase()}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400 font-semibold">Created Date:</span>
+                      <span className="font-semibold text-slate-700">{formatDate(appointment.createdAt)}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Status:</span>
-                  <Badge variant="outline" className="capitalize">
-                    {appointment.status?.toLowerCase()}
-                  </Badge>
+
+                {/* Video Call Session */}
+                <div className="rounded-xl border border-slate-200/60 bg-slate-50/15 p-4 space-y-2.5">
+                  <h3 className="font-bold text-sm text-[#047857] flex items-center gap-2 border-b border-slate-100 pb-1.5">
+                    <Video className="h-4.5 w-4.5" /> Telehealth Session
+                  </h3>
+                  <div className="space-y-1.5 text-sm">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-slate-400 font-semibold text-xs">Video Calling ID:</span>
+                      <span className="font-mono text-xs font-semibold text-slate-700 break-all bg-white border border-slate-200/80 rounded-lg p-2.5">
+                        {appointment.videoCallingId || "N/A"}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Payment:</span>
-                  <Badge variant="outline" className="capitalize">
-                    {appointment.paymentStatus?.toLowerCase()}
-                  </Badge>
+              </div>
+
+              {/* Patient and Doctor */}
+              <div className="space-y-4">
+                {/* Patient Info */}
+                <div className="rounded-xl border border-slate-200/60 p-4 hover:border-emerald-100/80 transition-colors bg-white">
+                  <h3 className="font-bold text-sm flex items-center gap-2 mb-3 border-b border-slate-100 pb-1.5 text-slate-800">
+                    <User className="h-4.5 w-4.5 text-sky-500" /> Patient Info
+                  </h3>
+                  <div className="text-sm space-y-1.5">
+                    <p className="font-bold text-slate-800">{appointment.patient?.name || "N/A"}</p>
+                    <p className="text-slate-500 font-medium text-xs">{appointment.patient?.email || "N/A"}</p>
+                    <div className="text-xs text-slate-400 font-mono mt-2 pt-2 border-t border-slate-50">ID: {appointment.patientId}</div>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Created:</span>
-                  <span>{formatDate(appointment.createdAt)}</span>
+
+                {/* Doctor Info */}
+                <div className="rounded-xl border border-slate-200/60 p-4 hover:border-emerald-100/80 transition-colors bg-white">
+                  <h3 className="font-bold text-sm flex items-center gap-2 mb-3 border-b border-slate-100 pb-1.5 text-slate-800">
+                    <Stethoscope className="h-4.5 w-4.5 text-emerald-500" /> Doctor Info
+                  </h3>
+                  <div className="text-sm space-y-1.5">
+                    <p className="font-bold text-slate-800">{appointment.doctor?.name || "N/A"}</p>
+                    <p className="text-slate-500 font-medium text-xs">{appointment.doctor?.email || "N/A"}</p>
+                    {appointment.doctor?.designation && (
+                      <p className="text-xs text-slate-450 font-semibold mt-1">
+                        {appointment.doctor.designation} • {appointment.doctor.currentWorkingPlace || "Clinic"}
+                      </p>
+                    )}
+                    <div className="text-xs text-slate-400 font-mono mt-2 pt-2 border-t border-slate-50">ID: {appointment.doctorId}</div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Video Call Session */}
-            <div className="rounded-lg border bg-muted/40 p-4">
-              <h3 className="font-semibold text-sm text-primary flex items-center gap-2 mb-2">
-                <Video className="h-4 w-4" /> Telehealth Session
-              </h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex flex-col gap-1">
-                  <span className="text-muted-foreground">Video Calling ID:</span>
-                  <span className="font-mono text-xs break-all bg-background border rounded p-1.5">
-                    {appointment.videoCallingId || "N/A"}
-                  </span>
+            {/* Schedule & Payment Detail */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="rounded-xl border border-slate-200/60 p-4 bg-slate-50/15">
+                <h3 className="font-bold text-sm flex items-center gap-2 mb-3 border-b border-slate-100 pb-1.5 text-slate-800">
+                  <Calendar className="h-4.5 w-4.5 text-purple-500" /> Timing Schedule
+                </h3>
+                <div className="text-sm space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-400 font-semibold">Start Time:</span>
+                    <span className="font-semibold text-slate-700">{formatDate(appointment.schedule?.startDateTime)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-400 font-semibold">End Time:</span>
+                    <span className="font-semibold text-slate-700">{formatDate(appointment.schedule?.endDateTime)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-slate-200/60 p-4 bg-slate-50/15">
+                <h3 className="font-bold text-sm flex items-center gap-2 mb-3 border-b border-slate-100 pb-1.5 text-slate-800">
+                  <CreditCard className="h-4.5 w-4.5 text-indigo-500" /> Payment Info
+                </h3>
+                <div className="text-sm space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-400 font-semibold">Fee Amount:</span>
+                    <span className="font-extrabold text-emerald-600">₹{appointment.payment?.amount?.toFixed(2) || appointment.doctor?.appointmentFee?.toFixed(2) || "0.00"}</span>
+                  </div>
+                  {appointment.payment?.transactionId && (
+                    <div className="flex flex-col gap-1.5 mt-2 pt-2 border-t border-slate-100/50">
+                      <span className="text-slate-400 font-semibold text-xs">Transaction ID:</span>
+                      <span className="font-mono text-xs font-medium text-slate-700 break-all bg-white border border-slate-200/85 p-2 rounded-lg">
+                        {appointment.payment.transactionId}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Patient and Doctor */}
-          <div className="space-y-4">
-            {/* Patient Info */}
-            <div className="rounded-lg border p-4">
-              <h3 className="font-semibold text-sm flex items-center gap-2 mb-2">
-                <User className="h-4 w-4 text-sky-500" /> Patient Info
-              </h3>
-              <div className="text-sm space-y-1">
-                <p className="font-medium">{appointment.patient?.name || "N/A"}</p>
-                <p className="text-muted-foreground text-xs">{appointment.patient?.email || "N/A"}</p>
-                <p className="text-xs text-muted-foreground mt-2">ID: <span className="font-mono">{appointment.patientId}</span></p>
-              </div>
-            </div>
-
-            {/* Doctor Info */}
-            <div className="rounded-lg border p-4">
-              <h3 className="font-semibold text-sm flex items-center gap-2 mb-2">
-                <Stethoscope className="h-4 w-4 text-emerald-500" /> Doctor Info
-              </h3>
-              <div className="text-sm space-y-1">
-                <p className="font-medium">{appointment.doctor?.name || "N/A"}</p>
-                <p className="text-muted-foreground text-xs">{appointment.doctor?.email || "N/A"}</p>
-                {appointment.doctor?.designation && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {appointment.doctor.designation} at {appointment.doctor.currentWorkingPlace || "Clinic"}
-                  </p>
-                )}
-                <p className="text-xs text-muted-foreground mt-2">ID: <span className="font-mono">{appointment.doctorId}</span></p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Schedule & Payment Detail */}
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="rounded-lg border p-4">
-            <h3 className="font-semibold text-sm flex items-center gap-2 mb-2">
-              <Calendar className="h-4 w-4 text-purple-500" /> Timing Schedule
-            </h3>
-            <div className="text-sm space-y-1">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Start Time:</span>
-                <span>{formatDate(appointment.schedule?.startDateTime)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">End Time:</span>
-                <span>{formatDate(appointment.schedule?.endDateTime)}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border p-4">
-            <h3 className="font-semibold text-sm flex items-center gap-2 mb-2">
-              <CreditCard className="h-4 w-4 text-indigo-500" /> Payment Info
-            </h3>
-            <div className="text-sm space-y-1">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Fee Amount:</span>
-                <span className="font-semibold text-green-600">₹{appointment.payment?.amount?.toFixed(2) || appointment.doctor?.appointmentFee?.toFixed(2) || "0.00"}</span>
-              </div>
-              {appointment.payment?.transactionId && (
-                <div className="flex flex-col gap-0.5 mt-1">
-                  <span className="text-muted-foreground text-xs">Transaction ID:</span>
-                  <span className="font-mono text-[10px] break-all bg-background border p-1 rounded">
-                    {appointment.payment.transactionId}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

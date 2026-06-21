@@ -30,68 +30,70 @@ const ViewReviewDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold flex items-center gap-2">
-            <MessageSquare className="h-5 w-5 text-primary" />
-            Patient Feedback & Review
+      <DialogContent className="sm:max-w-lg border-slate-200/80 p-0 overflow-hidden">
+        <DialogHeader className="px-6 py-5 border-b shrink-0 bg-slate-50/50">
+          <DialogTitle className="text-xl font-extrabold flex items-center gap-2.5 text-slate-800">
+            <MessageSquare className="h-5.5 w-5.5 text-[#047857]" />
+            <span className="bg-gradient-to-r from-teal-800 to-emerald-700 bg-clip-text text-transparent">Patient Feedback & Review</span>
           </DialogTitle>
         </DialogHeader>
 
-        <div className="mt-4 space-y-4">
+        <div className="px-6 py-5 space-y-5">
           {/* Rating Header */}
-          <div className="flex flex-col items-center justify-center p-4 border rounded-lg bg-muted/40 gap-1.5">
-            <div className="flex items-center gap-1">
+          <div className="flex flex-col items-center justify-center p-5 border border-emerald-100/60 rounded-xl bg-gradient-to-br from-emerald-50/10 to-teal-50/5 gap-2 shadow-xs">
+            <div className="flex items-center gap-1.5">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-6 w-6 ${
+                  className={`h-7 w-7 transition-all duration-300 ${
                     i < rating
-                      ? "fill-yellow-400 text-yellow-400"
-                      : "text-muted-foreground/30 fill-transparent"
+                      ? "fill-amber-400 text-amber-400 drop-shadow-sm scale-110"
+                      : "text-slate-200 fill-transparent"
                   }`}
                 />
               ))}
             </div>
-            <span className="text-sm font-semibold">
+            <span className="text-sm font-extrabold text-slate-800 bg-white border border-slate-200 px-3 py-1 rounded-full shadow-xs mt-1">
               Rating: {rating.toFixed(1)} / 5.0
             </span>
           </div>
 
           {/* Comment Box */}
-          <div className="space-y-1">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Comment</span>
-            <div className="p-3 bg-muted/20 border rounded-lg text-sm text-foreground italic break-words">
+          <div className="space-y-1.5">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Comment</span>
+            <div className="p-4 bg-slate-50/15 border border-slate-200/60 rounded-xl text-sm font-medium text-slate-750 italic break-words leading-relaxed">
               "{review.comment || "No comment provided."}"
             </div>
           </div>
 
           {/* Metadata */}
-          <div className="border-t pt-4 space-y-3">
+          <div className="border-t border-slate-100 pt-4 space-y-4">
             {/* Patient Info */}
-            <div className="flex items-start gap-3">
-              <User className="h-4 w-4 text-sky-500 mt-0.5" />
-              <div className="text-xs">
-                <span className="font-semibold block">Written By Patient:</span>
-                <span className="text-muted-foreground">{review.patient?.name || "N/A"} ({review.patient?.email || "N/A"})</span>
+            <div className="flex items-start gap-3 bg-white border border-slate-200/60 rounded-xl p-3 hover:border-emerald-100/50 transition-colors">
+              <User className="h-5 w-5 text-sky-500 mt-0.5 shrink-0" />
+              <div className="text-xs space-y-0.5">
+                <span className="font-bold text-slate-450 block">Written By Patient</span>
+                <span className="font-bold text-slate-800">{review.patient?.name || "N/A"}</span>
+                <span className="text-slate-400 font-medium block">{review.patient?.email || "N/A"}</span>
               </div>
             </div>
 
             {/* Doctor Info */}
-            <div className="flex items-start gap-3">
-              <Stethoscope className="h-4 w-4 text-emerald-500 mt-0.5" />
-              <div className="text-xs">
-                <span className="font-semibold block">For Doctor:</span>
-                <span className="text-muted-foreground">{review.doctor?.name || "N/A"} ({review.doctor?.email || "N/A"})</span>
+            <div className="flex items-start gap-3 bg-white border border-slate-200/60 rounded-xl p-3 hover:border-emerald-100/50 transition-colors">
+              <Stethoscope className="h-5 w-5 text-emerald-500 mt-0.5 shrink-0" />
+              <div className="text-xs space-y-0.5">
+                <span className="font-bold text-slate-450 block">For Doctor</span>
+                <span className="font-bold text-slate-800">{review.doctor?.name || "N/A"}</span>
+                <span className="text-slate-400 font-medium block">{review.doctor?.email || "N/A"}</span>
               </div>
             </div>
 
             {/* Timings */}
-            <div className="flex items-start gap-3">
-              <Calendar className="h-4 w-4 text-purple-500 mt-0.5" />
-              <div className="text-xs">
-                <span className="font-semibold block">Date Submitted:</span>
-                <span className="text-muted-foreground">{formatDate(review.createdAt)}</span>
+            <div className="flex items-start gap-3 bg-slate-50/15 border border-slate-200/60 rounded-xl p-3">
+              <Calendar className="h-4.5 w-4.5 text-purple-500 mt-0.5 shrink-0" />
+              <div className="text-xs space-y-0.5">
+                <span className="font-bold text-slate-450 block">Date Submitted</span>
+                <span className="text-slate-700 font-semibold">{formatDate(review.createdAt)}</span>
               </div>
             </div>
           </div>

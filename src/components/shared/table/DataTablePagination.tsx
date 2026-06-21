@@ -143,6 +143,7 @@ const DataTablePagination = <TData,>({
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage() || isLoading}
+          className="hover:border-emerald-500/50 hover:bg-emerald-50/40 hover:text-emerald-700 transition-colors rounded-lg cursor-pointer font-bold"
         >
           <ChevronLeft className="h-4 w-4" />
           Prev
@@ -155,7 +156,7 @@ const DataTablePagination = <TData,>({
                 key="start-ellipsis"
                 variant="ghost"
                 size="sm"
-                className="min-w-9 px-2"
+                className="min-w-9 px-2 rounded-lg cursor-pointer hover:bg-emerald-50/30 hover:text-emerald-700"
                 onClick={() => table.setPageIndex(jumpBackwardTarget - 1)}
                 disabled={isLoading}
               >
@@ -170,7 +171,7 @@ const DataTablePagination = <TData,>({
                 key="end-ellipsis"
                 variant="ghost"
                 size="sm"
-                className="min-w-9 px-2"
+                className="min-w-9 px-2 rounded-lg cursor-pointer hover:bg-emerald-50/30 hover:text-emerald-700"
                 onClick={() => table.setPageIndex(jumpForwardTarget - 1)}
                 disabled={isLoading}
               >
@@ -185,7 +186,10 @@ const DataTablePagination = <TData,>({
               key={item}
               variant={isActive ? "default" : "outline"}
               size="sm"
-              className={cn("min-w-9", isActive && "pointer-events-none")}
+              className={cn(
+                "min-w-9 rounded-lg transition-colors cursor-pointer",
+                isActive ? "bg-[#047857] hover:bg-[#035f43] text-white font-bold border-transparent pointer-events-none" : "hover:border-emerald-500/50 hover:bg-emerald-50/40 hover:text-emerald-700 text-slate-700"
+              )}
               onClick={() => table.setPageIndex(item - 1)}
               disabled={isLoading}
             >
@@ -199,15 +203,16 @@ const DataTablePagination = <TData,>({
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage() || isLoading}
+          className="hover:border-emerald-500/50 hover:bg-emerald-50/40 hover:text-emerald-700 transition-colors rounded-lg cursor-pointer font-bold"
         >
           Next
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+      <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 font-medium">
         <Select value={pageSizeSelectValue} onValueChange={onPageSizeSelect}>
-          <SelectTrigger className="w-24" aria-label="Rows per page">
+          <SelectTrigger className="w-24 rounded-lg border-slate-200 hover:border-emerald-500/30 focus:border-[#047857] focus:ring-emerald-500/20 transition-all bg-white" aria-label="Rows per page">
             <SelectValue placeholder="Limit" />
           </SelectTrigger>
 
@@ -227,7 +232,7 @@ const DataTablePagination = <TData,>({
             <Input
               type="number"
               min={1}
-              className="h-9 w-24"
+              className="h-9 w-24 rounded-lg border-slate-200 hover:border-emerald-500/30 focus-visible:border-[#047857] focus-visible:ring-emerald-500/20 transition-all bg-white"
               value={customPageSize}
               onChange={(event) => setCustomPageSize(event.target.value)}
               onKeyDown={(event) => {
@@ -242,6 +247,7 @@ const DataTablePagination = <TData,>({
               variant="outline"
               onClick={applyCustomPageSize}
               disabled={isLoading}
+              className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg transition-all duration-300 cursor-pointer"
             >
               Apply
             </Button>

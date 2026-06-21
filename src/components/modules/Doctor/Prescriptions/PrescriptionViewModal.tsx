@@ -102,7 +102,7 @@ const PrescriptionViewModal = ({
                 href={item.pdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-full bg-[#047857] hover:bg-[#035f43] px-5 py-3 text-sm font-semibold text-white shadow-xs transition-colors"
+                className="flex items-center justify-center gap-2 rounded-lg bg-[#047857] hover:bg-[#035f43] px-5 py-3 text-sm font-semibold text-white shadow-xs transition-colors"
               >
                 <ExternalLink className="h-4 w-4 shrink-0" />
                 Open Prescription PDF

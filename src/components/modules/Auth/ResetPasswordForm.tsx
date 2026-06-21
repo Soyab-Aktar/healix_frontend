@@ -1,26 +1,21 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { loginAction } from "@/app/(commonLayout)/(authRouteGroup)/login/_action";
+import { resetPasswordAction } from "@/app/(commonLayout)/(authRouteGroup)/reset-password/_action";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ILoginPayload, loginZodSchema } from "@/zod/auth.validation";
+import { IResetPasswordPayload, resetPasswordZodSchema } from "@/zod/auth.validation";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, KeyRound, Loader2, Lock, Mail } from "lucide-react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import AuthLayout from "./AuthLayout";
 import AuthCard from "./AuthCard";
-import SocialLogin from "./SocialLogin";
-
-interface LoginParams {
-  redirectPath?: string;
-}
 
 const getErrorMessage = (error: unknown): string => {
   if (typeof error === "string") return error;
@@ -32,30 +27,34 @@ const getErrorMessage = (error: unknown): string => {
   return String(error);
 };
 
-const LoginForm = ({ redirectPath }: LoginParams) => {
+const ResetPasswordForm = () => {
+  const searchParams = useSearchParams();
+  const emailFromUrl = searchParams.get("email") ?? "";
+  const router = useRouter();
+
   const [serverError, setServerError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: (payload: ILoginPayload) => loginAction(payload, redirectPath),
+    mutationFn: (payload: IResetPasswordPayload) => resetPasswordAction(payload),
   });
 
   const form = useForm({
     defaultValues: {
-      email: "",
-      password: "",
+      email: emailFromUrl,
+      otp: "",
+      newPassword: "",
     },
     onSubmit: async ({ value }) => {
       setServerError(null);
       try {
-        const result = await mutateAsync(value) as any;
-        if (!result.success) {
-          setServerError(result.message || "Login failed");
-          return;
+        const result = await mutateAsync(value);
+        if (result && !result.success) {
+          setServerError(result.message || "Failed to reset password");
         }
       } catch (error: any) {
-        console.log(`Login failed: ${error.message}`);
-        setServerError(`Login failed: ${error.message}`);
+        console.log(`Password reset failed: ${error.message}`);
+        setServerError(`Reset failed: ${error.message}`);
       }
     },
   });
@@ -63,11 +62,14 @@ const LoginForm = ({ redirectPath }: LoginParams) => {
   return (
     <AuthLayout activeStep={1}>
       <AuthCard
-        title="Welcome Back!"
-        description="Please enter your credentials to log in."
+        title="Reset Password"
+        description="Enter the 6-digit OTP code sent to your email and choose a secure new password."
       >
-        {/* Social Authentication Row */}
-        <SocialLogin />
+        <div className="flex justify-center mb-6">
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center">
+            <Lock className="h-6 w-6 text-[#047857]" />
+          </div>
+        </div>
 
         <form
           method="POST"
@@ -83,7 +85,7 @@ const LoginForm = ({ redirectPath }: LoginParams) => {
           {/* Email Field */}
           <form.Field
             name="email"
-            validators={{ onChange: loginZodSchema.shape.email }}
+            validators={{ onChange: resetPasswordZodSchema.shape.email }}
           >
             {(field) => {
               const firstError =
@@ -103,23 +105,30 @@ const LoginForm = ({ redirectPath }: LoginParams) => {
                 >
                   <Label
                     htmlFor={field.name}
-                    className={cn("text-xs font-semibold text-slate-500 uppercase tracking-wider", hasError && "text-destructive")}
-                  >
-                    Email
-                  </Label>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    type="email"
-                    value={field.state.value}
-                    placeholder="Enter your email"
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
                     className={cn(
-                      "h-11 rounded-xl transition-all duration-200 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus-visible:ring-3 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-600/80",
-                      hasError && "border-destructive focus-visible:ring-destructive/10 focus-visible:border-destructive/80"
+                      "text-xs font-semibold text-slate-500 uppercase tracking-wider",
+                      hasError && "text-destructive"
                     )}
-                  />
+                  >
+                    Email Address
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      type="email"
+                      value={field.state.value}
+                      placeholder="Enter your email"
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      disabled={!!emailFromUrl}
+                      className={cn(
+                        "pr-10 h-11 rounded-xl transition-all duration-200 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus-visible:ring-3 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-600/80 disabled:opacity-70 disabled:bg-slate-50",
+                        hasError && "border-destructive focus-visible:ring-destructive/10 focus-visible:border-destructive/80"
+                      )}
+                    />
+                    <Mail className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                  </div>
                   {hasError && (
                     <p className="text-xs text-destructive font-medium mt-1">
                       {firstError}
@@ -130,10 +139,10 @@ const LoginForm = ({ redirectPath }: LoginParams) => {
             }}
           </form.Field>
 
-          {/* Password Field */}
+          {/* OTP Field */}
           <form.Field
-            name="password"
-            validators={{ onChange: loginZodSchema.shape.password }}
+            name="otp"
+            validators={{ onChange: resetPasswordZodSchema.shape.otp }}
           >
             {(field) => {
               const firstError =
@@ -151,21 +160,79 @@ const LoginForm = ({ redirectPath }: LoginParams) => {
                     idle: { x: 0 },
                   }}
                 >
-                  <div className="flex justify-between items-center">
-                    <Label
-                      htmlFor={field.name}
-                      className={cn("text-xs font-semibold text-slate-500 uppercase tracking-wider", hasError && "text-destructive")}
-                    >
-                      Password
-                    </Label>
+                  <Label
+                    htmlFor={field.name}
+                    className={cn(
+                      "text-xs font-semibold text-slate-500 uppercase tracking-wider",
+                      hasError && "text-destructive"
+                    )}
+                  >
+                    6-Digit Verification Code
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      type="text"
+                      maxLength={6}
+                      value={field.state.value}
+                      placeholder="Enter 6-digit code"
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value.replace(/\D/g, ""))}
+                      className={cn(
+                        "pr-10 h-11 rounded-xl transition-all duration-200 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus-visible:ring-3 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-600/80 tracking-[0.2em] font-semibold text-sm",
+                        hasError && "border-destructive focus-visible:ring-destructive/10 focus-visible:border-destructive/80"
+                      )}
+                    />
+                    <KeyRound className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
                   </div>
-                  <div className="relative group">
+                  {hasError && (
+                    <p className="text-xs text-destructive font-medium mt-1">
+                      {firstError}
+                    </p>
+                  )}
+                </motion.div>
+              );
+            }}
+          </form.Field>
+
+          {/* New Password Field */}
+          <form.Field
+            name="newPassword"
+            validators={{ onChange: resetPasswordZodSchema.shape.newPassword }}
+          >
+            {(field) => {
+              const firstError =
+                field.state.meta.isTouched && field.state.meta.errors.length > 0
+                  ? getErrorMessage(field.state.meta.errors[0])
+                  : null;
+              const hasError = firstError !== null;
+
+              return (
+                <motion.div
+                  className="space-y-1.5"
+                  animate={hasError ? "shake" : "idle"}
+                  variants={{
+                    shake: { x: [0, -6, 6, -6, 6, -3, 3, 0], transition: { duration: 0.35 } },
+                    idle: { x: 0 },
+                  }}
+                >
+                  <Label
+                    htmlFor={field.name}
+                    className={cn(
+                      "text-xs font-semibold text-slate-500 uppercase tracking-wider",
+                      hasError && "text-destructive"
+                    )}
+                  >
+                    New Password
+                  </Label>
+                  <div className="relative">
                     <Input
                       id={field.name}
                       name={field.name}
                       type={showPassword ? "text" : "password"}
                       value={field.state.value}
-                      placeholder="Enter your password"
+                      placeholder="Minimum 8 characters"
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       className={cn(
@@ -187,14 +254,6 @@ const LoginForm = ({ redirectPath }: LoginParams) => {
                         <Eye className="size-4" aria-hidden="true" />
                       )}
                     </Button>
-                  </div>
-                  <div className="flex justify-end mt-1.5">
-                    <Link
-                      href="/forgot-password"
-                      className="text-xs text-emerald-600 hover:text-[#047857] font-semibold transition-colors hover:underline underline-offset-2"
-                    >
-                      Forgot password?
-                    </Link>
                   </div>
                   {hasError && (
                     <p className="text-xs text-destructive font-medium mt-1">
@@ -241,10 +300,10 @@ const LoginForm = ({ redirectPath }: LoginParams) => {
                     {loading ? (
                       <>
                         <Loader2 className="animate-spin size-4 mr-2" />
-                        <span>Logging In...</span>
+                        <span>Resetting Password...</span>
                       </>
                     ) : (
-                      <span>Log In</span>
+                      <span>Reset Password</span>
                     )}
                   </Button>
                 </motion.div>
@@ -253,19 +312,18 @@ const LoginForm = ({ redirectPath }: LoginParams) => {
           </form.Subscribe>
         </form>
 
-        {/* Bottom Sign-Up Link */}
-        <p className="text-sm text-slate-500 text-center mt-6">
-          Don&apos;t have an account?{" "}
+        {/* Back to Login Link */}
+        <div className="text-center text-sm border-t border-slate-100 mt-6 pt-4">
           <Link
-            href="/register"
-            className="text-emerald-600 hover:text-[#047857] font-semibold transition-colors hover:underline underline-offset-2"
+            href="/login"
+            className="text-slate-500 hover:text-slate-900 font-medium transition-colors hover:underline underline-offset-2"
           >
-            Sign Up
+            ← Back to login
           </Link>
-        </p>
+        </div>
       </AuthCard>
     </AuthLayout>
   );
 };
 
-export default LoginForm;
+export default ResetPasswordForm;

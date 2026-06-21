@@ -82,7 +82,7 @@ const CreateScheduleFormModal = () => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button type="button" className="ml-auto shrink-0">
+        <Button type="button" className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg px-5 py-2 shadow-sm transition-all duration-300 ml-auto shrink-0 cursor-pointer gap-2">
           <Plus className="size-4" />
           Create Schedule
         </Button>
@@ -153,11 +153,11 @@ const CreateScheduleFormModal = () => {
 
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button type="button" variant="outline" disabled={isPending}>
+                  <Button type="button" variant="outline" disabled={isPending} className="rounded-lg">
                     Cancel
                   </Button>
                 </DialogClose>
-                <AppSubmitButton isPending={isPending} pendingLabel="Creating..." className="w-auto">
+                <AppSubmitButton isPending={isPending} pendingLabel="Creating..." className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg transition-all duration-300 w-auto cursor-pointer">
                   Create Schedule
                 </AppSubmitButton>
               </DialogFooter>

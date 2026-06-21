@@ -381,7 +381,7 @@ const MyProfileForm = () => {
                   )}
                 </CardContent>
                 <CardFooter className="justify-end border-t border-slate-100 pt-4 pb-2 pr-4">
-                  <Button type="submit" disabled={isSubmitting} className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-full px-6 py-2.5 shadow-sm transition-all duration-300">
+                  <Button type="submit" disabled={isSubmitting} className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg px-6 py-2.5 shadow-sm transition-all duration-300">
                     {isSubmitting ? "Saving Changes..." : "Save Account Info"}
                   </Button>
                 </CardFooter>
@@ -469,7 +469,7 @@ const MyProfileForm = () => {
                   </div>
                 </CardContent>
                 <CardFooter className="justify-end border-t border-slate-100 pt-4 pb-2 pr-4">
-                  <Button type="submit" disabled={isSubmitting} className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-full px-6 py-2.5 shadow-sm transition-all duration-300">
+                  <Button type="submit" disabled={isSubmitting} className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg px-6 py-2.5 shadow-sm transition-all duration-300">
                     {isSubmitting ? "Saving Changes..." : "Save Vitals"}
                   </Button>
                 </CardFooter>
@@ -569,7 +569,7 @@ const MyProfileForm = () => {
                   </div>
                 </CardContent>
                 <CardFooter className="justify-end border-t border-slate-100 pt-4 pb-2 pr-4">
-                  <Button type="submit" disabled={isSubmitting} className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-full px-6 py-2.5 shadow-sm transition-all duration-300">
+                  <Button type="submit" disabled={isSubmitting} className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg px-6 py-2.5 shadow-sm transition-all duration-300">
                     {isSubmitting ? "Saving Changes..." : "Save Conditions"}
                   </Button>
                 </CardFooter>
@@ -609,7 +609,7 @@ const MyProfileForm = () => {
                                 </span>
                               </div>
                               <div className="flex items-center gap-2 shrink-0">
-                                <Button variant="outline" size="xs" className="h-7.5 px-3 text-xs font-bold border-emerald-600/30 text-[#047857] hover:bg-emerald-50 hover:text-emerald-700 rounded-full" asChild disabled={isMarkedDelete}>
+                                <Button variant="outline" size="xs" className="h-7.5 px-3 text-xs font-bold border-emerald-600/30 text-[#047857] hover:bg-emerald-50 hover:text-emerald-700 rounded-lg" asChild disabled={isMarkedDelete}>
                                   <a href={report.reportLink} target="_blank" rel="noopener noreferrer">
                                     View
                                   </a>
@@ -677,7 +677,7 @@ const MyProfileForm = () => {
                   </div>
                 </CardContent>
                 <CardFooter className="justify-end border-t border-slate-100 pt-4 pb-2 pr-4">
-                  <Button type="submit" disabled={isSubmitting} className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-full px-6 py-2.5 shadow-sm transition-all duration-300">
+                  <Button type="submit" disabled={isSubmitting} className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg px-6 py-2.5 shadow-sm transition-all duration-300">
                     {isSubmitting ? "Saving Changes..." : "Save & Upload Reports"}
                   </Button>
                 </CardFooter>

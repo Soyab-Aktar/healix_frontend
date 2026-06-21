@@ -109,7 +109,7 @@ const PatientHealthRecords = ({ patientData }: PatientHealthRecordsProps) => {
               Monitor your physical statistics, chronic condition history, and download clinic-uploaded laboratory reports.
             </p>
           </div>
-          <Button asChild className="shrink-0 font-bold self-start sm:self-center bg-[#047857] hover:bg-[#035f43] text-white rounded-full px-5 py-2.5 shadow-sm transition-all duration-300">
+          <Button asChild className="shrink-0 font-bold self-start sm:self-center bg-[#047857] hover:bg-[#035f43] text-white rounded-lg px-5 py-2.5 shadow-sm transition-all duration-300">
             <Link href="/my-profile" className="flex items-center gap-1.5">
               <PlusCircle className="h-4 w-4 text-white" /> Manage Profile
             </Link>
@@ -369,7 +369,7 @@ const PatientHealthRecords = ({ patientData }: PatientHealthRecordsProps) => {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="w-full text-xs font-bold h-9 flex items-center justify-center gap-1.5 border-emerald-600/30 text-[#047857] hover:bg-emerald-50 hover:text-emerald-700 rounded-full shadow-2xs transition-all"
+                          className="w-full text-xs font-bold h-9 flex items-center justify-center gap-1.5 border-emerald-600/30 text-[#047857] hover:bg-emerald-50 hover:text-emerald-700 rounded-lg shadow-2xs transition-all"
                           asChild
                         >
                           <a href={report.reportLink} target="_blank" rel="noopener noreferrer">
@@ -387,7 +387,7 @@ const PatientHealthRecords = ({ patientData }: PatientHealthRecordsProps) => {
                   <p className="text-sm text-slate-500 font-medium max-w-sm mb-4">
                     {searchQuery ? "No reports match your current search query." : "No documents have been uploaded to your profile yet."}
                   </p>
-                  <Button asChild variant="outline" size="sm" className="font-bold border-emerald-600/30 text-[#047857] hover:bg-emerald-50 rounded-full shadow-2xs">
+                  <Button asChild variant="outline" size="sm" className="font-bold border-emerald-600/30 text-[#047857] hover:bg-emerald-50 rounded-lg shadow-2xs">
                     <Link href="/my-profile" className="flex items-center gap-1">
                       <PlusCircle className="h-4 w-4" /> Go Upload Records
                     </Link>

@@ -16,12 +16,14 @@ const AdminsManagementPage = async () => {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Admins Management</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Admins Management</h1>
+          <p className="text-sm text-slate-500 font-medium mt-1">
             Manage administrators credentials, register new admin users, and soft-delete accounts.
           </p>
         </div>
-        <AdminsTable />
+        <div className="rounded-[24px] border border-slate-200/60 bg-white shadow-sm overflow-hidden p-2">
+          <AdminsTable />
+        </div>
       </div>
     </HydrationBoundary>
   )

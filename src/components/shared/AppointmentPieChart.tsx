@@ -1,7 +1,23 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { PieChartData } from "@/types/dashboard.types";
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+"use client"
 
+import { PieChartData } from "@/types/dashboard.types"
+import { Cell, Pie, PieChart } from "recharts"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 interface AppointmentPieChartProps {
   data: PieChartData[]
@@ -9,89 +25,116 @@ interface AppointmentPieChartProps {
   description?: string
 }
 
-const CHART_COLORS = [
-  "oklch(0.646 0.222 41.116)", // chart-1 - orange
-  "oklch(0.6 0.118 184.704)", // chart-2 - teal
-  "oklch(0.398 0.07 227.392)", // chart-3 - blue
-  "oklch(0.828 0.189 84.429)", // chart-4 - lime
-  "oklch(0.769 0.188 70.08)", // chart-5 - orange variant
-];
+// Emerald-anchored palette that visually harmonises with the theme
+const SLICE_COLORS = [
+  "#047857", // emerald-700
+  "#059669", // emerald-600
+  "#34d399", // emerald-400
+  "#0d9488", // teal-600
+  "#f59e0b", // amber-400  – stands out for contrasting statuses
+]
 
+const AppointmentPieChart = ({
+  data,
+  title = "Appointments Distribution",
+  description = "Visual status summary",
+}: AppointmentPieChartProps) => {
+  const formattedData = Array.isArray(data)
+    ? data.map((item, index) => ({
+        name: item.status
+          .replace(/_/g, " ")
+          .toLowerCase()
+          .replace(/\b\w/g, (c: string) => c.toUpperCase()),
+        value: Number(item.count),
+        fill: SLICE_COLORS[index % SLICE_COLORS.length],
+      }))
+    : []
 
-const AppointmentPieChart = ({ data, title, description }: AppointmentPieChartProps) => {
+  const isEmpty =
+    formattedData.length === 0 ||
+    formattedData.every((item) => item.value === 0)
 
-  if (!data || !Array.isArray(data)) {
-    return (
-      <Card className="col-span-2">
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex items-center justify-center h-75">
-          <p className="text-sm text-muted-foreground">
-            Invalid data provided for the chart.
-          </p>
-        </CardContent>
-      </Card>
-    )
-  }
+  // Build a ChartConfig keyed by formatted name so the legend renders labels
+  const chartConfig: ChartConfig = Object.fromEntries(
+    formattedData.map((item, index) => [
+      item.name,
+      {
+        label: item.name,
+        color: SLICE_COLORS[index % SLICE_COLORS.length],
+      },
+    ])
+  )
 
+  const totalAppointments = formattedData.reduce(
+    (acc, item) => acc + item.value,
+    0
+  )
 
-  const formattedData = data.map((item) => ({
-    name: item.status
-      .replace(/_/g, " ") // Replace underscores with spaces for better readability
-      .toLowerCase()
-      .replace(/\b\w/g, (char: string) => char.toUpperCase()) // Capitalize the first letter of each word
-    ,
-    value: Number(item.count),
-  }));
-
-
-  if (!formattedData.length || formattedData.every(item => item.value === 0)) {
-    return (
-      <Card className="col-span-2">
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
-        </CardHeader>
-
-        <CardContent className="flex items-center justify-center h-75">
-          <p className="text-sm text-muted-foreground">
-            No appointment data available to display the chart.
-          </p>
-        </CardContent>
-      </Card>
-    )
-  }
   return (
-    <Card className="col-span-2">
+    <Card className="rounded-[24px] border-slate-200/60 shadow-sm bg-white w-full">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardTitle className="text-lg font-bold text-slate-800">
+          {title}
+        </CardTitle>
+        <CardDescription className="text-slate-400 font-medium">
+          {description}
+        </CardDescription>
       </CardHeader>
 
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={formattedData}
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              dataKey={"value"}
-            >
-              {formattedData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={CHART_COLORS[index % CHART_COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
+      <CardContent className="pb-0">
+        {isEmpty ? (
+          <div className="flex items-center justify-center h-[250px]">
+            <p className="text-sm text-slate-400 font-medium">
+              No appointment data available.
+            </p>
+          </div>
+        ) : (
+          <ChartContainer
+            config={chartConfig}
+            className="mx-auto aspect-square h-[250px]"
+          >
+            <PieChart>
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Pie
+                data={formattedData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                innerRadius={55}
+                outerRadius={95}
+                strokeWidth={2}
+                stroke="#fff"
+              >
+                {formattedData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={entry.fill}
+                  />
+                ))}
+              </Pie>
+              <ChartLegend
+                content={<ChartLegendContent nameKey="name" />}
+                className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+              />
+            </PieChart>
+          </ChartContainer>
+        )}
       </CardContent>
+
+      {!isEmpty && (
+        <CardFooter className="flex-col items-center gap-1 pt-3 pb-5 text-sm">
+          <p className="font-extrabold text-slate-800 text-base">
+            {totalAppointments.toLocaleString()}
+          </p>
+          <p className="text-xs text-slate-400 font-medium">
+            Total appointments across all statuses
+          </p>
+        </CardFooter>
+      )}
     </Card>
   )
 }

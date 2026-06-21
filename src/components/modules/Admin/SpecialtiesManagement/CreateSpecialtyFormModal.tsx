@@ -80,7 +80,7 @@ const CreateSpecialtyFormModal = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
+        <Button className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg px-5 py-2 shadow-sm transition-all duration-300 gap-2 cursor-pointer">
           <Plus className="h-4 w-4" /> Add Specialty
         </Button>
       </DialogTrigger>
@@ -103,12 +103,13 @@ const CreateSpecialtyFormModal = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               disabled={isPending}
+              className="rounded-lg focus-visible:border-[#047857] focus-visible:ring-emerald-500/20"
             />
           </div>
 
           <div className="space-y-2">
             <Label className="text-sm font-medium">Icon File</Label>
-            <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 hover:bg-muted/30 cursor-pointer relative transition-colors">
+            <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-[20px] p-6 hover:bg-emerald-50/20 hover:border-[#047857] cursor-pointer relative transition-all border-slate-200 bg-slate-50/50">
               <input
                 type="file"
                 accept="image/*"
@@ -118,7 +119,7 @@ const CreateSpecialtyFormModal = () => {
               />
               {file ? (
                 <div className="flex flex-col items-center gap-1.5 text-center">
-                  <FileImage className="h-8 w-8 text-primary" />
+                  <FileImage className="h-8 w-8 text-[#047857]" />
                   <span className="text-sm font-medium text-foreground max-w-[250px] truncate">
                     {file.name}
                   </span>
@@ -128,7 +129,7 @@ const CreateSpecialtyFormModal = () => {
                 </div>
               ) : (
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <Upload className="h-8 w-8 text-muted-foreground" />
+                  <Upload className="h-8 w-8 text-[#047857] mb-2" />
                   <span className="text-sm font-medium text-foreground">
                     Upload Icon
                   </span>
@@ -146,10 +147,15 @@ const CreateSpecialtyFormModal = () => {
               variant="outline"
               onClick={() => setOpen(false)}
               disabled={isPending}
+              className="rounded-lg"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending}>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg transition-all duration-300 cursor-pointer"
+            >
               {isPending ? "Adding..." : "Add Specialty"}
             </Button>
           </DialogFooter>

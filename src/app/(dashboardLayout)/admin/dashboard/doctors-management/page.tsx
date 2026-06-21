@@ -58,7 +58,17 @@ const DoctorsManagementPage = async ({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <DoctorsTable initialQueryString={queryString} />
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Doctors Management</h1>
+          <p className="text-sm text-slate-500 font-medium mt-1">
+            Manage doctor profiles, specialties, appointment fees, and active/inactive status.
+          </p>
+        </div>
+        <div className="rounded-[24px] border border-slate-200/60 bg-white shadow-sm overflow-hidden p-2">
+          <DoctorsTable initialQueryString={queryString} />
+        </div>
+      </div>
     </HydrationBoundary>
   );
 };

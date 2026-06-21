@@ -155,7 +155,7 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
             </p>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline" className="bg-white text-[#047857] hover:bg-teal-50 border-white rounded-full font-bold shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all">
+            <Button asChild variant="outline" className="bg-white text-[#047857] hover:bg-teal-50 border-white rounded-lg font-bold shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all">
               <Link href="/dashboard/book-appointments">
                 <PlusCircle className="mr-2 h-4 w-4" /> Book Appointment
               </Link>
@@ -259,7 +259,7 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
                 <Calendar className="h-10 w-10 text-slate-300 mb-2 animate-bounce" />
                 <p className="text-sm font-semibold text-slate-700">No upcoming appointments found</p>
                 <p className="text-xs text-slate-400 mt-1 max-w-xs">Need to check up with a doctor? Click below to book.</p>
-                <Button asChild size="sm" className="mt-4 rounded-full bg-[#047857] hover:bg-[#035f43] text-white">
+                <Button asChild size="sm" className="mt-4 rounded-lg bg-[#047857] hover:bg-[#035f43] text-white">
                   <Link href="/dashboard/book-appointments">Book Now</Link>
                 </Button>
               </div>
@@ -312,14 +312,14 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
                         {isPendingPay ? (
                           <Button 
                             size="sm" 
-                            className="bg-[#047857] hover:bg-[#035f43] text-white rounded-full font-semibold shadow-md shadow-emerald-500/10 transition-colors gap-1 w-full sm:w-auto"
+                            className="bg-[#047857] hover:bg-[#035f43] text-white rounded-lg font-semibold shadow-md shadow-emerald-500/10 transition-colors gap-1 w-full sm:w-auto"
                             onClick={() => handlePayNow(appointment.id)}
                             disabled={initiatePaymentMutation.isPending}
                           >
                             <CreditCard className="h-4 w-4" /> Pay Now
                           </Button>
                         ) : (
-                          <Button asChild size="sm" variant="outline" className="w-full sm:w-auto rounded-full border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold">
+                          <Button asChild size="sm" variant="outline" className="w-full sm:w-auto rounded-lg border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold">
                             <Link href={`/consultation/doctor/${appointment.doctorId || appointment.doctor?.id || ""}`}>
                               Profile
                             </Link>
@@ -384,7 +384,7 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
                       <Button 
                         size="sm" 
                         variant="ghost" 
-                        className="h-7 px-2.5 text-xs text-[#047857] font-bold hover:text-[#035f43] hover:bg-emerald-50/50 rounded-full transition-colors"
+                        className="h-7 px-2.5 text-xs text-[#047857] font-bold hover:text-[#035f43] hover:bg-emerald-50/50 rounded-lg transition-colors"
                         asChild
                       >
                         <Link href="/dashboard/my-prescriptions">Details</Link>

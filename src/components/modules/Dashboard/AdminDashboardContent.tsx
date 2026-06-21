@@ -129,10 +129,10 @@ const AdminDashboardContent = () => {
 
       {/* Analytics Charts Grid */}
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-7">
-        <div className="lg:col-span-4 bg-white rounded-[24px] border border-slate-200/60 p-4 shadow-sm">
+        <div className="lg:col-span-4">
           <AppointmentBarChart data={data?.barChartData ?? []} />
         </div>
-        <div className="lg:col-span-3 bg-white rounded-[24px] border border-slate-200/60 p-4 shadow-sm">
+        <div className="lg:col-span-3">
           <AppointmentPieChart
             data={appointmentPieChartData}
             title="Appointments Distribution"

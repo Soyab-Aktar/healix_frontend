@@ -162,6 +162,7 @@ const MultiSelectFilterControl = ({
           size="sm"
           onClick={applyNow}
           disabled={isLoading}
+          className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg transition-all duration-300 cursor-pointer"
         >
           Apply
         </Button>
@@ -271,6 +272,7 @@ const RangeFilterControl = ({
           size="sm"
           onClick={applyNow}
           disabled={isLoading}
+          className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg transition-all duration-300 cursor-pointer"
         >
           Apply
         </Button>
@@ -359,8 +361,8 @@ const DataTableFilters = ({
           const filterValue = values[filter.id];
           const activeCount = getFilterActiveCount(filter, filterValue);
           const triggerClass = cn(
-            "h-9",
-            activeCount > 0 && "border-primary text-primary",
+            "h-9 rounded-lg cursor-pointer transition-all hover:bg-slate-50 border-slate-200/80 text-slate-700 hover:border-emerald-300",
+            activeCount > 0 && "border-emerald-600 bg-emerald-50/40 text-emerald-700 hover:bg-emerald-50/60 hover:text-emerald-800 hover:border-emerald-700 font-bold",
           );
 
           return (
@@ -369,7 +371,7 @@ const DataTableFilters = ({
                 <Button variant="outline" className={triggerClass} disabled={isLoading}>
                   {filter.label}
                   {activeCount > 0 && (
-                    <Badge className="h-5 min-w-5 px-1.5" variant="secondary">
+                    <Badge className="h-5 min-w-5 px-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-md ml-1" variant="secondary">
                       {activeCount}
                     </Badge>
                   )}
@@ -416,7 +418,7 @@ const DataTableFilters = ({
           <Button
             type="button"
             variant="ghost"
-            className="h-9"
+            className="h-9 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-transparent hover:border-rose-200/50 transition-colors cursor-pointer"
             onClick={onClearAll}
             disabled={isLoading}
           >
@@ -425,8 +427,8 @@ const DataTableFilters = ({
           </Button>
         )}
 
-        <div className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
-          <Filter className="h-3.5 w-3.5" />
+        <div className="ml-auto flex items-center gap-2 text-xs text-slate-400 font-semibold">
+          <Filter className="h-3.5 w-3.5 text-[#047857]/80" />
           <span>{totalActiveFilters} active</span>
         </div>
       </div>
@@ -437,14 +439,14 @@ const DataTableFilters = ({
             <Badge
               key={badge.key}
               variant="secondary"
-              className="flex items-center gap-1 pr-1 text-xs"
+              className="flex items-center gap-1.5 pr-1.5 py-0.5 text-xs font-semibold bg-emerald-50 border border-emerald-100 text-emerald-700 hover:bg-emerald-100/50 rounded-md"
             >
               {badge.label}
               <button
                 type="button"
                 onClick={badge.onRemove}
                 disabled={isLoading}
-                className="ml-0.5 rounded-full p-0.5 hover:bg-muted-foreground/20 disabled:pointer-events-none"
+                className="ml-0.5 rounded-md p-0.5 hover:bg-emerald-200/50 text-emerald-700 disabled:pointer-events-none cursor-pointer"
                 aria-label={`Remove ${badge.label}`}
               >
                 <X className="h-3 w-3" />

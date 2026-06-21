@@ -113,7 +113,7 @@ const RegisterForm = () => {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                     className={cn(
-                      "h-11 rounded-xl transition-all duration-200 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus-visible:ring-3 focus-visible:ring-blue-500/10 focus-visible:border-blue-500/80",
+                      "h-11 rounded-xl transition-all duration-200 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus-visible:ring-3 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-600/80",
                       hasError && "border-destructive focus-visible:ring-destructive/10 focus-visible:border-destructive/80"
                     )}
                   />
@@ -163,7 +163,7 @@ const RegisterForm = () => {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                     className={cn(
-                      "h-11 rounded-xl transition-all duration-200 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus-visible:ring-3 focus-visible:ring-blue-500/10 focus-visible:border-blue-500/80",
+                      "h-11 rounded-xl transition-all duration-200 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus-visible:ring-3 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-600/80",
                       hasError && "border-destructive focus-visible:ring-destructive/10 focus-visible:border-destructive/80"
                     )}
                   />
@@ -214,7 +214,7 @@ const RegisterForm = () => {
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       className={cn(
-                        "pr-10 h-11 rounded-xl transition-all duration-200 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus-visible:ring-3 focus-visible:ring-blue-500/10 focus-visible:border-blue-500/80",
+                        "pr-10 h-11 rounded-xl transition-all duration-200 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus-visible:ring-3 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-600/80",
                         hasError && "border-destructive focus-visible:ring-destructive/10 focus-visible:border-destructive/80"
                       )}
                     />
@@ -288,7 +288,7 @@ const RegisterForm = () => {
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       className={cn(
-                        "pr-10 h-11 rounded-xl transition-all duration-200 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus-visible:ring-3 focus-visible:ring-blue-500/10 focus-visible:border-blue-500/80",
+                        "pr-10 h-11 rounded-xl transition-all duration-200 border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus-visible:ring-3 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-600/80",
                         hasError && "border-destructive focus-visible:ring-destructive/10 focus-visible:border-destructive/80"
                       )}
                     />
@@ -347,7 +347,7 @@ const RegisterForm = () => {
                   <Button
                     type="submit"
                     disabled={!canSubmit || loading}
-                    className="w-full h-11 rounded-xl text-white font-semibold bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/10 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                    className="w-full h-11 rounded-xl text-white font-semibold bg-[#047857] hover:bg-[#035f43] shadow-md shadow-emerald-500/10 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                   >
                     {loading ? (
                       <>
@@ -369,7 +369,7 @@ const RegisterForm = () => {
           Already have an account?{" "}
           <Link
             href="/login"
-            className="text-blue-600 hover:text-blue-700 font-semibold transition-colors hover:underline underline-offset-2"
+            className="text-emerald-600 hover:text-[#047857] font-semibold transition-colors hover:underline underline-offset-2"
           >
             Log in
           </Link>

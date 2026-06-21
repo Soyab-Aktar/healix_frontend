@@ -141,7 +141,7 @@ const DoctorDashboardContent = ({ userInfo }: DoctorDashboardContentProps) => {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline" className="bg-white text-[#047857] hover:bg-teal-50 border-white rounded-full font-bold shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all">
+            <Button asChild variant="outline" className="bg-white text-[#047857] hover:bg-teal-50 border-white rounded-lg font-bold shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all">
               <Link href="/doctor/dashboard/my-schedules">
                 <Plus className="mr-1.5 h-4 w-4" /> Add Slot
               </Link>
@@ -281,7 +281,7 @@ const DoctorDashboardContent = ({ userInfo }: DoctorDashboardContentProps) => {
                         </Badge>
                       </div>
                       
-                      <Button asChild size="sm" variant="outline" className="w-full sm:w-auto rounded-full border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold">
+                      <Button asChild size="sm" variant="outline" className="w-full sm:w-auto rounded-lg border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold">
                         <Link href="/doctor/dashboard/appointments">
                           Manage
                         </Link>

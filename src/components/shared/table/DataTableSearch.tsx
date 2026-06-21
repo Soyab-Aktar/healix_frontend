@@ -52,13 +52,13 @@ const DataTableSearch = ({
   };
 
   return (
-    <div className="relative w-full md:max-w-sm">
-      <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+    <div className="group relative w-full md:max-w-sm">
+      <Search className="text-[#047857]/60 group-focus-within:text-[#047857] pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transition-colors" />
       <Input
         value={value}
         onChange={(event) => setValue(event.target.value)}
         placeholder={placeholder}
-        className="h-9 pr-9 pl-9"
+        className="h-9 pr-9 pl-9 rounded-lg border-slate-200 hover:border-emerald-500/30 focus-visible:border-[#047857] focus-visible:ring-emerald-500/20 transition-all bg-white"
         disabled={isLoading}
       />
 

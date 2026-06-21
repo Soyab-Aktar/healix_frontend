@@ -139,8 +139,8 @@ const VerifyEmailForm = () => {
         }
       >
         <div className="flex justify-center mb-6">
-          <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-            <Mail className="h-6 w-6 text-blue-600" />
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center">
+            <Mail className="h-6 w-6 text-[#047857]" />
           </div>
         </div>
 
@@ -166,8 +166,8 @@ const VerifyEmailForm = () => {
                 className={cn(
                   "w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold border rounded-xl outline-none transition-all duration-150",
                   digit
-                    ? "border-blue-500 bg-blue-50/20 text-blue-900"
-                    : "border-slate-300 bg-white text-slate-900 focus-visible:ring-3 focus-visible:ring-blue-500/10 focus-visible:border-blue-500/80",
+                    ? "border-[#047857] bg-emerald-50/20 text-emerald-900"
+                    : "border-slate-300 bg-white text-slate-900 focus-visible:ring-3 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-600/80",
                   serverError && "border-destructive text-destructive focus-visible:ring-destructive/10 focus-visible:border-destructive/80"
                 )}
               />
@@ -208,7 +208,7 @@ const VerifyEmailForm = () => {
             <Button
               type="submit"
               disabled={!isComplete || isVerifying}
-              className="w-full h-11 rounded-xl text-white font-semibold bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/10 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+              className="w-full h-11 rounded-xl text-white font-semibold bg-[#047857] hover:bg-[#035f43] shadow-md shadow-emerald-500/10 transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
             >
               {isVerifying ? (
                 <>
@@ -236,7 +236,7 @@ const VerifyEmailForm = () => {
                 type="button"
                 onClick={() => resendEmail()}
                 disabled={isResending}
-                className="inline-flex items-center gap-1.5 text-blue-600 font-semibold hover:underline underline-offset-4 disabled:opacity-50 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-emerald-600 font-semibold hover:underline underline-offset-4 disabled:opacity-50 transition-colors cursor-pointer"
               >
                 {isResending ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />

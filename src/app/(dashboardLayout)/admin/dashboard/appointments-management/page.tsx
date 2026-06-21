@@ -40,13 +40,18 @@ const AppointmentsManagementPage = async ({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Appointments Management</h1>
-          <p className="text-muted-foreground">
-            Manage patient appointments, view video room sessions, and update statuses.
-          </p>
+        <div className="flex items-start gap-3">
+          <div className="h-10 w-1 bg-gradient-to-b from-[#0d9488] to-[#047857] rounded-full shrink-0 mt-1" />
+          <div>
+            <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-[#0d9488] to-[#047857] bg-clip-text text-transparent">Appointments Management</h1>
+            <p className="text-sm text-slate-500 font-medium mt-1">
+              Manage patient appointments, view video room sessions, and update statuses.
+            </p>
+          </div>
         </div>
-        <AppointmentsTable initialQueryString={queryString} />
+        <div className="rounded-[24px] border border-slate-200/60 bg-white shadow-sm overflow-hidden p-2">
+          <AppointmentsTable initialQueryString={queryString} />
+        </div>
       </div>
     </HydrationBoundary>
   )

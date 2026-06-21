@@ -140,7 +140,7 @@ const CreateDoctorFormModal = ({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button type="button" className="ml-auto shrink-0">
+        <Button type="button" className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg px-5 py-2 shadow-sm transition-all duration-300 ml-auto shrink-0 cursor-pointer gap-2">
           <Plus className="size-4" />
           Create Doctor
         </Button>
@@ -409,7 +409,7 @@ const CreateDoctorFormModal = ({
 
               <div className="flex items-center justify-end gap-3 border-t pt-4">
                 <DialogClose asChild>
-                  <Button type="button" variant="outline" disabled={isPending}>
+                  <Button type="button" variant="outline" disabled={isPending} className="rounded-lg">
                     Cancel
                   </Button>
                 </DialogClose>
@@ -422,7 +422,7 @@ const CreateDoctorFormModal = ({
                       isPending={isSubmitting || isPending}
                       pendingLabel="Creating doctor..."
                       disabled={!canSubmit || isLoadingSpecialties}
-                      className="w-auto min-w-36"
+                      className="bg-[#047857] hover:bg-[#035f43] text-white font-bold rounded-lg transition-all duration-300 w-auto min-w-36 cursor-pointer"
                     >
                       Create Doctor
                     </AppSubmitButton>
