@@ -25,7 +25,7 @@ export default function BookAppointmentButton({
     <>
       <Button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors shrink-0 h-auto"
+        className="flex items-center gap-2 bg-[#047857] hover:bg-[#035f43] text-white text-sm font-bold px-5 py-3 rounded-xl transition-all shadow-xs shrink-0 h-auto cursor-pointer border-0"
       >
         <Calendar className="h-4 w-4" />
         Book Appointment

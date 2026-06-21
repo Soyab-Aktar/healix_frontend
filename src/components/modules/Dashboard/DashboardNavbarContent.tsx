@@ -35,11 +35,11 @@ const DashboardNavbarContent = ({ dashboardHome, navItems, userInfo }: Dashboard
   }, []);
 
   return (
-    <div className="flex items-center gap-4 w-full px-4 py-3 border-b bg-background justify-between md:justify-end">
+    <div className="flex items-center gap-4 w-full px-6 py-3 border-b border-slate-100 bg-white/85 backdrop-blur-md justify-between md:justify-end">
       {/* Mobile Menu Toggle Button And Menu */}
       <Sheet open={isOpen && isMobile} onOpenChange={setIsOpen}>
         <SheetTrigger asChild className="md:hidden">
-          <Button variant={"outline"} size={"icon"}>
+          <Button variant="outline" size="icon" className="rounded-xl border-slate-200 text-slate-500 hover:text-[#047857] hover:bg-emerald-50/50">
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>

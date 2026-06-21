@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { IAppointment, AppointmentStatus, PaymentStatus } from "@/types/appointment.types";
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -11,17 +10,17 @@ const formatDateTime = (value?: string | Date) => {
   });
 };
 
-const statusBadgeVariant: Record<AppointmentStatus, "default" | "secondary" | "destructive" | "outline"> = {
-  SCHEDULED: "default",
-  INPROGRESS: "secondary",
-  COMPLETED: "outline",
-  CANCELED: "destructive",
+const statusBadgeStyles: Record<AppointmentStatus, string> = {
+  SCHEDULED: "bg-blue-50 text-blue-700 border-blue-100/80",
+  INPROGRESS: "bg-amber-50 text-amber-700 border-amber-100/80",
+  COMPLETED: "bg-emerald-50 text-[#047857] border-emerald-100/80",
+  CANCELED: "bg-rose-50 text-rose-700 border-rose-100/80",
 };
 
-const paymentBadgeVariant: Record<PaymentStatus, "default" | "secondary" | "destructive" | "outline"> = {
-  PAID: "default",
-  UNPAID: "secondary",
-  FAILED: "destructive",
+const paymentBadgeStyles: Record<PaymentStatus, string> = {
+  PAID: "bg-emerald-50 text-[#047857] border-emerald-100/80",
+  UNPAID: "bg-amber-50 text-amber-700 border-amber-100/80",
+  FAILED: "bg-rose-50 text-rose-700 border-rose-100/80",
 };
 
 export const myAppointmentsColumns: ColumnDef<IAppointment>[] = [
@@ -31,12 +30,27 @@ export const myAppointmentsColumns: ColumnDef<IAppointment>[] = [
     enableSorting: false,
     cell: ({ row }) => {
       const doctor = row.original.doctor;
+      const initial = doctor?.name?.charAt(0).toUpperCase() ?? "D";
       return (
-        <div className="flex flex-col">
-          <span className="font-medium">{doctor?.name ?? "-"}</span>
-          {doctor?.designation && (
-            <span className="text-xs text-muted-foreground">{doctor.designation}</span>
-          )}
+        <div className="flex items-center gap-3">
+          <div className="relative shrink-0 w-9 h-9 rounded-[10px] overflow-hidden bg-emerald-50 border border-slate-100 flex items-center justify-center text-emerald-600 font-extrabold text-sm shadow-2xs">
+            {doctor?.profilePhoto ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={doctor.profilePhoto}
+                alt={doctor.name ?? "Doctor"}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              initial
+            )}
+          </div>
+          <div className="min-w-0">
+            <span className="font-bold text-slate-800 text-sm truncate block">{doctor?.name ?? "-"}</span>
+            {doctor?.designation && (
+              <span className="text-[10px] font-bold text-slate-400 block tracking-wide uppercase mt-0.5">{doctor.designation}</span>
+            )}
+          </div>
         </div>
       );
     },
@@ -47,7 +61,7 @@ export const myAppointmentsColumns: ColumnDef<IAppointment>[] = [
     enableSorting: false,
     cell: ({ row }) => {
       const schedule = row.original.schedule;
-      return <span>{formatDateTime(schedule?.startDateTime)}</span>;
+      return <span className="text-sm font-semibold text-slate-700">{formatDateTime(schedule?.startDateTime)}</span>;
     },
   },
   {
@@ -56,9 +70,9 @@ export const myAppointmentsColumns: ColumnDef<IAppointment>[] = [
     cell: ({ row }) => {
       const appointmentStatus = row.original.status as AppointmentStatus;
       return (
-        <Badge variant={statusBadgeVariant[appointmentStatus] ?? "outline"}>
+        <span className={`inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full border ${statusBadgeStyles[appointmentStatus] || "bg-slate-50 text-slate-750 border-slate-100"}`}>
           {appointmentStatus}
-        </Badge>
+        </span>
       );
     },
   },
@@ -68,15 +82,19 @@ export const myAppointmentsColumns: ColumnDef<IAppointment>[] = [
     cell: ({ row }) => {
       const paymentStatus = row.original.paymentStatus as PaymentStatus;
       return (
-        <Badge variant={paymentBadgeVariant[paymentStatus] ?? "outline"}>
+        <span className={`inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full border ${paymentBadgeStyles[paymentStatus] || "bg-slate-50 text-slate-750 border-slate-100"}`}>
           {paymentStatus}
-        </Badge>
+        </span>
       );
     },
   },
   {
     accessorKey: "createdAt",
     header: "Booked On",
-    cell: ({ row }) => formatDateTime(row.original.createdAt),
+    cell: ({ row }) => (
+      <span className="text-sm font-medium text-slate-500">
+        {formatDateTime(row.original.createdAt)}
+      </span>
+    ),
   },
 ];

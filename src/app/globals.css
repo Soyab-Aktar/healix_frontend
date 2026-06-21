@@ -126,5 +126,15 @@
   }
   html {
     @apply font-sans;
+    scrollbar-gutter: stable;
+  }
+
+  /* Prevent Radix UI / react-remove-scroll layout shift and scrollbar hiding */
+  html[data-scroll-locked],
+  body[data-scroll-locked],
+  body[style*="overflow: hidden"] {
+    margin-right: 0px !important;
+    padding-right: 0px !important;
+    overflow: auto !important;
   }
 }

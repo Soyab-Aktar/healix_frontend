@@ -144,61 +144,63 @@ const MyAppointmentsView = () => {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">My Appointments</h1>
-        <p className="text-sm text-muted-foreground">
-          View and manage your booked appointments.
+        <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">My Appointments</h1>
+        <p className="text-sm text-slate-500 font-medium mt-1">
+          View and manage your booked clinical appointments and schedules.
         </p>
       </div>
 
-      <DataTable
-        data={paginatedAppointments}
-        columns={myAppointmentsColumns}
-        actions={{
-          onView: tableActions.onView,
-        }}
-        isLoading={isLoading}
-        emptyMessage="No appointments found."
-        sorting={{
-          state: optimisticSortingState,
-          onSortingChange: handleSortingChange,
-        }}
-        pagination={{
-          state: { ...optimisticPaginationState, pageIndex },
-          onPaginationChange: handlePaginationChange,
-        }}
-        search={{
-          initialValue: searchTermFromUrl,
-          placeholder: "Search by doctor name...",
-          onDebouncedChange: handleDebouncedSearchChange,
-        }}
-        filters={{
-          configs: [
-            {
-              id: "status",
-              label: "Status",
-              type: "single-select",
-              options: STATUS_FILTER_OPTIONS,
-            },
-            {
-              id: "paymentStatus",
-              label: "Payment Status",
-              type: "single-select",
-              options: PAYMENT_STATUS_FILTER_OPTIONS,
-            },
-          ],
-          values: filterValues,
-          onFilterChange: handleFilterChange,
-          onClearAll: clearAllFilters,
-        }}
-        meta={{
-          page: pageIndex + 1,
-          limit: pageSize,
-          total: totalRows,
-          totalPages,
-        }}
-      />
+      <div className="rounded-[24px] border border-slate-200/60 bg-white shadow-sm overflow-hidden p-2">
+        <DataTable
+          data={paginatedAppointments}
+          columns={myAppointmentsColumns}
+          actions={{
+            onView: tableActions.onView,
+          }}
+          isLoading={isLoading}
+          emptyMessage="No appointments found."
+          sorting={{
+            state: optimisticSortingState,
+            onSortingChange: handleSortingChange,
+          }}
+          pagination={{
+            state: { ...optimisticPaginationState, pageIndex },
+            onPaginationChange: handlePaginationChange,
+          }}
+          search={{
+            initialValue: searchTermFromUrl,
+            placeholder: "Search by doctor name...",
+            onDebouncedChange: handleDebouncedSearchChange,
+          }}
+          filters={{
+            configs: [
+              {
+                id: "status",
+                label: "Status",
+                type: "single-select",
+                options: STATUS_FILTER_OPTIONS,
+              },
+              {
+                id: "paymentStatus",
+                label: "Payment Status",
+                type: "single-select",
+                options: PAYMENT_STATUS_FILTER_OPTIONS,
+              },
+            ],
+            values: filterValues,
+            onFilterChange: handleFilterChange,
+            onClearAll: clearAllFilters,
+          }}
+          meta={{
+            page: pageIndex + 1,
+            limit: pageSize,
+            total: totalRows,
+            totalPages,
+          }}
+        />
+      </div>
 
       <ViewAppointmentModal
         appointment={viewingItem}

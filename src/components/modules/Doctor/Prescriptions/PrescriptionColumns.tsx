@@ -39,12 +39,28 @@ export const buildPrescriptionColumns = (
         return nameA.localeCompare(nameB);
       },
       cell: ({ row }) => {
-        const person =
-          perspective === "doctor" ? row.original.patient : row.original.doctor;
+        const person = (
+          perspective === "doctor" ? row.original.patient : row.original.doctor
+        ) as any;
+        const initial = person?.name?.charAt(0).toUpperCase() ?? "P";
         return (
-          <div>
-            <p className="font-medium text-sm">{person?.name ?? "—"}</p>
-            <p className="text-xs text-muted-foreground">{person?.email ?? "—"}</p>
+          <div className="flex items-center gap-3">
+            <div className="relative shrink-0 w-9 h-9 rounded-[10px] overflow-hidden bg-emerald-50 border border-slate-100 flex items-center justify-center text-emerald-600 font-extrabold text-sm shadow-2xs">
+              {person?.profilePhoto ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={person.profilePhoto}
+                  alt={person.name ?? "User"}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                initial
+              )}
+            </div>
+            <div className="min-w-0">
+              <p className="font-bold text-slate-800 text-sm truncate">{person?.name ?? "—"}</p>
+              <p className="text-xs text-slate-400 truncate">{person?.email ?? "—"}</p>
+            </div>
           </div>
         );
       },
@@ -58,11 +74,11 @@ export const buildPrescriptionColumns = (
       cell: ({ row }) => {
         const date = row.original.followUpDate;
         return date ? (
-          <Badge variant="outline" className="text-xs font-normal">
+          <span className="inline-flex items-center gap-1.5 text-xs bg-[#eefcf7] text-[#047857] px-2.5 py-1 rounded-full font-semibold border border-emerald-100/30">
             {formatDate(date)}
-          </Badge>
+          </span>
         ) : (
-          <span className="text-xs text-muted-foreground">No follow-up</span>
+          <span className="text-xs text-slate-400">No follow-up</span>
         );
       },
     },
@@ -73,7 +89,7 @@ export const buildPrescriptionColumns = (
       accessorKey: "createdAt",
       enableSorting: true,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm font-medium text-slate-600">
           {formatDate(row.original.createdAt)}
         </span>
       ),
@@ -91,13 +107,13 @@ export const buildPrescriptionColumns = (
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#047857] hover:text-[#035f43] hover:underline"
           >
-            <ExternalLink className="h-3.5 w-3.5" />
+            <ExternalLink className="h-3.5 w-3.5 text-[#047857]" />
             View PDF
           </a>
         ) : (
-          <span className="text-xs text-muted-foreground">—</span>
+          <span className="text-xs text-slate-400">—</span>
         );
       },
     },

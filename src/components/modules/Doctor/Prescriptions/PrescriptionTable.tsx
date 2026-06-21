@@ -139,17 +139,17 @@ const PrescriptionTable = ({
       </div>
 
       {/* Table */}
-      <div className="rounded-lg border">
+      <div className="rounded-[24px] border border-slate-200/60 bg-white shadow-sm overflow-hidden p-2">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-[#eefcf7]/40 border-b border-slate-100 hover:bg-transparent">
             {table.getHeaderGroups().map((hg) => (
-              <TableRow key={hg.id}>
+              <TableRow key={hg.id} className="hover:bg-transparent border-b border-slate-100">
                 {hg.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="text-slate-800 font-bold h-12">
                     {header.isPlaceholder ? null : header.column.getCanSort() ? (
                       <Button
                         variant="ghost"
-                        className="h-auto cursor-pointer p-0 font-semibold hover:bg-transparent hover:text-inherit focus-visible:ring-0"
+                        className="h-auto cursor-pointer p-0 font-semibold hover:bg-transparent hover:text-emerald-700 focus-visible:ring-0"
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         {flexRender(
@@ -157,9 +157,9 @@ const PrescriptionTable = ({
                           header.getContext(),
                         )}
                         {header.column.getIsSorted() === "asc" ? (
-                          <ArrowUp className="ml-1 h-4 w-4" />
+                          <ArrowUp className="ml-1 h-4 w-4 text-[#047857]" />
                         ) : header.column.getIsSorted() === "desc" ? (
-                          <ArrowDown className="ml-1 h-4 w-4" />
+                          <ArrowDown className="ml-1 h-4 w-4 text-[#047857]" />
                         ) : (
                           <ArrowUpDown className="ml-1 h-4 w-4 opacity-50" />
                         )}
@@ -179,9 +179,9 @@ const PrescriptionTable = ({
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} className="hover:bg-slate-50/50 border-b border-slate-100/80 transition-colors">
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="py-3.5">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

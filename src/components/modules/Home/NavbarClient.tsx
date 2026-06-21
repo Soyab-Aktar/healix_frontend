@@ -8,12 +8,23 @@ import {
   LogOut,
   Menu,
   User,
-  LayoutDashboard,
+  LayoutGrid,
   X,
-  Stethoscope,
+  ShieldCheck,
+  Calendar,
+  ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface NavbarClientProps {
   user: UserInfo | null;
@@ -21,199 +32,224 @@ interface NavbarClientProps {
 
 const NavbarClient = ({ user }: NavbarClientProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   const isLoggedIn = !!user;
   const dashboardRoute = user
     ? getDefaultDashboardRoute(user.role)
     : "/dashboard";
 
-  // Close dropdown on outside click
+  // Handle scroll events to adjust spacing and backdrop opacity
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setDropdownOpen(false);
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "Consultation", href: "/consultation" },
-  ];
-
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-      <nav className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl text-blue-600">
-          <Stethoscope className="h-5 w-5" />
-          <span>MediConsult</span>
-        </Link>
+    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-transparent pointer-events-none">
+      <div
+        className={cn(
+          "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 transition-all duration-300 ease-in-out pointer-events-auto",
+          scrolled ? "pt-2" : "pt-4 md:pt-6"
+        )}
+      >
+        <nav
+          className={cn(
+            "bg-white/80 backdrop-blur-xl border border-slate-200/50 shadow-sm rounded-2xl md:rounded-[20px] px-6 h-16 flex items-center justify-between relative transition-all duration-300 ease-in-out",
+            scrolled && "bg-white/95 backdrop-blur-2xl border-slate-200/80 shadow-md"
+          )}
+        >
+          {/* Left Section: Brand Logo */}
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-bold text-xl hover:opacity-90 transition-opacity"
+          >
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-teal-50 border border-teal-100 shadow-sm">
+              <ShieldCheck className="h-5 w-5 text-[#047857]" />
+            </div>
+            <span className="text-lg tracking-tight font-extrabold text-slate-900">
+              Healix
+            </span>
+          </Link>
 
-        {/* Desktop nav links */}
-        <ul className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                className="text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors"
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
+          {/* Right Section: Links & Buttons (Desktop) */}
+          <div className="hidden md:flex items-center gap-6">
+            {/* Consultation Link */}
+            <Link
+              href="/consultation"
+              className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-950 transition-colors"
+            >
+              <Calendar className="h-4 w-4 text-slate-400" />
+              <span>Consultation</span>
+            </Link>
 
-        {/* Desktop right section */}
-        <div className="hidden md:flex items-center gap-3">
-          {isLoggedIn ? (
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setDropdownOpen((v) => !v)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all text-sm font-medium text-gray-700"
-                aria-expanded={dropdownOpen}
-                aria-haspopup="true"
-              >
-                <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
-                  <User className="h-4 w-4 text-blue-600" />
-                </div>
-                <span>{user.name?.split(" ")[0]}</span>
-              </button>
-
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl border border-gray-200 shadow-lg py-1 text-sm z-50">
-                  <div className="px-4 py-2.5 border-b border-gray-100">
-                    <p className="font-semibold text-gray-800 truncate">{user.name}</p>
-                    <p className="text-gray-400 text-xs truncate">{user.email}</p>
-                  </div>
-
-                  <Link
-                    href={dashboardRoute}
-                    className="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    <LayoutDashboard className="h-4 w-4" />
-                    Dashboard
-                  </Link>
-
-                  <Link
-                    href="/my-profile"
-                    className="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors"
-                    onClick={() => setDropdownOpen(false)}
+            {/* User CTA Action */}
+            {isLoggedIn ? (
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    className="bg-[#047857] hover:bg-[#035f43] text-white text-sm font-semibold px-4 py-2.5 h-10 rounded-xl flex items-center gap-2 transition-all cursor-pointer shadow-sm border-0"
                   >
                     <User className="h-4 w-4" />
-                    My Profile
-                  </Link>
+                    <span>View Profile</span>
+                    <ChevronDown className="h-4 w-4 opacity-80" />
+                  </Button>
+                </DropdownMenuTrigger>
 
-                  <div className="border-t border-gray-100 mt-1">
-                    {/* Use a form to call the server action — safest in Next.js App Router */}
-                    <form action={logoutAction}>
-                      <button
-                        type="submit"
-                        className="w-full flex items-center gap-2 px-4 py-2.5 text-red-600 hover:bg-red-50 transition-colors"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        Log out
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <>
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/login">Log in</Link>
-              </Button>
-              <Button size="sm" asChild>
-                <Link href="/register">Sign up</Link>
-              </Button>
-            </>
-          )}
-        </div>
-
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
-          onClick={() => setMenuOpen((v) => !v)}
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
-      </nav>
-
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div className="md:hidden border-t border-gray-200 bg-white px-4 py-4 space-y-3">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="block text-sm font-medium text-gray-700 hover:text-blue-600 py-1"
-              onClick={() => setMenuOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
-
-          <div className="pt-3 border-t border-gray-100 space-y-2">
-            {isLoggedIn ? (
-              <>
-                <div className="flex items-center gap-2 py-1">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <User className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-800">{user.name}</p>
-                    <p className="text-xs text-gray-400">{user.email}</p>
-                  </div>
-                </div>
-                <Link
-                  href={dashboardRoute}
-                  className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 py-1"
-                  onClick={() => setMenuOpen(false)}
+                <DropdownMenuContent
+                  align="end"
+                  className="w-52 bg-white rounded-2xl border border-slate-200 shadow-xl p-1 z-50"
                 >
-                  <LayoutDashboard className="h-4 w-4" />
-                  Dashboard
-                </Link>
-                <form action={logoutAction}>
-                  <button
-                    type="submit"
-                    className="flex items-center gap-2 text-sm text-red-600 hover:text-red-700 py-1"
+                  <DropdownMenuItem
+                    asChild
+                    className="rounded-xl px-3 py-2.5 cursor-pointer focus:bg-slate-50 transition-colors"
                   >
-                    <LogOut className="h-4 w-4" />
-                    Log out
-                  </button>
-                </form>
-              </>
+                    <Link
+                      href={dashboardRoute}
+                      className="flex items-center w-full text-slate-700"
+                    >
+                      <LayoutGrid className="mr-2.5 h-4 w-4 text-slate-400" />
+                      <span className="text-sm font-medium">Dashboard</span>
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem
+                    asChild
+                    className="rounded-xl px-3 py-2.5 cursor-pointer focus:bg-slate-50 transition-colors"
+                  >
+                    <Link
+                      href="/my-profile"
+                      className="flex items-center w-full text-slate-700"
+                    >
+                      <User className="mr-2.5 h-4 w-4 text-slate-400" />
+                      <span className="text-sm font-medium">My Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator className="-mx-1 my-1 h-px bg-slate-100" />
+
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={async () => {
+                      await logoutAction();
+                    }}
+                    className="rounded-xl px-3 py-2.5 cursor-pointer flex items-center w-full"
+                  >
+                    <LogOut className="mr-2.5 h-4 w-4" />
+                    <span className="text-sm font-medium">Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="block text-sm font-medium text-gray-700 py-1"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Log in
+              <Button
+                className="bg-[#047857] hover:bg-[#035f43] text-white font-semibold text-sm px-5 py-2.5 h-10 rounded-xl flex items-center gap-2 transition-all cursor-pointer shadow-sm border-0"
+                asChild
+              >
+                <Link href="/login">
+                  <User className="h-4 w-4" />
+                  <span>Log in / Register</span>
                 </Link>
-                <Link
-                  href="/register"
-                  className="block text-sm font-medium text-blue-600 py-1"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Sign up
-                </Link>
-              </>
+              </Button>
             )}
           </div>
-        </div>
-      )}
+
+          {/* Mobile Hamburger Button */}
+          <button
+            className="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+
+          {/* Mobile Dropdown Panel */}
+          <AnimatePresence>
+            {menuOpen && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.15 }}
+                className="absolute top-18 left-0 right-0 bg-white border border-slate-200 rounded-2xl shadow-lg p-4 space-y-3 z-50 md:hidden"
+              >
+                <Link
+                  href="/consultation"
+                  className="flex items-center gap-2.5 text-sm font-semibold text-slate-600 hover:text-slate-900 py-2 transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <Calendar className="h-4.5 w-4.5 text-slate-400" />
+                  <span>Consultation</span>
+                </Link>
+
+                <div className="pt-2 border-t border-slate-100 space-y-2">
+                  {isLoggedIn ? (
+                    <>
+                      <div className="px-3 py-2.5 bg-slate-50 border border-slate-100 rounded-xl mb-3">
+                        <p className="text-sm font-bold text-slate-900 truncate">
+                          {user.name}
+                        </p>
+                        <p className="text-xs text-slate-500 truncate mt-0.5">
+                          {user.email}
+                        </p>
+                        <span className="inline-block text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md mt-2 border border-emerald-100 capitalize">
+                          {user.role.toLowerCase().replace("_", " ")}
+                        </span>
+                      </div>
+
+                      <Link
+                        href={dashboardRoute}
+                        className="flex items-center gap-3 px-3 py-2 text-slate-700 hover:text-[#047857] hover:bg-slate-50 rounded-xl transition-all font-medium text-sm"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        <LayoutGrid className="h-4 w-4 text-slate-400" />
+                        <span>Dashboard</span>
+                      </Link>
+
+                      <Link
+                        href="/my-profile"
+                        className="flex items-center gap-3 px-3 py-2 text-slate-700 hover:text-[#047857] hover:bg-slate-50 rounded-xl transition-all font-medium text-sm"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        <User className="h-4 w-4 text-slate-400" />
+                        <span>My Profile</span>
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          setMenuOpen(false);
+                          await logoutAction();
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-xl transition-all font-medium text-sm text-left cursor-pointer mt-1"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        <span>Logout</span>
+                      </button>
+                    </>
+                  ) : (
+                    <Button
+                      className="w-full bg-[#047857] hover:bg-[#035f43] text-white font-semibold text-sm px-5 py-2.5 h-auto rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm border-0"
+                      asChild
+                    >
+                      <Link href="/login" onClick={() => setMenuOpen(false)}>
+                        <User className="h-4 w-4" />
+                        <span>Log in / Register</span>
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </nav>
+      </div>
     </header>
   );
 };

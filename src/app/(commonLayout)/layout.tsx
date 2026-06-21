@@ -1,4 +1,5 @@
 import Navbar from "@/components/modules/Home/Navbar";
+import PageWrapper from "@/components/shared/PageWrapper";
 
 export default function CommonLayout({
   children,
@@ -8,7 +9,7 @@ export default function CommonLayout({
   return (
     <>
       <Navbar />
-      {children}
+      <PageWrapper>{children}</PageWrapper>
     </>
   );
 }

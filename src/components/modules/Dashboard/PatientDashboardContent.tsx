@@ -28,6 +28,7 @@ import Link from "next/link";
 import { format, formatDistanceToNow } from "date-fns";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface PatientDashboardContentProps {
   userInfo: UserInfo;
@@ -52,14 +53,6 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
 
   const appointments = appointmentsResponse?.data ?? [];
   const prescriptions = (prescriptionsResponse?.data ?? []) as PrescriptionRow[];
-
-  // Toast feedback for load and error states
-  useEffect(() => {
-    toast.success(`Welcome back, ${userInfo.name}!`, {
-      description: "We hope you are feeling well today.",
-      duration: 3000,
-    });
-  }, [userInfo.name]);
 
   useEffect(() => {
     if (appointmentsError) {
@@ -147,7 +140,7 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
   return (
     <div className="space-y-6">
       {/* Patient Welcome Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-teal-500 via-cyan-500 to-blue-500 p-6 md:p-8 text-white shadow-lg shadow-teal-500/10">
+      <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#0d9488] to-[#047857] p-6 md:p-8 text-white shadow-lg shadow-emerald-500/10">
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white/5 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-white/5 blur-3xl pointer-events-none" />
         
@@ -156,13 +149,13 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-semibold backdrop-blur-md">
               <Heart className="h-3 w-3 text-rose-300 animate-pulse" /> Healthcare Portal Active
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Welcome back, {userInfo.name}</h1>
-            <p className="text-sm md:text-base text-teal-50 max-w-xl">
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Welcome back, {userInfo.name}</h1>
+            <p className="text-sm md:text-base text-teal-100/90 max-w-xl">
               Track your appointments, view instructions from your doctors, and manage payments easily from your Healix account.
             </p>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+            <Button asChild variant="outline" className="bg-white text-[#047857] hover:bg-teal-50 border-white rounded-full font-bold shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all">
               <Link href="/dashboard/book-appointments">
                 <PlusCircle className="mr-2 h-4 w-4" /> Book Appointment
               </Link>
@@ -174,18 +167,18 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
       {/* Quick Stats Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Next Appointment Card */}
-        <Card className="relative overflow-hidden hover:scale-[1.02] transition-transform duration-200 border-teal-500/20">
+        <Card className="relative overflow-hidden hover:scale-[1.02] hover:shadow-md transition-all duration-250 border-emerald-500/30 rounded-[20px] shadow-sm bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Next Appointment</CardTitle>
-            <div className="h-9 w-9 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-600">
+            <CardTitle className="text-sm font-bold text-slate-500">Next Appointment</CardTitle>
+            <div className="h-9 w-9 rounded-[12px] bg-emerald-50 text-[#047857] flex items-center justify-center">
               <Clock className="w-5 h-5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-2">
             {nextAppointment ? (
               <>
-                <div className="text-lg font-bold truncate">{nextAppointment.doctor?.name}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className="text-lg font-extrabold text-slate-800 truncate">{nextAppointment.doctor?.name}</div>
+                <p className="text-xs text-[#047857] font-semibold bg-emerald-50/50 px-2 py-0.5 rounded-md inline-block">
                   {nextAppointment.schedule?.startDateTime 
                     ? formatDistanceToNow(new Date(nextAppointment.schedule.startDateTime), { addSuffix: true })
                     : "Scheduled soon"}
@@ -193,54 +186,54 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
               </>
             ) : (
               <>
-                <div className="text-lg font-bold text-muted-foreground">None Scheduled</div>
-                <p className="text-xs text-muted-foreground">Stay healthy!</p>
+                <div className="text-lg font-extrabold text-slate-400">None Scheduled</div>
+                <p className="text-xs text-slate-400">Stay healthy!</p>
               </>
             )}
           </CardContent>
         </Card>
 
         {/* Total Appointments Card */}
-        <Card className="hover:scale-[1.02] transition-transform duration-200">
+        <Card className="hover:scale-[1.02] hover:shadow-md transition-all duration-250 border-slate-200/60 rounded-[20px] shadow-sm bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Appointments</CardTitle>
-            <div className="h-9 w-9 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-600">
+            <CardTitle className="text-sm font-bold text-slate-500">Total Appointments</CardTitle>
+            <div className="h-9 w-9 rounded-[12px] bg-emerald-50 text-[#047857] flex items-center justify-center">
               <Calendar className="w-5 h-5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
-            <div className="text-2xl font-bold">{appointments.length}</div>
-            <p className="text-xs text-muted-foreground">Scheduled & historical visits</p>
+            <div className="text-2xl font-extrabold text-slate-800">{appointments.length}</div>
+            <p className="text-xs text-slate-400 font-medium">Scheduled & historical visits</p>
           </CardContent>
         </Card>
 
         {/* Prescriptions Card */}
-        <Card className="hover:scale-[1.02] transition-transform duration-200">
+        <Card className="hover:scale-[1.02] hover:shadow-md transition-all duration-250 border-slate-200/60 rounded-[20px] shadow-sm bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">My Prescriptions</CardTitle>
-            <div className="h-9 w-9 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-600">
+            <CardTitle className="text-sm font-bold text-slate-500">My Prescriptions</CardTitle>
+            <div className="h-9 w-9 rounded-[12px] bg-emerald-50 text-[#047857] flex items-center justify-center">
               <FileText className="w-5 h-5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
-            <div className="text-2xl font-bold">{prescriptions.length}</div>
-            <p className="text-xs text-muted-foreground">Prescribed medical plans</p>
+            <div className="text-2xl font-extrabold text-slate-800">{prescriptions.length}</div>
+            <p className="text-xs text-slate-400 font-medium">Prescribed medical plans</p>
           </CardContent>
         </Card>
 
         {/* Health Records Profile Card */}
-        <Card className="hover:scale-[1.02] transition-transform duration-200">
+        <Card className="hover:scale-[1.02] hover:shadow-md transition-all duration-250 border-slate-200/60 rounded-[20px] shadow-sm bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Health Profile</CardTitle>
-            <div className="h-9 w-9 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-600">
+            <CardTitle className="text-sm font-bold text-slate-500">Health Profile</CardTitle>
+            <div className="h-9 w-9 rounded-[12px] bg-emerald-50 text-[#047857] flex items-center justify-center">
               <Activity className="w-5 h-5" />
             </div>
           </CardHeader>
           <CardContent className="space-y-1">
-            <div className="text-lg font-bold text-violet-600 flex items-center gap-1">
-              Active <Sparkles className="h-4 w-4 text-violet-500 animate-pulse" />
+            <div className="text-lg font-extrabold text-[#047857] flex items-center gap-1">
+              Active <Sparkles className="h-4 w-4 text-[#047857] animate-pulse" />
             </div>
-            <p className="text-xs text-muted-foreground">Check your medical parameters</p>
+            <p className="text-xs text-slate-400 font-medium">Check your medical parameters</p>
           </CardContent>
         </Card>
       </div>
@@ -248,13 +241,13 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
       {/* Grid: Upcoming Appointments (col-span-2) & Prescriptions (col-span-1) */}
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
         {/* Upcoming appointments */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 rounded-[24px] border-slate-200/60 shadow-sm bg-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="space-y-1">
-              <CardTitle>Upcoming Appointments</CardTitle>
-              <CardDescription>Booked slots requiring attendance or payment.</CardDescription>
+              <CardTitle className="text-lg font-bold text-slate-800">Upcoming Appointments</CardTitle>
+              <CardDescription className="text-slate-400 font-medium">Booked slots requiring attendance or payment.</CardDescription>
             </div>
-            <Button asChild variant="ghost" size="sm" className="gap-1 text-primary">
+            <Button asChild variant="ghost" size="sm" className="gap-1 text-[#047857] hover:text-[#035f43] font-semibold hover:bg-emerald-50/50 transition-colors">
               <Link href="/dashboard/my-appointments">
                 View All <ArrowRight className="h-4 w-4" />
               </Link>
@@ -262,16 +255,16 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
           </CardHeader>
           <CardContent>
             {sortedUpcomingAppointments.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 text-center border-2 border-dashed rounded-xl">
-                <Calendar className="h-10 w-10 text-muted-foreground/60 mb-2 animate-bounce" />
-                <p className="text-sm font-medium text-muted-foreground">No upcoming appointments found</p>
-                <p className="text-xs text-muted-foreground/80 mt-1 max-w-xs">Need to check up with a doctor? Click below to book.</p>
-                <Button asChild size="sm" className="mt-4">
+              <div className="flex flex-col items-center justify-center py-10 text-center border border-dashed border-slate-200 rounded-2xl">
+                <Calendar className="h-10 w-10 text-slate-300 mb-2 animate-bounce" />
+                <p className="text-sm font-semibold text-slate-700">No upcoming appointments found</p>
+                <p className="text-xs text-slate-400 mt-1 max-w-xs">Need to check up with a doctor? Click below to book.</p>
+                <Button asChild size="sm" className="mt-4 rounded-full bg-[#047857] hover:bg-[#035f43] text-white">
                   <Link href="/dashboard/book-appointments">Book Now</Link>
                 </Button>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 {sortedUpcomingAppointments.map((appointment) => {
                   const isUnpaid = appointment.paymentStatus !== "PAID";
                   const isPendingPay = isUnpaid && appointment.status !== "CANCELED";
@@ -279,27 +272,38 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
                   return (
                     <div 
                       key={appointment.id} 
-                      className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl border bg-muted/20 hover:bg-muted/40 transition-colors"
+                      className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-[20px] border border-slate-200/60 bg-slate-50/30 hover:bg-slate-50/80 hover:border-emerald-100/80 transition-all duration-200"
                     >
                       <div className="space-y-1">
-                        <div className="font-semibold text-base">{appointment.doctor?.name || "Consultation visit"}</div>
-                        <div className="text-xs text-muted-foreground font-medium">{appointment.doctor?.designation || "Healthcare Doctor"}</div>
-                        <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">
-                          <Clock className="h-3.5 w-3.5" />
+                        <div className="font-extrabold text-slate-800 text-base">{appointment.doctor?.name || "Consultation visit"}</div>
+                        <div className="text-xs text-slate-400 font-semibold">{appointment.doctor?.designation || "Healthcare Doctor"}</div>
+                        <div className="flex items-center gap-2 mt-1.5 text-xs text-slate-505 font-medium">
+                          <Clock className="h-3.5 w-3.5 text-[#047857]" />
                           <span>{formatDateTime(appointment.schedule?.startDateTime)}</span>
                         </div>
                       </div>
                       
                       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
                         <div className="flex gap-2">
-                          <Badge variant="outline" className="bg-white">{appointment.status}</Badge>
+                          <Badge 
+                            variant="outline" 
+                            className={cn(
+                              "bg-white rounded-full font-semibold border-slate-200/60 px-2.5 py-0.5 text-xs",
+                              appointment.status === "SCHEDULED" && "text-blue-700 bg-blue-50/20 border-blue-100",
+                              appointment.status === "COMPLETED" && "text-[#047857] bg-emerald-50/20 border-emerald-100",
+                              appointment.status === "CANCELED" && "text-rose-700 bg-rose-50/20 border-rose-100"
+                            )}
+                          >
+                            {appointment.status}
+                          </Badge>
                           <Badge 
                             variant="secondary"
-                            className={
+                            className={cn(
+                              "rounded-full font-semibold border px-2.5 py-0.5 text-xs",
                               appointment.paymentStatus === "PAID" 
-                                ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" 
-                                : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
-                            }
+                                ? "bg-emerald-50 text-[#047857] border-emerald-100/50" 
+                                : "bg-amber-50 text-amber-700 border-amber-100/50"
+                            )}
                           >
                             {appointment.paymentStatus}
                           </Badge>
@@ -308,14 +312,14 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
                         {isPendingPay ? (
                           <Button 
                             size="sm" 
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white gap-1 w-full sm:w-auto"
+                            className="bg-[#047857] hover:bg-[#035f43] text-white rounded-full font-semibold shadow-md shadow-emerald-500/10 transition-colors gap-1 w-full sm:w-auto"
                             onClick={() => handlePayNow(appointment.id)}
                             disabled={initiatePaymentMutation.isPending}
                           >
                             <CreditCard className="h-4 w-4" /> Pay Now
                           </Button>
                         ) : (
-                          <Button asChild size="sm" variant="outline" className="w-full sm:w-auto">
+                          <Button asChild size="sm" variant="outline" className="w-full sm:w-auto rounded-full border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold">
                             <Link href={`/consultation/doctor/${appointment.doctorId || appointment.doctor?.id || ""}`}>
                               Profile
                             </Link>
@@ -331,13 +335,13 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
         </Card>
 
         {/* Recent Prescriptions */}
-        <Card>
+        <Card className="rounded-[24px] border-slate-200/60 shadow-sm bg-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="space-y-1">
-              <CardTitle>Recent Prescriptions</CardTitle>
-              <CardDescription>Guidelines from doctors.</CardDescription>
+              <CardTitle className="text-lg font-bold text-slate-800">Recent Prescriptions</CardTitle>
+              <CardDescription className="text-slate-400 font-medium">Guidelines from doctors.</CardDescription>
             </div>
-            <Button asChild variant="ghost" size="sm" className="gap-1 text-primary">
+            <Button asChild variant="ghost" size="sm" className="gap-1 text-[#047857] hover:text-[#035f43] font-semibold hover:bg-emerald-50/50 transition-colors">
               <Link href="/dashboard/my-prescriptions">
                 View All <ArrowRight className="h-4 w-4" />
               </Link>
@@ -345,42 +349,42 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
           </CardHeader>
           <CardContent>
             {recentPrescriptions.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 text-center border-2 border-dashed rounded-xl">
-                <FileText className="h-10 w-10 text-muted-foreground/60 mb-2" />
-                <p className="text-sm font-medium text-muted-foreground">No prescriptions yet</p>
-                <p className="text-xs text-muted-foreground/80 mt-1">Prescriptions will appear here after diagnostic sessions.</p>
+              <div className="flex flex-col items-center justify-center py-10 text-center border border-dashed border-slate-200 rounded-2xl">
+                <FileText className="h-10 w-10 text-slate-300 mb-2" />
+                <p className="text-sm font-semibold text-slate-700">No prescriptions yet</p>
+                <p className="text-xs text-slate-400 mt-1">Prescriptions will appear here after diagnostic sessions.</p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 {recentPrescriptions.map((prescription) => (
                   <div 
                     key={prescription.id} 
-                    className="p-4 rounded-xl border bg-muted/10 hover:bg-muted/30 transition-all duration-200 space-y-3"
+                    className="p-4 rounded-xl border border-slate-200/60 bg-slate-50/30 hover:bg-slate-50/80 hover:border-emerald-100/80 transition-all duration-200 space-y-3"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <div className="font-semibold text-sm text-foreground">
+                        <div className="font-extrabold text-sm text-slate-800">
                           {prescription.doctor?.name || "Dr. Practitioner"}
                         </div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-slate-400 font-semibold">
                           Date: {prescription.createdAt ? format(new Date(prescription.createdAt), "MMM dd, yyyy") : "N/A"}
                         </div>
                       </div>
-                      <Badge variant="outline" className="bg-primary/5 text-primary text-[10px] py-0">Active</Badge>
+                      <Badge variant="outline" className="bg-emerald-50 text-[#047857] border-emerald-100 text-[10px] py-0.5 px-2 rounded-full font-semibold">Active</Badge>
                     </div>
 
-                    <p className="text-xs text-muted-foreground line-clamp-2 italic">
+                    <p className="text-xs text-slate-600 line-clamp-2 italic font-medium leading-relaxed bg-slate-100/30 p-2 rounded-lg border border-slate-100">
                       "{prescription.instructions}"
                     </p>
 
-                    <div className="flex items-center justify-between text-xs pt-1 border-t">
-                      <span className="text-muted-foreground">
+                    <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-100 font-medium">
+                      <span className="text-slate-400">
                         Follow-up: {prescription.followUpDate ? format(new Date(prescription.followUpDate), "MMM dd, yyyy") : "N/A"}
                       </span>
                       <Button 
                         size="sm" 
                         variant="ghost" 
-                        className="h-7 px-2.5 text-xs text-indigo-600 font-medium hover:text-indigo-800"
+                        className="h-7 px-2.5 text-xs text-[#047857] font-bold hover:text-[#035f43] hover:bg-emerald-50/50 rounded-full transition-colors"
                         asChild
                       >
                         <Link href="/dashboard/my-prescriptions">Details</Link>
@@ -395,37 +399,37 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
       </div>
 
       {/* Patient Shortcuts Action Panel */}
-      <Card>
+      <Card className="rounded-[24px] border-slate-200/60 shadow-sm bg-white">
         <CardHeader>
-          <CardTitle>Quick Patient Shortcuts</CardTitle>
-          <CardDescription>Get instant access to common diagnostic and booking functions.</CardDescription>
+          <CardTitle className="text-lg font-bold text-slate-800">Quick Patient Shortcuts</CardTitle>
+          <CardDescription className="text-slate-400 font-medium">Get instant access to common diagnostic and booking functions.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 grid-cols-2 md:grid-cols-4">
-          <Button asChild variant="outline" className="flex flex-col items-center justify-center p-6 h-28 gap-2 hover:bg-teal-50/10 hover:border-teal-500/30 transition-all border-dashed rounded-xl">
+          <Button asChild variant="outline" className="flex flex-col items-center justify-center p-6 h-28 gap-2 bg-white hover:bg-emerald-50/30 hover:border-emerald-300 border-slate-200/60 border-dashed rounded-2xl transition-all duration-200 group shadow-sm hover:shadow-md cursor-pointer">
             <Link href="/dashboard/book-appointments">
-              <ClipboardList className="h-6 w-6 text-teal-500" />
-              <span className="text-sm font-semibold">Book Doctor</span>
+              <ClipboardList className="h-6 w-6 text-[#047857] group-hover:scale-110 transition-transform duration-200" />
+              <span className="text-sm font-extrabold text-slate-700">Book Doctor</span>
             </Link>
           </Button>
 
-          <Button asChild variant="outline" className="flex flex-col items-center justify-center p-6 h-28 gap-2 hover:bg-cyan-50/10 hover:border-cyan-500/30 transition-all border-dashed rounded-xl">
+          <Button asChild variant="outline" className="flex flex-col items-center justify-center p-6 h-28 gap-2 bg-white hover:bg-emerald-50/30 hover:border-emerald-300 border-slate-200/60 border-dashed rounded-2xl transition-all duration-200 group shadow-sm hover:shadow-md cursor-pointer">
             <Link href="/dashboard/my-appointments">
-              <Calendar className="h-6 w-6 text-cyan-500" />
-              <span className="text-sm font-semibold">My Bookings</span>
+              <Calendar className="h-6 w-6 text-[#047857] group-hover:scale-110 transition-transform duration-200" />
+              <span className="text-sm font-extrabold text-slate-700">My Bookings</span>
             </Link>
           </Button>
 
-          <Button asChild variant="outline" className="flex flex-col items-center justify-center p-6 h-28 gap-2 hover:bg-blue-50/10 hover:border-blue-500/30 transition-all border-dashed rounded-xl">
+          <Button asChild variant="outline" className="flex flex-col items-center justify-center p-6 h-28 gap-2 bg-white hover:bg-emerald-50/30 hover:border-emerald-300 border-slate-200/60 border-dashed rounded-2xl transition-all duration-200 group shadow-sm hover:shadow-md cursor-pointer">
             <Link href="/dashboard/my-prescriptions">
-              <FileText className="h-6 w-6 text-blue-500" />
-              <span className="text-sm font-semibold">Prescriptions</span>
+              <FileText className="h-6 w-6 text-[#047857] group-hover:scale-110 transition-transform duration-200" />
+              <span className="text-sm font-extrabold text-slate-700">Prescriptions</span>
             </Link>
           </Button>
 
-          <Button asChild variant="outline" className="flex flex-col items-center justify-center p-6 h-28 gap-2 hover:bg-violet-50/10 hover:border-violet-500/30 transition-all border-dashed rounded-xl">
+          <Button asChild variant="outline" className="flex flex-col items-center justify-center p-6 h-28 gap-2 bg-white hover:bg-emerald-50/30 hover:border-emerald-300 border-slate-200/60 border-dashed rounded-2xl transition-all duration-200 group shadow-sm hover:shadow-md cursor-pointer">
             <Link href="/dashboard/health-records">
-              <Activity className="h-6 w-6 text-violet-500" />
-              <span className="text-sm font-semibold">Health Records</span>
+              <Activity className="h-6 w-6 text-[#047857] group-hover:scale-110 transition-transform duration-200" />
+              <span className="text-sm font-extrabold text-slate-700">Health Records</span>
             </Link>
           </Button>
         </CardContent>

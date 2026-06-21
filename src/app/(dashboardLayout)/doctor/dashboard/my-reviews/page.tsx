@@ -20,7 +20,7 @@ const MyReviewsPage = async ({
   const user = await getUserinfo();
 
   const { data: reviews } = await getReviewsByDoctorId(
-    user.userId,
+    user.doctor?.id || "",
     queryString.toString()
   );
 
