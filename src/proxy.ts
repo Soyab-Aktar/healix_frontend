@@ -163,11 +163,7 @@ export async function proxy(request: NextRequest) {
             url.searchParams.set("email", userInfo.email);
             return NextResponse.redirect(url);
           }
-          if (userInfo.needPasswordChange) {
-            const url = new URL("/reset-password", request.url);
-            url.searchParams.set("email", userInfo.email);
-            return NextResponse.redirect(url);
-          }
+          // Allow user to enter site even if they need password change
         }
       }
       return NextResponse.next();
@@ -195,11 +191,7 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    if (userInfo.needPasswordChange) {
-      const url = new URL("/reset-password", request.url);
-      url.searchParams.set("email", userInfo.email);
-      return NextResponse.redirect(url);
-    }
+    // Allow user to enter site even if they need password change
 
     // ── 8. Common protected routes ───────────────────────────────────────────
     if (routeOwner === "COMMON") return NextResponse.next();

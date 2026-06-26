@@ -76,15 +76,11 @@ export const loginAction = async (
     await setTokenInCookies("refreshToken", refreshToken);
     await setTokenInCookies("better-auth.session_token", token);
 
-    if (needPasswordChange) {
-      redirect(`/reset-password?email=${encodeURIComponent(email)}`);
-    } else {
-      const targetPath =
-        redirectPath && isValidRedirectRole(redirectPath, role as UserRole)
-          ? redirectPath
-          : getDefaultDashboardRoute(role as UserRole);
-      redirect(targetPath as string);
-    }
+    const targetPath =
+      redirectPath && isValidRedirectRole(redirectPath, role as UserRole)
+        ? redirectPath
+        : getDefaultDashboardRoute(role as UserRole);
+    redirect(targetPath as string);
   } catch (error: unknown) {
     // Re-throw ALL Next.js redirects
     if (

@@ -12,11 +12,22 @@ interface UserDropdownProps {
 }
 
 const UserDropdown = ({ userInfo }: UserDropdownProps) => {
+  const profilePhoto = 
+    userInfo.patient?.profilePhoto || 
+    userInfo.doctor?.profilePhoto || 
+    userInfo.admin?.profilePhoto || 
+    userInfo.superAdmin?.profilePhoto || 
+    userInfo.image;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="rounded-full h-9 w-9 bg-emerald-50 text-[#047857] border-emerald-100 hover:bg-emerald-100/50 hover:text-[#035f43] font-bold">
-          {userInfo.name.charAt(0).toUpperCase()}
+        <Button variant="outline" className="rounded-full h-9 w-9 p-0 bg-emerald-50 text-[#047857] border-emerald-100 hover:bg-emerald-100/50 hover:text-[#035f43] font-bold overflow-hidden">
+          {profilePhoto ? (
+            <img src={profilePhoto} alt={userInfo.name} className="h-full w-full object-cover" />
+          ) : (
+            userInfo.name.charAt(0).toUpperCase()
+          )}
         </Button>
       </DropdownMenuTrigger>
 

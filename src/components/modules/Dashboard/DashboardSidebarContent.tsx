@@ -18,6 +18,13 @@ interface DashboardSidebarContentProps {
 
 const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: DashboardSidebarContentProps) => {
   const pathname = usePathname()
+  const profilePhoto = 
+    userInfo.patient?.profilePhoto || 
+    userInfo.doctor?.profilePhoto || 
+    userInfo.admin?.profilePhoto || 
+    userInfo.superAdmin?.profilePhoto || 
+    userInfo.image;
+
   return (
     <div className="hidden md:flex h-full w-64 flex-col border-r border-slate-200/80 bg-white overflow-y-auto">
       {/* Logo / Brand */}
@@ -77,8 +84,12 @@ const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: Dashboar
       {/* User Info At Bottom */}
       <div className="border-t border-slate-100 px-4 py-4 bg-slate-50/50">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-full bg-emerald-50 text-[#047857] border border-emerald-100/50 flex items-center justify-center font-bold">
-            {userInfo.name.charAt(0).toUpperCase()}
+          <div className="h-9 w-9 rounded-full bg-emerald-50 text-[#047857] border border-emerald-100/50 flex items-center justify-center font-bold overflow-hidden">
+            {profilePhoto ? (
+              <img src={profilePhoto} alt={userInfo.name} className="h-full w-full object-cover" />
+            ) : (
+              userInfo.name.charAt(0).toUpperCase()
+            )}
           </div>
 
           <div className="flex-1 overflow-hidden">
