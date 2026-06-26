@@ -20,7 +20,7 @@ export default function PatientReviewsClient({
   const [reviews, setReviews] = useState<IReview[]>(initialReviews);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  
+
   // Table states
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({

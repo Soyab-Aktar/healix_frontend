@@ -11,12 +11,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { 
-  Calendar, 
-  FileText, 
-  Activity, 
-  ArrowRight, 
-  CreditCard, 
+import {
+  Calendar,
+  FileText,
+  Activity,
+  ArrowRight,
+  CreditCard,
   Sparkles,
   ClipboardList,
   Clock,
@@ -73,7 +73,7 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
   // Recent Appointments (include upcoming, sorted chronologically, followed by recent past desc)
   const recentAppointments = useMemo(() => {
     const now = Date.now();
-    
+
     const upcoming = [...appointments].filter((a) => {
       const isScheduled = a.status === "SCHEDULED" || a.status === "INPROGRESS";
       const start = a.schedule?.startDateTime ? new Date(a.schedule.startDateTime).getTime() : 0;
@@ -142,7 +142,7 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
       <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#0d9488] to-[#047857] p-6 md:p-8 text-white shadow-lg shadow-emerald-500/10">
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white/5 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-white/5 blur-3xl pointer-events-none" />
-        
+
         <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-semibold backdrop-blur-md">
@@ -300,7 +300,7 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
                               </div>
                             </div>
                           </TableCell>
-                          
+
                           <TableCell className="align-middle py-3.5">
                             <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
                               <Clock className="h-3.5 w-3.5 text-[#047857]" />
@@ -309,8 +309,8 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
                           </TableCell>
 
                           <TableCell className="align-middle py-3.5">
-                            <Badge 
-                              variant="outline" 
+                            <Badge
+                              variant="outline"
                               className={cn(
                                 "bg-white rounded-full font-semibold border-slate-200/60 px-2.5 py-0.5 text-[11px]",
                                 appointment.status === "SCHEDULED" && "text-blue-700 bg-blue-50/20 border-blue-100",
@@ -324,12 +324,12 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
                           </TableCell>
 
                           <TableCell className="align-middle py-3.5">
-                            <Badge 
+                            <Badge
                               variant="secondary"
                               className={cn(
                                 "rounded-full font-semibold border px-2.5 py-0.5 text-[11px]",
-                                appointment.paymentStatus === "PAID" 
-                                  ? "bg-emerald-50 text-[#047857] border-emerald-100/50" 
+                                appointment.paymentStatus === "PAID"
+                                  ? "bg-emerald-50 text-[#047857] border-emerald-100/50"
                                   : "bg-amber-50 text-amber-700 border-amber-100/50"
                               )}
                             >
@@ -339,8 +339,8 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
 
                           <TableCell className="align-middle pr-6 py-3.5 text-right">
                             {isPendingPay ? (
-                              <Button 
-                                size="sm" 
+                              <Button
+                                size="sm"
                                 className="bg-[#047857] hover:bg-[#035f43] text-white rounded-lg font-semibold shadow-md shadow-emerald-500/10 transition-all duration-200 gap-1 text-xs px-3 py-1.5 h-auto inline-flex items-center cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                                 onClick={() => handlePayNow(appointment.id)}
                                 disabled={initiatePaymentMutation.isPending}
@@ -463,8 +463,8 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
           ) : (
             <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
               {recentPrescriptions.map((prescription) => (
-                <div 
-                  key={prescription.id} 
+                <div
+                  key={prescription.id}
                   className="p-4 rounded-xl border border-slate-200/60 bg-slate-50/30 hover:bg-slate-50/80 hover:border-emerald-100/80 transition-all duration-200 space-y-3 flex flex-col justify-between"
                 >
                   <div className="space-y-3">
@@ -489,9 +489,9 @@ const PatientDashboardContent = ({ userInfo }: PatientDashboardContentProps) => 
                     <span className="text-slate-450 text-[11px] font-semibold">
                       Follow-up: {prescription.followUpDate ? format(new Date(prescription.followUpDate), "MMM dd, yyyy") : "N/A"}
                     </span>
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
+                    <Button
+                      size="sm"
+                      variant="ghost"
                       className="h-7 px-2.5 text-xs text-[#047857] font-bold hover:text-[#035f43] hover:bg-emerald-50/50 rounded-lg transition-colors"
                       asChild
                     >

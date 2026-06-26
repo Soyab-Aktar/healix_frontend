@@ -61,7 +61,7 @@ const ChangePasswordPage = () => {
     },
     onSubmit: async ({ value }) => {
       setServerError(null);
-      
+
       if (value.newPassword !== value.confirmPassword) {
         setServerError("New passwords do not match");
         return;
@@ -155,7 +155,7 @@ const ChangePasswordPage = () => {
                     >
                       {isActive ? <Check className="w-3 h-3" /> : step.number}
                     </div>
-                    
+
                     <h4 className="text-[10px] lg:text-[11px] font-medium leading-tight">
                       {step.title}
                     </h4>
@@ -169,7 +169,7 @@ const ChangePasswordPage = () => {
         {/* Right Column: Change Password Form */}
         <div className="col-span-1 lg:col-span-6 flex flex-col justify-center py-6 px-4 sm:px-8 lg:px-10">
           <div className="w-full max-w-[380px] mx-auto flex flex-col">
-            
+
             {/* Header info */}
             <div className="space-y-1.5 text-left pb-6">
               <h3 className="text-xl font-bold tracking-tight text-slate-800">

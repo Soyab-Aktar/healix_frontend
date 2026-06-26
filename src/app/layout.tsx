@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import QueryProviders from "@/providers/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -32,13 +33,21 @@ export default function RootLayout({
 
       lang="en"
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
+      suppressHydrationWarning
 
     >
 
       <body className="min-h-full flex flex-col">
         <QueryProviders>
-          {children}
-          <Toaster richColors closeButton position="top-right" />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster richColors closeButton position="top-right" />
+          </ThemeProvider>
         </QueryProviders>
       </body>
     </html>

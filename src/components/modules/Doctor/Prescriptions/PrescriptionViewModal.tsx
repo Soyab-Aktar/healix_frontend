@@ -30,11 +30,10 @@ const DetailRow = ({
   <div className="flex items-start justify-between gap-4 py-0.5">
     <span className="text-slate-400 shrink-0 w-36 text-sm font-semibold">{label}</span>
     <span
-      className={`text-slate-700 text-right break-all text-sm font-semibold ${
-        mono
+      className={`text-slate-700 text-right break-all text-sm font-semibold ${mono
           ? "font-mono text-xs text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/40"
           : ""
-      }`}
+        }`}
     >
       {value}
     </span>

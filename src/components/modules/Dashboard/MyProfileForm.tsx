@@ -623,9 +623,8 @@ const MyProfileForm = () => {
                           return (
                             <div
                               key={report.id}
-                              className={`flex items-center justify-between p-3.5 border rounded-[16px] transition-all duration-200 ${
-                                isMarkedDelete ? "opacity-50 border-rose-300 bg-rose-50/30" : "border-slate-200/60 bg-white hover:border-emerald-100 hover:shadow-sm"
-                              }`}
+                              className={`flex items-center justify-between p-3.5 border rounded-[16px] transition-all duration-200 ${isMarkedDelete ? "opacity-50 border-rose-300 bg-rose-50/30" : "border-slate-200/60 bg-white hover:border-emerald-100 hover:shadow-sm"
+                                }`}
                             >
                               <div className="flex items-center gap-2.5 overflow-hidden mr-2">
                                 <FileText className={`h-4.5 w-4.5 shrink-0 ${isMarkedDelete ? "text-slate-400" : "text-rose-500"}`} />

@@ -71,7 +71,7 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section className="py-24 bg-slate-50 relative overflow-hidden">
+    <section className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
       {/* Background decoration */}
       <div className="absolute left-0 bottom-1/4 -ml-32 w-80 h-80 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -79,18 +79,18 @@ export default function TestimonialsSection() {
         
         {/* Header Block */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <Badge className="bg-emerald-100/80 text-emerald-800 border-emerald-200/50 hover:bg-emerald-100 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+          <Badge className="bg-emerald-100/80 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-900/40 hover:bg-emerald-100 dark:hover:bg-emerald-950/30 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
             Testimonials
           </Badge>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight transition-colors">
             Loved by patients. Trusted by doctors.
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+          <p className="text-slate-650 dark:text-slate-305 text-sm sm:text-base leading-relaxed transition-colors">
             Read authentic feedback from individuals, families, and healthcare providers who have transformed their clinical experience through Healix.
           </p>
         </div>
 
-        {/* Testimonial Cards Layout - Asymmetric staggered height columns */}
+        {/* Testimonial Cards Layout */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
@@ -104,13 +104,13 @@ export default function TestimonialsSection() {
               variants={itemVariants}
               className={idx === 1 ? "md:translate-y-4" : ""}
             >
-              <Card className="bg-white border border-slate-200/60 rounded-3xl p-6 sm:p-8 flex flex-col justify-between hover:shadow-md transition-all duration-300 h-full relative overflow-hidden">
-                <Quote className="absolute right-6 top-6 h-8 w-8 text-slate-100/80" />
+              <Card className="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-808/80 rounded-3xl p-6 sm:p-8 flex flex-col justify-between hover:shadow-md transition-all duration-300 h-full relative overflow-hidden">
+                <Quote className="absolute right-6 top-6 h-8 w-8 text-slate-100/80 dark:text-slate-800/40" />
                 
                 <div className="space-y-4">
                   {/* Badge & Stars */}
                   <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1 text-[9px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded border border-emerald-100">
+                    <span className="inline-flex items-center gap-1 text-[9px] bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded border border-emerald-100 dark:border-emerald-900/40">
                       <ShieldCheck className="h-3 w-3" /> {t.badgeText}
                     </span>
                     <div className="flex gap-0.5">
@@ -121,21 +121,21 @@ export default function TestimonialsSection() {
                   </div>
 
                   {/* Feedback text */}
-                  <p className="text-slate-600 text-sm leading-relaxed italic">
+                  <p className="text-slate-650 dark:text-slate-300 text-sm leading-relaxed italic transition-colors">
                     &ldquo;{t.feedback}&rdquo;
                   </p>
                 </div>
 
                 {/* Profile info */}
-                <div className="mt-8 pt-5 border-t border-slate-100 flex items-center gap-3">
-                  <Avatar className="h-10 w-10 border border-slate-200 shadow-2xs rounded-full">
-                    <AvatarFallback className="bg-emerald-50 text-emerald-700 font-bold text-xs">
+                <div className="mt-8 pt-5 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3 transition-colors">
+                  <Avatar className="h-10 w-10 border border-slate-200 dark:border-slate-800 shadow-2xs rounded-full">
+                    <AvatarFallback className="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
                       {t.initials}
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0">
-                    <h4 className="text-sm font-bold text-slate-900 truncate">{t.name}</h4>
-                    <p className="text-[11px] text-slate-500 font-medium truncate">
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate transition-colors">{t.name}</h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate transition-colors">
                       {t.role} · {t.location}
                     </p>
                   </div>

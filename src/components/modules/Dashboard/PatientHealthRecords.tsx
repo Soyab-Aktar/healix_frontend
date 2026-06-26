@@ -1,18 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { 
-  Activity, 
-  Heart, 
-  FileText, 
-  Calendar, 
-  ShieldAlert, 
-  ArrowUpRight, 
+import {
+  Activity,
+  Heart,
+  FileText,
+  Calendar,
+  ShieldAlert,
+  ArrowUpRight,
   Ruler,
   Scale,
-  CheckCircle2, 
-  XCircle, 
-  Search, 
+  CheckCircle2,
+  XCircle,
+  Search,
   ExternalLink,
   PlusCircle,
   FileCheck
@@ -38,10 +38,10 @@ const PatientHealthRecords = ({ patientData }: PatientHealthRecordsProps) => {
   // Parse height and weight to calculate BMI
   const calculateBMI = () => {
     if (!health?.height || !health?.weight) return null;
-    
+
     // Parse weight (expecting kg, strip any letters)
     const weightKg = parseFloat(health.weight.replace(/[^0-9.]/g, ""));
-    
+
     // Parse height (can be cm like "180", meters like "1.8", or inches)
     let heightM = parseFloat(health.height.replace(/[^0-9.]/g, ""));
     if (isNaN(weightKg) || isNaN(heightM)) return null;
@@ -322,14 +322,14 @@ const PatientHealthRecords = ({ patientData }: PatientHealthRecordsProps) => {
                     Access, view, or download clinical charts and reports.
                   </CardDescription>
                 </div>
-                
+
                 {/* Search Field */}
                 <div className="relative w-full sm:w-72">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                  <Input 
-                    type="text" 
-                    placeholder="Search reports by name..." 
-                    className="pl-9 pr-4 h-9 rounded-lg border-slate-200 focus-visible:border-[#047857] focus-visible:ring-emerald-500/20" 
+                  <Input
+                    type="text"
+                    placeholder="Search reports by name..."
+                    className="pl-9 pr-4 h-9 rounded-lg border-slate-200 focus-visible:border-[#047857] focus-visible:ring-emerald-500/20"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -340,7 +340,7 @@ const PatientHealthRecords = ({ patientData }: PatientHealthRecordsProps) => {
               {filteredReports.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {filteredReports.map((report) => (
-                    <div 
+                    <div
                       key={report.id}
                       className="group flex flex-col justify-between p-5 border border-slate-200/60 rounded-[20px] bg-white hover:border-emerald-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                     >
@@ -364,11 +364,11 @@ const PatientHealthRecords = ({ patientData }: PatientHealthRecordsProps) => {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="flex gap-2 mt-4 pt-3 border-t border-slate-100">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           className="w-full text-xs font-bold h-9 flex items-center justify-center gap-1.5 border-emerald-600/30 text-[#047857] hover:bg-emerald-50 hover:text-emerald-700 rounded-lg shadow-2xs transition-all"
                           asChild
                         >

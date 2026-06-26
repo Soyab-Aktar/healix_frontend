@@ -100,11 +100,10 @@ export default function EditReviewModal({
                     aria-label={`Rate ${star} Stars`}
                   >
                     <Star
-                      className={`h-8 w-8 transition-colors duration-150 ${
-                        isHighlighted
+                      className={`h-8 w-8 transition-colors duration-150 ${isHighlighted
                           ? "fill-yellow-400 text-yellow-400"
                           : "text-slate-200 fill-transparent"
-                      }`}
+                        }`}
                     />
                   </button>
                 );

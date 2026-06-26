@@ -8,11 +8,11 @@ import { Badge } from "@/components/ui/badge";
 
 export default function CTASection() {
   return (
-    <section className="py-12 bg-white relative overflow-hidden">
+    <section className="py-12 bg-white dark:bg-slate-900 relative overflow-hidden transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Deep Emerald Conversion Panel */}
-        <div className="relative bg-gradient-to-br from-[#047857] via-[#035f43] to-[#02402d] rounded-[32px] overflow-hidden p-8 sm:p-12 lg:p-16 border border-emerald-800 shadow-xl shadow-emerald-950/5">
+        <div className="relative bg-gradient-to-br from-[#047857] via-[#035f43] to-[#02402d] rounded-[32px] overflow-hidden p-8 sm:p-12 lg:p-16 border border-emerald-800 dark:border-emerald-950/80 shadow-xl shadow-emerald-950/5">
           
           {/* Background Vector Grids & Blurs */}
           <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:20px_20px] opacity-30 pointer-events-none" />
@@ -53,7 +53,7 @@ export default function CTASection() {
               <Button 
                 size="lg"
                 variant="outline"
-                className="border-emerald-500/40 text-white hover:bg-white/10 hover:text-white font-semibold text-sm px-6 h-12 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-98"
+                className="border-emerald-500/40 hover:bg-white/10 hover:text-white text-white font-semibold text-sm px-6 h-12 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-98"
                 asChild
               >
                 <Link href="/login">

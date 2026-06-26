@@ -88,7 +88,7 @@ const getNotificationIcon = (type: Notification["type"]) => {
 
 const NotificationDropdown = () => {
   const unreadCount = MOCK_NOTIFICATIONS.filter(notification => !notification.read).length;
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

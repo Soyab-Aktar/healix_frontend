@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus, HelpCircle, ArrowRight, MessageCircle } from "lucide-react";
+import { Plus, Minus, ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import Link from "next/link";
 
 interface FAQItem {
   question: string;
@@ -44,7 +43,7 @@ export default function FaqSection() {
   };
 
   return (
-    <section className="py-24 bg-slate-50 relative overflow-hidden">
+    <section className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
       {/* Background blobs */}
       <div className="absolute right-1/4 bottom-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -53,30 +52,30 @@ export default function FaqSection() {
           
           {/* Left Column: Heading + Support Card */}
           <div className="lg:col-span-5 space-y-6">
-            <Badge className="bg-emerald-100/80 text-emerald-800 border-emerald-200/50 hover:bg-emerald-100 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+            <Badge className="bg-emerald-100/80 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-900/40 hover:bg-emerald-100 dark:hover:bg-emerald-950/30 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
               FAQ
             </Badge>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight transition-colors">
               Answering your clinical & platform questions.
             </h2>
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+            <p className="text-slate-650 dark:text-slate-300 text-sm sm:text-base leading-relaxed transition-colors">
               Find instant answers to details regarding digital appointments, physician verification, health data security, and consulting services.
             </p>
 
             {/* Premium Support Card */}
-            <Card className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs relative overflow-hidden group">
+            <Card className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-808/80 rounded-2xl p-6 shadow-xs relative overflow-hidden group transition-colors">
               <div className="absolute right-0 top-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl pointer-events-none" />
               <div className="relative z-10 flex gap-4">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-700 dark:text-emerald-400 shrink-0">
                   <MessageCircle className="h-5 w-5" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-slate-900">Still have questions?</h4>
-                  <p className="text-xs text-slate-500 leading-relaxed">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white transition-colors">Still have questions?</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed transition-colors">
                     Our patient support team is available 24/7. Reach out and we will help you resolve your query.
                   </p>
                   <div className="pt-2">
-                    <Button variant="link" className="text-emerald-700 hover:text-emerald-800 p-0 text-xs font-bold gap-1 group/btn cursor-pointer">
+                    <Button variant="link" className="text-emerald-700 dark:text-emerald-405 hover:text-emerald-800 dark:hover:text-emerald-300 p-0 text-xs font-bold gap-1 group/btn cursor-pointer">
                       Contact Support
                       <ArrowRight className="h-3 w-3 group-hover/btn:translate-x-0.5 transition-transform" />
                     </Button>
@@ -93,17 +92,17 @@ export default function FaqSection() {
               return (
                 <div
                   key={index}
-                  className="bg-white border border-slate-200/60 rounded-2xl overflow-hidden transition-all duration-200"
+                  className="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-808/80 rounded-2xl overflow-hidden transition-colors duration-250"
                 >
                   <button
                     type="button"
                     onClick={() => toggleFaq(index)}
-                    className="w-full px-6 py-5 flex items-center justify-between text-left font-semibold text-slate-800 hover:text-slate-900 text-sm sm:text-base cursor-pointer focus:outline-none transition-colors"
+                    className="w-full px-6 py-5 flex items-center justify-between text-left font-semibold text-slate-800 dark:text-slate-205 hover:text-slate-905 dark:hover:text-white text-sm sm:text-base cursor-pointer focus:outline-none transition-colors"
                   >
                     <span className="pr-4 leading-snug">{faq.question}</span>
-                    <span className="shrink-0 w-6 h-6 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-slate-600 transition-colors">
+                    <span className="shrink-0 w-6 h-6 rounded-full bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-550 group-hover:text-slate-650 transition-colors">
                       {isOpen ? (
-                        <Minus className="h-3.5 w-3.5 text-emerald-600" />
+                        <Minus className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-450" />
                       ) : (
                         <Plus className="h-3.5 w-3.5" />
                       )}
@@ -118,8 +117,8 @@ export default function FaqSection() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.25, ease: "easeInOut" }}
                       >
-                        <div className="px-6 pb-6 pt-1 border-t border-slate-50">
-                          <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                        <div className="px-6 pb-6 pt-1 border-t border-slate-50 dark:border-slate-800 transition-colors">
+                          <p className="text-slate-605 dark:text-slate-400 text-xs sm:text-sm leading-relaxed transition-colors">
                             {faq.answer}
                           </p>
                         </div>
