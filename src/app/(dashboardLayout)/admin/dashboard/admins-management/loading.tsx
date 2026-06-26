@@ -1,4 +1,5 @@
-export default function AdminAdminsManagementLoading() {
-  // Or a custom loading skeleton component
-  return <p>Admin Admins Management Loading...</p>
+import Loader from "@/components/shared/Loader";
+
+export default function Loading() {
+  return <Loader />;
 }

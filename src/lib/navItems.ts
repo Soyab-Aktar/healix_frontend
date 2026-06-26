@@ -158,6 +158,16 @@ export const patientNavItems: NavSection[] = [
       },
     ],
   },
+  {
+    title: "Feedback",
+    items: [
+      {
+        title: "My Reviews",
+        href: "/dashboard/my-reviews",
+        icon: "Star",
+      },
+    ],
+  },
 ];
 
 export const getNavItemsByRole = (role: UserRole): NavSection[] => {

@@ -1,4 +1,5 @@
-export default function PatientMyAppointmentsLoading() {
-  // Or a custom loading skeleton component
-  return <p>Patient My Appointments Loading...</p>
+import Loader from "@/components/shared/Loader";
+
+export default function Loading() {
+  return <Loader />;
 }

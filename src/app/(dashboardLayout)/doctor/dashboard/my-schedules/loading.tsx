@@ -1,4 +1,5 @@
-export default function DoctorMySchedulesLoading() {
-  // Or a custom loading skeleton component
-  return <p>Doctor My Schedules Loading...</p>
+import Loader from "@/components/shared/Loader";
+
+export default function Loading() {
+  return <Loader />;
 }

@@ -1,4 +1,5 @@
-export default function ConsultationLoading() {
-  // Or a custom loading skeleton component
-  return <p>Loading Consultation...</p>;
+import Loader from "@/components/shared/Loader";
+
+export default function Loading() {
+  return <Loader />;
 }

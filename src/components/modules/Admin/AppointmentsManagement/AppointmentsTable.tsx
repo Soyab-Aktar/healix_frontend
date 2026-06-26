@@ -45,7 +45,9 @@ const AppointmentsTable = ({
     onViewOpenChange,
     onEditOpenChange,
     tableActions,
-  } = useRowActionModalState<IAppointment>();
+  } = useRowActionModalState<IAppointment>({
+    enableDelete: false,
+  });
 
   const {
     queryStringFromUrl,
@@ -108,7 +110,6 @@ const AppointmentsTable = ({
         options: [
           { label: "Paid", value: "PAID" },
           { label: "Unpaid", value: "UNPAID" },
-          { label: "Failed", value: "FAILED" },
         ],
       },
     ];

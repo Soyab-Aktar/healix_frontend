@@ -13,7 +13,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { buttonVariants } from "@/components/ui/button";
 import { deleteAdmin } from "@/services/admin.services";
 import { IAdmin } from "@/types/admin.types";
 
@@ -76,12 +75,12 @@ const DeleteAdminConfirmationDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
           <AlertDialogAction
+            variant="destructive"
             onClick={(e) => {
               e.preventDefault();
               void handleDelete();
             }}
             disabled={isPending}
-            className={buttonVariants({ variant: "destructive" })}
           >
             {isPending ? "Deleting..." : "Delete Admin"}
           </AlertDialogAction>

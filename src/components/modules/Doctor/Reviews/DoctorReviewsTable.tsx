@@ -75,17 +75,15 @@ const DoctorReviewsTable = ({
 
   return (
     <>
-      <Card>
-        <CardContent className="space-y-5">
+      <div className="rounded-[24px] border border-slate-200/60 bg-white shadow-sm overflow-hidden p-5 sm:p-6">
+        <div className="space-y-5">
 
           {/* Search */}
-
-          <div className="relative max-w-sm">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-
+          <div className="group relative max-w-sm">
+            <Search className="text-[#047857]/60 group-focus-within:text-[#047857] pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transition-colors" />
             <Input
               placeholder="Search patient..."
-              className="pl-9"
+              className="h-9 pr-9 pl-9 rounded-lg border-slate-200 hover:border-emerald-500/30 focus-visible:border-[#047857] focus-visible:ring-emerald-500/20 transition-all bg-white"
               value={
                 (table
                   .getColumn("patient")
@@ -100,14 +98,13 @@ const DoctorReviewsTable = ({
           </div>
 
           {/* Table */}
-
-          <div className="rounded-lg border">
+          <div className="rounded-xl border border-slate-100 overflow-hidden">
             <Table>
-              <TableHeader>
+              <TableHeader className="bg-[#eefcf7]/40 border-b border-slate-100 hover:bg-transparent">
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
+                  <TableRow key={headerGroup.id} className="hover:bg-transparent border-b border-slate-100">
                     {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id}>
+                      <TableHead key={header.id} className="text-slate-800 font-bold h-12">
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -117,7 +114,7 @@ const DoctorReviewsTable = ({
                       </TableHead>
                     ))}
 
-                    <TableHead className="text-right">
+                    <TableHead className="text-slate-800 font-bold h-12 text-right">
                       Action
                     </TableHead>
                   </TableRow>
@@ -129,10 +126,10 @@ const DoctorReviewsTable = ({
                   table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
-                      className="cursor-pointer"
+                      className="hover:bg-slate-50/50 border-b border-slate-100/85 transition-colors cursor-pointer"
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
+                        <TableCell key={cell.id} className="py-3.5">
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
@@ -140,13 +137,14 @@ const DoctorReviewsTable = ({
                         </TableCell>
                       ))}
 
-                      <TableCell className="text-right">
+                      <TableCell className="py-3.5 text-right">
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() =>
                             setSelectedReview(row.original)
                           }
+                          className="hover:border-emerald-500/50 hover:bg-emerald-50/40 hover:text-emerald-700 transition-colors rounded-lg font-bold"
                         >
                           View
                         </Button>
@@ -170,9 +168,8 @@ const DoctorReviewsTable = ({
           </div>
 
           {/* Pagination */}
-
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
+          <div className="flex items-center justify-between border-t pt-4">
+            <p className="text-sm text-slate-500 font-medium">
               Showing{" "}
               {table.getRowModel().rows.length} of{" "}
               {reviews.length} reviews
@@ -184,6 +181,7 @@ const DoctorReviewsTable = ({
                 size="sm"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
+                className="hover:border-emerald-500/50 hover:bg-emerald-50/40 hover:text-emerald-700 transition-colors rounded-lg cursor-pointer font-bold"
               >
                 Previous
               </Button>
@@ -193,13 +191,14 @@ const DoctorReviewsTable = ({
                 size="sm"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
+                className="hover:border-emerald-500/50 hover:bg-emerald-50/40 hover:text-emerald-700 transition-colors rounded-lg cursor-pointer font-bold"
               >
                 Next
               </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       <ViewReviewDialog
         open={!!selectedReview}

@@ -55,3 +55,14 @@ export const updateAdmin = async (id: string, payload: any) => {
     throw error
   }
 }
+
+export const updateSuperAdmin = async (id: string, payload: any) => {
+  try {
+    const response = await httpClient.patch<any>(`/superAdmins/${id}`, payload)
+    return response
+  } catch (error) {
+    console.log("Error updating super admin:", error)
+    throw error
+  }
+}
+

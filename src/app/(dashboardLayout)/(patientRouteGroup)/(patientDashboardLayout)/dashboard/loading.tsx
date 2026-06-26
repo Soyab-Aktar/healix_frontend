@@ -1,4 +1,5 @@
-export default function PatientDashboardLoading() {
-  // Or a custom loading skeleton component
-  return <p>Patient Dashboard Loading...</p>
+import Loader from "@/components/shared/Loader";
+
+export default function Loading() {
+  return <Loader />;
 }

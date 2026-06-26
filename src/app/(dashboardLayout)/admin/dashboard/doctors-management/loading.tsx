@@ -1,4 +1,5 @@
-export default function AdminDoctorsManagementLoading() {
-  // Or a custom loading skeleton component
-  return <p>Admin Doctors Management Loading...</p>
+import Loader from "@/components/shared/Loader";
+
+export default function Loading() {
+  return <Loader />;
 }

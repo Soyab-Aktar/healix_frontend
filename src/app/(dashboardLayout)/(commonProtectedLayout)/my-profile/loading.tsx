@@ -1,4 +1,5 @@
-export default function MyProfileLoading() {
-  // Or a custom loading skeleton component
-  return <p>My Profile Loading...</p>
+import Loader from "@/components/shared/Loader";
+
+export default function Loading() {
+  return <Loader />;
 }

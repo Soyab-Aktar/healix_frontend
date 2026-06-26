@@ -28,11 +28,11 @@ const DetailRow = ({
   mono?: boolean;
 }) => (
   <div className="flex items-start justify-between gap-4 py-0.5">
-    <span className="text-slate-500 shrink-0 w-36 text-sm font-medium">{label}</span>
+    <span className="text-slate-400 shrink-0 w-36 text-sm font-semibold">{label}</span>
     <span
-      className={`text-slate-800 text-right break-all text-sm font-semibold ${
+      className={`text-slate-700 text-right break-all text-sm font-semibold ${
         mono
-          ? "font-mono text-xs text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200/40"
+          ? "font-mono text-xs text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/40"
           : ""
       }`}
     >
@@ -52,18 +52,18 @@ const PrescriptionViewModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg rounded-[24px] border border-slate-200/60 p-6">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl font-bold text-slate-800">
-            <FileText className="h-5 w-5 text-[#047857]" />
-            Prescription Details
+      <DialogContent className="max-w-lg p-0 overflow-hidden border-slate-200/80">
+        <DialogHeader className="px-6 py-5 border-b shrink-0 bg-slate-50/50">
+          <DialogTitle className="text-xl font-extrabold flex items-center gap-2.5 text-slate-800">
+            <FileText className="h-5.5 w-5.5 text-[#047857]" />
+            <span className="bg-gradient-to-r from-teal-800 to-emerald-700 bg-clip-text text-transparent">Prescription Details</span>
           </DialogTitle>
         </DialogHeader>
 
         {item && (
-          <div className="space-y-4">
+          <div className="px-6 py-5 space-y-4">
             {/* Meta */}
-            <div className="rounded-[20px] border border-slate-200/60 bg-slate-50/50 p-4.5 space-y-2.5">
+            <div className="rounded-[20px] border border-slate-200/60 bg-slate-50/15 p-4.5 space-y-2.5">
               <DetailRow label="Prescription ID" value={item.id} mono />
               <DetailRow label="Appointment ID" value={item.appointmentId} mono />
               <DetailRow label="Issued On" value={formatDate(item.createdAt)} />
@@ -91,7 +91,7 @@ const PrescriptionViewModal = ({
               <p className="text-xs font-bold text-[#047857] uppercase tracking-wide mb-2">
                 Instructions & Medications
               </p>
-              <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+              <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed font-medium">
                 {item.instructions}
               </p>
             </div>
@@ -102,7 +102,7 @@ const PrescriptionViewModal = ({
                 href={item.pdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-lg bg-[#047857] hover:bg-[#035f43] px-5 py-3 text-sm font-semibold text-white shadow-xs transition-colors"
+                className="flex items-center justify-center gap-2 rounded-lg bg-[#047857] hover:bg-[#035f43] px-5 py-3 text-sm font-bold text-white shadow-xs transition-colors"
               >
                 <ExternalLink className="h-4 w-4 shrink-0" />
                 Open Prescription PDF

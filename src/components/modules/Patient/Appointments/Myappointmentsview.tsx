@@ -9,11 +9,13 @@ import {
 } from "@/hooks/useServerManagedDataTableFilters";
 import { useServerManagedDataTableSearch } from "@/hooks/useServerManagedDataTableSearch";
 import { getMyAppointments } from "@/services/appointment.services";
+import { getMyReviews } from "@/services/review.services";
 import { IAppointment } from "@/types/appointment.types";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ViewAppointmentModal from "./Viewappointmentmodal";
-import { myAppointmentsColumns } from "./myAppointmentsColumns";
+import { getMyAppointmentsColumns } from "./myAppointmentsColumns";
+import WriteReviewModal from "./WriteReviewModal";
 
 const STATUS_FILTER_OPTIONS = [
   { label: "Scheduled", value: "SCHEDULED" },
@@ -32,7 +34,12 @@ const MyAppointmentsView = () => {
   const searchParams = useSearchParams();
 
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
+  const [reviewedAppointmentIds, setReviewedAppointmentIds] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchTrigger, setFetchTrigger] = useState(0);
+
+  const [reviewAppointment, setReviewAppointment] = useState<IAppointment | null>(null);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
 
   const {
     optimisticSortingState,
@@ -62,23 +69,42 @@ const MyAppointmentsView = () => {
     });
 
   useEffect(() => {
-    const fetchAppointments = async () => {
+    const fetchAppointmentsAndReviews = async () => {
       try {
         setIsLoading(true);
-        const response = await getMyAppointments();
-        setAppointments(response?.data ?? []);
+        const [apptsRes, reviewsRes] = await Promise.all([
+          getMyAppointments(),
+          getMyReviews(),
+        ]);
+        setAppointments(apptsRes?.data ?? []);
+
+        const ids = new Set<string>();
+        for (const review of reviewsRes?.data ?? []) {
+          if (review.appointmentId) {
+            ids.add(review.appointmentId);
+          }
+        }
+        setReviewedAppointmentIds(ids);
       } catch (error) {
-        console.error("Error fetching my appointments:", error);
+        console.error("Error fetching patient appointments and reviews:", error);
         setAppointments([]);
+        setReviewedAppointmentIds(new Set());
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchAppointments();
-    // Re-fetch whenever the URL query (search/sort/filter/pagination) changes.
-    // Backend currently returns all appointments regardless of params.
-  }, [searchParams]);
+    fetchAppointmentsAndReviews();
+  }, [searchParams, fetchTrigger]);
+
+  const handleOpenWriteReview = (appointment: IAppointment) => {
+    setReviewAppointment(appointment);
+    setIsReviewOpen(true);
+  };
+
+  const handleReviewSuccess = () => {
+    setFetchTrigger((prev) => prev + 1);
+  };
 
   // Client-side application of search/sort/filter/pagination as a fallback
   // since the backend does not yet support these query params.
@@ -143,19 +169,27 @@ const MyAppointmentsView = () => {
     pageIndex * pageSize + pageSize,
   );
 
+  const columns = useMemo(
+    () => getMyAppointmentsColumns(reviewedAppointmentIds, handleOpenWriteReview),
+    [reviewedAppointmentIds]
+  );
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">My Appointments</h1>
-        <p className="text-sm text-slate-500 font-medium mt-1">
-          View and manage your booked clinical appointments and schedules.
-        </p>
+      <div className="flex items-start gap-3">
+        <div className="h-10 w-1 bg-gradient-to-b from-[#0d9488] to-[#047857] rounded-full shrink-0 mt-1" />
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-[#0d9488] to-[#047857] bg-clip-text text-transparent">My Appointments</h1>
+          <p className="text-sm text-slate-500 font-medium mt-1">
+            View and manage your booked clinical appointments, schedules, and submit reviews for completed visits.
+          </p>
+        </div>
       </div>
 
       <div className="rounded-[24px] border border-slate-200/60 bg-white shadow-sm overflow-hidden p-2">
         <DataTable
           data={paginatedAppointments}
-          columns={myAppointmentsColumns}
+          columns={columns}
           actions={{
             onView: tableActions.onView,
           }}
@@ -206,6 +240,13 @@ const MyAppointmentsView = () => {
         appointment={viewingItem}
         open={isViewDialogOpen}
         onOpenChange={onViewOpenChange}
+      />
+
+      <WriteReviewModal
+        appointment={reviewAppointment}
+        open={isReviewOpen}
+        onOpenChange={setIsReviewOpen}
+        onSuccess={handleReviewSuccess}
       />
     </div>
   );

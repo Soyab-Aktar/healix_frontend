@@ -23,8 +23,8 @@ export const createDoctorFormZodSchema = z.object({
   contactNumber: z
     .string()
     .trim()
-    .min(11, "Contact number must be at least 11 characters")
-    .max(14, "Contact number must be at most 14 characters"),
+    .length(10, "Contact number must be exactly 10 digits")
+    .regex(/^[6-9]\d{9}$/, "Contact number must be a valid Indian mobile number"),
   address: z
     .string()
     .trim()
@@ -88,8 +88,8 @@ export const createDoctorServerZodSchema = z.object({
     contactNumber: z
       .string()
       .trim()
-      .min(11, "Contact number must be at least 11 characters")
-      .max(14, "Contact number must be at most 14 characters"),
+      .length(10, "Contact number must be exactly 10 digits")
+      .regex(/^[6-9]\d{9}$/, "Contact number must be a valid Indian mobile number"),
     address: z.preprocess(
       emptyStringToUndefined,
       z
@@ -149,8 +149,8 @@ export const editDoctorFormZodSchema = z.object({
   contactNumber: z
     .string()
     .trim()
-    .min(11, "Contact number must be at least 11 characters")
-    .max(14, "Contact number must be at most 14 characters"),
+    .length(10, "Contact number must be exactly 10 digits")
+    .regex(/^[6-9]\d{9}$/, "Contact number must be a valid Indian mobile number"),
   address: z
     .string()
     .trim()
@@ -211,8 +211,8 @@ export const updateDoctorServerZodSchema = z.object({
       contactNumber: z
         .string()
         .trim()
-        .min(11, "Contact number must be at least 11 characters")
-        .max(14, "Contact number must be at most 14 characters")
+        .length(10, "Contact number must be exactly 10 digits")
+        .regex(/^[6-9]\d{9}$/, "Contact number must be a valid Indian mobile number")
         .optional(),
       address: z.preprocess(
         emptyStringToUndefined,

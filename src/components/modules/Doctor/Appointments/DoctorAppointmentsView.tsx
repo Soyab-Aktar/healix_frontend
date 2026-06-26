@@ -13,7 +13,7 @@ import { getMyPrescriptions } from "@/services/prescription.services";
 import { IAppointment } from "@/types/appointment.types";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 import ManageAppointmentModal from "./ManageAppointmentModal";
 import { getDoctorAppointmentsColumns } from "./doctorAppointmentsColumns";
@@ -38,6 +38,11 @@ const DoctorAppointmentsView = () => {
 
   const [prescriptionAppointment, setPrescriptionAppointment] = useState<IAppointment | null>(null);
   const [isPrescriptionModalOpen, setIsPrescriptionModalOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const {
     optimisticSortingState,
@@ -177,66 +182,71 @@ const DoctorAppointmentsView = () => {
     [prescribedAppointmentIds],
   );
 
-  const isLoading = isAppointmentsLoading || isPrescriptionsLoading || isAppointmentsFetching;
+  const isLoading = !isMounted || isAppointmentsLoading || isPrescriptionsLoading || isAppointmentsFetching;
 
   const viewingItemHasPrescription = viewingItem ? prescribedAppointmentIds.has(viewingItem.id) : false;
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">My Appointments</h1>
-        <p className="text-sm text-muted-foreground">
-          View your appointments, update their status, and create prescriptions for completed visits.
-        </p>
+    <div className="space-y-6">
+      <div className="flex items-start gap-3">
+        <div className="h-10 w-1 bg-gradient-to-b from-[#0d9488] to-[#047857] rounded-full shrink-0 mt-1" />
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-[#0d9488] to-[#047857] bg-clip-text text-transparent">My Appointments</h1>
+          <p className="text-sm text-slate-500 font-medium mt-1">
+            View your appointments, update their status, and create prescriptions for completed visits.
+          </p>
+        </div>
       </div>
 
-      <DataTable
-        data={paginatedAppointments}
-        columns={columns}
-        actions={{
-          onView: tableActions.onView,
-        }}
-        isLoading={isLoading}
-        emptyMessage="No appointments found."
-        sorting={{
-          state: optimisticSortingState,
-          onSortingChange: handleSortingChange,
-        }}
-        pagination={{
-          state: { ...optimisticPaginationState, pageIndex },
-          onPaginationChange: handlePaginationChange,
-        }}
-        search={{
-          initialValue: searchTermFromUrl,
-          placeholder: "Search by patient name or email...",
-          onDebouncedChange: handleDebouncedSearchChange,
-        }}
-        filters={{
-          configs: [
-            {
-              id: "status",
-              label: "Status",
-              type: "single-select",
-              options: STATUS_FILTER_OPTIONS,
-            },
-            {
-              id: "paymentStatus",
-              label: "Payment Status",
-              type: "single-select",
-              options: PAYMENT_STATUS_FILTER_OPTIONS,
-            },
-          ],
-          values: filterValues,
-          onFilterChange: handleFilterChange,
-          onClearAll: clearAllFilters,
-        }}
-        meta={{
-          page: pageIndex + 1,
-          limit: pageSize,
-          total: totalRows,
-          totalPages,
-        }}
-      />
+      <div className="rounded-[24px] border border-slate-200/60 bg-white shadow-sm overflow-hidden p-2">
+        <DataTable
+          data={paginatedAppointments}
+          columns={columns}
+          actions={{
+            onView: tableActions.onView,
+          }}
+          isLoading={isLoading}
+          emptyMessage="No appointments found."
+          sorting={{
+            state: optimisticSortingState,
+            onSortingChange: handleSortingChange,
+          }}
+          pagination={{
+            state: { ...optimisticPaginationState, pageIndex },
+            onPaginationChange: handlePaginationChange,
+          }}
+          search={{
+            initialValue: searchTermFromUrl,
+            placeholder: "Search by patient name or email...",
+            onDebouncedChange: handleDebouncedSearchChange,
+          }}
+          filters={{
+            configs: [
+              {
+                id: "status",
+                label: "Status",
+                type: "single-select",
+                options: STATUS_FILTER_OPTIONS,
+              },
+              {
+                id: "paymentStatus",
+                label: "Payment Status",
+                type: "single-select",
+                options: PAYMENT_STATUS_FILTER_OPTIONS,
+              },
+            ],
+            values: filterValues,
+            onFilterChange: handleFilterChange,
+            onClearAll: clearAllFilters,
+          }}
+          meta={{
+            page: pageIndex + 1,
+            limit: pageSize,
+            total: totalRows,
+            totalPages,
+          }}
+        />
+      </div>
 
       <ManageAppointmentModal
         appointment={viewingItem}

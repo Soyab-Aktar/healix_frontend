@@ -14,9 +14,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { User, Activity, Heart, FileText, CheckCircle, ShieldAlert, Upload, Trash2, Camera, UserCheck } from "lucide-react";
 import { getUserinfo } from "@/services/auth.services";
-import { updatePatientProfile } from "@/services/profile.services";
+import { updatePatientProfile, uploadImage } from "@/services/profile.services";
 import { updateDoctor } from "@/services/doctor.services";
-import { updateAdmin } from "@/services/admin.services";
+import { updateAdmin, updateSuperAdmin } from "@/services/admin.services";
 import { format } from "date-fns";
 import { IMedicalReport } from "@/types/patient.types";
 
@@ -149,10 +149,19 @@ const MyProfileForm = () => {
         await updatePatientProfile(uploadFormData);
       } else if (role === "DOCTOR" && doctor) {
         // Doctor update
+        let profilePhoto = doctor.profilePhoto || undefined;
+        if (profilePhotoFile) {
+          const uploadRes = await uploadImage(profilePhotoFile);
+          if (uploadRes?.success && uploadRes?.data?.url) {
+            profilePhoto = uploadRes.data.url;
+          } else {
+            throw new Error("Failed to upload profile photo");
+          }
+        }
         const payload = {
           doctor: {
             name: formVal.get("name") as string,
-            profilePhoto: formVal.get("profilePhotoUrl") as string || doctor.profilePhoto || undefined,
+            profilePhoto,
             contactNumber: formVal.get("contactNumber") as string,
             address: formVal.get("address") as string,
             qualification: formVal.get("qualification") as string,
@@ -163,11 +172,37 @@ const MyProfileForm = () => {
           },
         };
         await updateDoctor(doctor.id, payload);
-      } else if ((role === "ADMIN" || role === "SUPER_ADMIN") && admin) {
-        // Admin update
+      } else if (role === "SUPER_ADMIN" && admin) {
+        // Super Admin update
+        let profilePhoto = admin.profilePhoto || undefined;
+        if (profilePhotoFile) {
+          const uploadRes = await uploadImage(profilePhotoFile);
+          if (uploadRes?.success && uploadRes?.data?.url) {
+            profilePhoto = uploadRes.data.url;
+          } else {
+            throw new Error("Failed to upload profile photo");
+          }
+        }
         const payload = {
           name: formVal.get("name") as string,
-          profilePhoto: formVal.get("profilePhotoUrl") as string || admin.profilePhoto || undefined,
+          profilePhoto,
+          contactNumber: formVal.get("contactNumber") as string,
+        };
+        await updateSuperAdmin(admin.id, payload);
+      } else if (role === "ADMIN" && admin) {
+        // Admin update
+        let profilePhoto = admin.profilePhoto || undefined;
+        if (profilePhotoFile) {
+          const uploadRes = await uploadImage(profilePhotoFile);
+          if (uploadRes?.success && uploadRes?.data?.url) {
+            profilePhoto = uploadRes.data.url;
+          } else {
+            throw new Error("Failed to upload profile photo");
+          }
+        }
+        const payload = {
+          name: formVal.get("name") as string,
+          profilePhoto,
           contactNumber: formVal.get("contactNumber") as string,
         };
         await updateAdmin(admin.id, payload);
@@ -225,25 +260,21 @@ const MyProfileForm = () => {
                   alt={currentName}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                {role === "PATIENT" && (
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="absolute inset-0 bg-black/45 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-350 cursor-pointer"
-                  >
-                    <Camera className="h-5 w-5" />
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute inset-0 bg-black/45 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-350 cursor-pointer"
+                >
+                  <Camera className="h-5 w-5" />
+                </button>
               </div>
-              {role === "PATIENT" && (
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleProfilePhotoChange}
-                  className="hidden"
-                />
-              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleProfilePhotoChange}
+                className="hidden"
+              />
               <CardTitle className="mt-4 text-slate-800 font-extrabold text-lg truncate">{currentName}</CardTitle>
               <CardDescription className="text-slate-400 font-medium truncate text-sm mt-0.5">{user?.email}</CardDescription>
             </CardHeader>
@@ -335,12 +366,6 @@ const MyProfileForm = () => {
                       <Label htmlFor="contactNumber" className="text-slate-700 font-bold text-xs">Contact Number</Label>
                       <Input id="contactNumber" name="contactNumber" defaultValue={currentContact} className="rounded-lg border-slate-300 focus-visible:border-[#047857] focus-visible:ring-emerald-500/20" />
                     </div>
-                    {role !== "PATIENT" && (
-                      <div className="space-y-1.5">
-                        <Label htmlFor="profilePhotoUrl" className="text-slate-700 font-bold text-xs">Profile Photo URL</Label>
-                        <Input id="profilePhotoUrl" name="profilePhotoUrl" defaultValue={currentPhoto} placeholder="https://example.com/avatar.jpg" className="rounded-lg border-slate-300 focus-visible:border-[#047857] focus-visible:ring-emerald-500/20" />
-                      </div>
-                    )}
                   </div>
 
                   {(role === "PATIENT" || role === "DOCTOR") && (

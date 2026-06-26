@@ -21,7 +21,7 @@ import {
 } from "@/zod/schedule.validation"
 import { useForm } from "@tanstack/react-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Plus } from "lucide-react"
+import { Plus, CalendarRange, Calendar, Clock } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useCallback, useState } from "react"
 import { toast } from "sonner"
@@ -89,19 +89,22 @@ const CreateScheduleFormModal = () => {
       </DialogTrigger>
 
       <DialogContent
-        className="max-h-[90vh] w-[calc(100vw-1.5rem)] max-w-[calc(100vw-1.5rem)] gap-0 overflow-hidden p-0 sm:w-[calc(100vw-3rem)] sm:max-w-[calc(100vw-3rem)] md:w-[calc(100vw-4rem)] md:max-w-[calc(100vw-4rem)] lg:w-[min(88vw,44rem)] lg:max-w-[min(88vw,44rem)]"
+        className="max-h-[90vh] w-[calc(100vw-1.5rem)] max-w-[calc(100vw-1.5rem)] gap-0 overflow-hidden p-0 sm:w-[calc(100vw-3rem)] sm:max-w-[calc(100vw-3rem)] md:w-[calc(100vw-4rem)] md:max-w-[calc(100vw-4rem)] lg:w-[min(88vw,44rem)] lg:max-w-[min(88vw,44rem)] rounded-[24px] border border-slate-200/60 shadow-lg"
         onInteractOutside={(event) => event.preventDefault()}
         onEscapeKeyDown={(event) => event.preventDefault()}
       >
-        <DialogHeader className="border-b px-6 py-5 pr-14">
-          <DialogTitle>Create Schedule</DialogTitle>
-          <DialogDescription>
+        <DialogHeader className="border-b bg-slate-50/50 px-6 py-5 pr-14 shrink-0">
+          <DialogTitle className="text-xl font-extrabold text-slate-800 flex items-center gap-2.5">
+            <CalendarRange className="h-5.5 w-5.5 text-[#047857]" />
+            <span className="text-[#047857]">Create Schedule</span>
+          </DialogTitle>
+          <DialogDescription className="text-slate-450 font-medium text-sm">
             Generate 30-minute schedule slots across a date range.
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[calc(90vh-5.5rem)]">
-          <div className="px-6 py-5">
+        <ScrollArea className="max-h-[calc(90vh-7.5rem)]">
+          <div className="px-6 py-6">
             <form
               method="POST"
               action="#"
@@ -111,15 +114,20 @@ const CreateScheduleFormModal = () => {
                 event.stopPropagation()
                 form.handleSubmit()
               }}
-              className="space-y-5"
+              className="space-y-6"
             >
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-5 sm:grid-cols-2">
                 <form.Field
                   name="startDate"
                   validators={{ onChange: createScheduleFormZodSchema.shape.startDate }}
                 >
                   {(field) => (
-                    <AppField field={field} label="Start Date" type="date" />
+                    <AppField
+                      field={field}
+                      label="Start Date"
+                      type="date"
+                      prepend={<Calendar className="size-4 text-slate-400" />}
+                    />
                   )}
                 </form.Field>
 
@@ -128,7 +136,12 @@ const CreateScheduleFormModal = () => {
                   validators={{ onChange: createScheduleFormZodSchema.shape.endDate }}
                 >
                   {(field) => (
-                    <AppField field={field} label="End Date" type="date" />
+                    <AppField
+                      field={field}
+                      label="End Date"
+                      type="date"
+                      prepend={<Calendar className="size-4 text-slate-400" />}
+                    />
                   )}
                 </form.Field>
 
@@ -137,7 +150,12 @@ const CreateScheduleFormModal = () => {
                   validators={{ onChange: createScheduleFormZodSchema.shape.startTime }}
                 >
                   {(field) => (
-                    <AppField field={field} label="Start Time" type="time" />
+                    <AppField
+                      field={field}
+                      label="Start Time"
+                      type="time"
+                      prepend={<Clock className="size-4 text-slate-400" />}
+                    />
                   )}
                 </form.Field>
 
@@ -146,14 +164,19 @@ const CreateScheduleFormModal = () => {
                   validators={{ onChange: createScheduleFormZodSchema.shape.endTime }}
                 >
                   {(field) => (
-                    <AppField field={field} label="End Time" type="time" />
+                    <AppField
+                      field={field}
+                      label="End Time"
+                      type="time"
+                      prepend={<Clock className="size-4 text-slate-400" />}
+                    />
                   )}
                 </form.Field>
               </div>
 
-              <DialogFooter>
+              <DialogFooter className="pt-4 border-t border-slate-100/80 gap-2">
                 <DialogClose asChild>
-                  <Button type="button" variant="outline" disabled={isPending} className="rounded-lg">
+                  <Button type="button" variant="outline" disabled={isPending} className="rounded-lg cursor-pointer">
                     Cancel
                   </Button>
                 </DialogClose>

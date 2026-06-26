@@ -101,20 +101,31 @@ const DoctorDashboardContent = ({ userInfo }: DoctorDashboardContentProps) => {
       .slice(0, 3);
   }, [reviews]);
 
-  // If no appointments today, display the next 3 upcoming ones
-  const displayedAppointments = useMemo(() => {
-    if (todayAppointments.length > 0) {
-      return todayAppointments.slice(0, 3);
-    }
-    return [...appointments]
-      .filter((a) => a.status === "SCHEDULED" || a.status === "INPROGRESS")
-      .sort((a, b) => {
-        const aTime = a.schedule?.startDateTime ? new Date(a.schedule.startDateTime).getTime() : 0;
-        const bTime = b.schedule?.startDateTime ? new Date(b.schedule.startDateTime).getTime() : 0;
-        return aTime - bTime;
-      })
-      .slice(0, 3);
-  }, [todayAppointments, appointments]);
+  const recentAppointments = useMemo(() => {
+    const now = Date.now();
+
+    const upcoming = [...appointments].filter((a) => {
+      const isScheduled = a.status === "SCHEDULED" || a.status === "INPROGRESS";
+      const start = a.schedule?.startDateTime ? new Date(a.schedule.startDateTime).getTime() : 0;
+      return isScheduled && start > now;
+    }).sort((a, b) => {
+      const aTime = a.schedule?.startDateTime ? new Date(a.schedule.startDateTime).getTime() : 0;
+      const bTime = b.schedule?.startDateTime ? new Date(b.schedule.startDateTime).getTime() : 0;
+      return aTime - bTime;
+    });
+
+    const past = [...appointments].filter((a) => {
+      const isScheduled = a.status === "SCHEDULED" || a.status === "INPROGRESS";
+      const start = a.schedule?.startDateTime ? new Date(a.schedule.startDateTime).getTime() : 0;
+      return !isScheduled || start <= now;
+    }).sort((a, b) => {
+      const aTime = a.schedule?.startDateTime ? new Date(a.schedule.startDateTime).getTime() : 0;
+      const bTime = b.schedule?.startDateTime ? new Date(b.schedule.startDateTime).getTime() : 0;
+      return bTime - aTime;
+    });
+
+    return [...upcoming, ...past].slice(0, 3);
+  }, [appointments]);
 
   const formatDateTime = (value?: string | Date | null) => {
     if (!value) return "Pending";
@@ -213,17 +224,15 @@ const DoctorDashboardContent = ({ userInfo }: DoctorDashboardContentProps) => {
 
       {/* Grid Content: Patient visits (col-span-2) & Reviews feed (col-span-1) */}
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
-        {/* Today's Schedule */}
+        {/* Recent Appointments */}
         <Card className="lg:col-span-2 rounded-[24px] border-slate-200/60 shadow-sm bg-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="space-y-1">
               <CardTitle className="text-lg font-bold text-slate-800">
-                {todayAppointments.length > 0 ? "Today's Clinic Schedule" : "Upcoming Consultations"}
+                Recent Appointments
               </CardTitle>
               <CardDescription className="text-slate-400 font-medium">
-                {todayAppointments.length > 0 
-                  ? "Daily checkups needing diagnostic review." 
-                  : "Next consultations booked by patients."}
+                Your upcoming scheduled consultations and recent patient encounters.
               </CardDescription>
             </div>
             <Button asChild variant="ghost" size="sm" className="gap-1 text-[#047857] hover:text-[#035f43] font-semibold hover:bg-emerald-50/50 transition-colors">
@@ -233,15 +242,15 @@ const DoctorDashboardContent = ({ userInfo }: DoctorDashboardContentProps) => {
             </Button>
           </CardHeader>
           <CardContent>
-            {displayedAppointments.length === 0 ? (
+            {recentAppointments.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-center border border-dashed border-slate-200 rounded-2xl">
                 <Stethoscope className="h-10 w-10 text-slate-300 mb-2 animate-pulse" />
-                <p className="text-sm font-semibold text-slate-700">No upcoming appointments found</p>
+                <p className="text-sm font-semibold text-slate-700">No appointments found</p>
                 <p className="text-xs text-slate-400 mt-1">Configure slot availability in Schedules to accept bookings.</p>
               </div>
             ) : (
               <div className="space-y-3.5">
-                {displayedAppointments.map((appointment) => (
+                {recentAppointments.map((appointment) => (
                   <div 
                     key={appointment.id} 
                     className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-[20px] border border-slate-200/60 bg-slate-50/30 hover:bg-slate-50/80 hover:border-emerald-100/80 transition-all duration-200"

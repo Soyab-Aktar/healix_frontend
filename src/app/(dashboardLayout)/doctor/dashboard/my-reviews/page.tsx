@@ -42,68 +42,57 @@ const MyReviewsPage = async ({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">My Reviews</h1>
-        <p className="text-muted-foreground">
-          View all patient reviews and ratings.
-        </p>
+      <div className="flex items-start gap-3">
+        <div className="h-10 w-1 bg-gradient-to-b from-[#0d9488] to-[#047857] rounded-full shrink-0 mt-1" />
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-[#0d9488] to-[#047857] bg-clip-text text-transparent">My Reviews</h1>
+          <p className="text-sm text-slate-500 font-medium mt-1">
+            View all patient reviews and ratings.
+          </p>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-xl border bg-card p-5">
-          <p className="text-sm text-muted-foreground">Average Rating</p>
-
-          <h2 className="mt-2 text-3xl font-bold">
+        <div className="rounded-[24px] border border-slate-200/60 bg-white p-5 shadow-sm">
+          <p className="text-sm text-slate-500 font-semibold uppercase tracking-wider">Average Rating</p>
+          <h2 className="mt-2 text-3xl font-bold text-slate-800">
             ⭐ {averageRating}
           </h2>
         </div>
 
-        <div className="rounded-xl border bg-card p-5">
-          <p className="text-sm text-muted-foreground">
-            Total Reviews
-          </p>
-
-          <h2 className="mt-2 text-3xl font-bold">
+        <div className="rounded-[24px] border border-slate-200/60 bg-white p-5 shadow-sm">
+          <p className="text-sm text-slate-500 font-semibold uppercase tracking-wider">Total Reviews</p>
+          <h2 className="mt-2 text-3xl font-bold text-slate-800">
             {totalReviews}
           </h2>
         </div>
 
-        <div className="rounded-xl border bg-card p-5">
-          <p className="text-sm text-muted-foreground">
-            5★ Reviews
-          </p>
-
+        <div className="rounded-[24px] border border-slate-200/60 bg-white p-5 shadow-sm">
+          <p className="text-sm text-slate-500 font-semibold uppercase tracking-wider">5★ Reviews</p>
           <h2 className="mt-2 text-3xl font-bold text-yellow-500">
             {fiveStar}
           </h2>
         </div>
 
-        <div className="rounded-xl border bg-card p-5 space-y-2">
-          <p className="text-sm text-muted-foreground">
-            Rating Breakdown
-          </p>
-
-          <div className="space-y-1 text-sm">
+        <div className="rounded-[24px] border border-slate-200/60 bg-white p-5 shadow-sm space-y-2">
+          <p className="text-sm text-slate-500 font-semibold uppercase tracking-wider">Rating Breakdown</p>
+          <div className="space-y-1 text-sm text-slate-600 font-medium">
             <div className="flex justify-between">
               <span>5★</span>
               <span>{fiveStar}</span>
             </div>
-
             <div className="flex justify-between">
               <span>4★</span>
               <span>{fourStar}</span>
             </div>
-
             <div className="flex justify-between">
               <span>3★</span>
               <span>{threeStar}</span>
             </div>
-
             <div className="flex justify-between">
               <span>2★</span>
               <span>{twoStar}</span>
             </div>
-
             <div className="flex justify-between">
               <span>1★</span>
               <span>{oneStar}</span>

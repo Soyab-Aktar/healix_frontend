@@ -13,7 +13,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { buttonVariants } from "@/components/ui/button";
 import { deletePatient } from "@/services/patient.services";
 import { IPatient } from "@/types/patient.types";
 
@@ -76,12 +75,12 @@ const DeletePatientConfirmationDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
           <AlertDialogAction
+            variant="destructive"
             onClick={(e) => {
               e.preventDefault();
               void handleDelete();
             }}
             disabled={isPending}
-            className={buttonVariants({ variant: "destructive" })}
           >
             {isPending ? "Deleting..." : "Delete Patient"}
           </AlertDialogAction>

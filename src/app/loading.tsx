@@ -1,4 +1,5 @@
-export default function GlobalLoading() {
-  // Or a custom loading skeleton component
-  return <p>Global Loading...</p>
+import Loader from "@/components/shared/Loader";
+
+export default function Loading() {
+  return <Loader fullScreen message="Loading Healix..." />;
 }

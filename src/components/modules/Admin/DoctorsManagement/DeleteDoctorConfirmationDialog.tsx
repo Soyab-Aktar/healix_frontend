@@ -17,9 +17,9 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 interface DeleteDoctorConfirmationDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  doctor: IDoctor | null
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  doctor: IDoctor | null;
 }
 
 const DeleteDoctorConfirmationDialog = ({

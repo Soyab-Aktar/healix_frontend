@@ -13,7 +13,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { buttonVariants } from "@/components/ui/button";
 import { deleteSpecialty } from "@/services/specialty.services";
 import { ISpecialty } from "@/types/specialty.types";
 
@@ -77,12 +76,12 @@ const DeleteSpecialtyConfirmationDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
           <AlertDialogAction
+            variant="destructive"
             onClick={(e) => {
               e.preventDefault();
               void handleDelete();
             }}
             disabled={isPending}
-            className={buttonVariants({ variant: "destructive" })}
           >
             {isPending ? "Deleting..." : "Delete Specialty"}
           </AlertDialogAction>

@@ -108,12 +108,15 @@ const DoctorSchedulesTable = ({ initialQueryString }: { initialQueryString: stri
 
   return (
     <>
-      <div className="space-y-5">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight">My Schedules</h1>
-          <p className="text-sm text-muted-foreground">
-            Track your assigned slots and book upcoming schedules from admin-created availability.
-          </p>
+      <div className="space-y-6">
+        <div className="flex items-start gap-3">
+          <div className="h-10 w-1 bg-gradient-to-b from-[#0d9488] to-[#047857] rounded-full shrink-0 mt-1" />
+          <div>
+            <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-[#0d9488] to-[#047857] bg-clip-text text-transparent">My Schedules</h1>
+            <p className="text-sm text-slate-500 font-medium mt-1">
+              Track your assigned slots and book upcoming schedules from admin-created availability.
+            </p>
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -128,7 +131,7 @@ const DoctorSchedulesTable = ({ initialQueryString }: { initialQueryString: stri
           </div>
         </div>
 
-        <div className="rounded-2xl border bg-card p-3 shadow-sm sm:p-4">
+        <div className="rounded-[24px] border border-slate-200/60 bg-white shadow-sm overflow-hidden p-2">
           <DataTable
             data={doctorSchedules}
             columns={doctorSchedulesColumns}

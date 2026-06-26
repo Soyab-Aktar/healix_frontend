@@ -26,12 +26,15 @@ const DoctorPrescriptionsPage = async () => {
   const prescriptions = (response?.data ?? []) as PrescriptionRow[];
 
   return (
-    <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">My Prescriptions</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          View and manage all prescriptions you have issued to your patients.
-        </p>
+    <div className="space-y-6">
+      <div className="flex items-start gap-3">
+        <div className="h-10 w-1 bg-gradient-to-b from-[#0d9488] to-[#047857] rounded-full shrink-0 mt-1" />
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-[#0d9488] to-[#047857] bg-clip-text text-transparent">My Prescriptions</h1>
+          <p className="text-sm text-slate-500 font-medium mt-1">
+            View and manage all prescriptions you have issued to your patients.
+          </p>
+        </div>
       </div>
 
       <DoctorPrescriptionsClient

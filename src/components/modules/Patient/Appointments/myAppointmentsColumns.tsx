@@ -23,7 +23,10 @@ const paymentBadgeStyles: Record<PaymentStatus, string> = {
   FAILED: "bg-rose-50 text-rose-700 border-rose-100/80",
 };
 
-export const myAppointmentsColumns: ColumnDef<IAppointment>[] = [
+export const getMyAppointmentsColumns = (
+  reviewedAppointmentIds: Set<string>,
+  onWriteReview: (appointment: IAppointment) => void
+): ColumnDef<IAppointment>[] => [
   {
     accessorKey: "doctor.name",
     header: "Doctor",
@@ -96,5 +99,48 @@ export const myAppointmentsColumns: ColumnDef<IAppointment>[] = [
         {formatDateTime(row.original.createdAt)}
       </span>
     ),
+  },
+  {
+    id: "review",
+    header: "Review Feedback",
+    enableSorting: false,
+    cell: ({ row }) => {
+      const appointment = row.original;
+      const isCompleted = appointment.status === "COMPLETED";
+      const isPaid = appointment.paymentStatus === "PAID";
+
+      if (!isCompleted) {
+        return <span className="text-slate-450 text-xs italic font-medium">Available on completion</span>;
+      }
+
+      if (!isPaid) {
+        return (
+          <span 
+            className="inline-flex items-center text-xs font-bold text-amber-600 bg-amber-50/50 px-2 py-0.5 rounded-lg border border-amber-100/50 cursor-help"
+            title="Payment is required to submit reviews"
+          >
+            Requires Payment
+          </span>
+        );
+      }
+
+      const hasReviewed = reviewedAppointmentIds.has(appointment.id);
+      if (hasReviewed) {
+        return (
+          <span className="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700">
+            Reviewed
+          </span>
+        );
+      }
+
+      return (
+        <button
+          onClick={() => onWriteReview(appointment)}
+          className="inline-flex items-center text-xs font-bold px-3 py-1 rounded-lg border border-emerald-500/20 bg-emerald-50 text-[#047857] hover:bg-[#047857] hover:text-white hover:border-[#047857] transition-all cursor-pointer shadow-3xs"
+        >
+          Write Review
+        </button>
+      );
+    },
   },
 ];

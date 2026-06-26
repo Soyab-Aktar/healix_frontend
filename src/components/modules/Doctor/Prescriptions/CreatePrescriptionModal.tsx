@@ -20,7 +20,7 @@ import {
 } from "@/zod/prescription.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, Send, FileText } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -111,67 +111,72 @@ const CreatePrescriptionModal = ({
 
   return (
     <Dialog open={open} onOpenChange={(next) => !isPending && onOpenChange(next)}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Create Prescription</DialogTitle>
-          <DialogDescription>
-            Add prescription details for {appointment.patient?.name ?? "this patient"}. The
-            patient will receive it via email once submitted.
+      <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-slate-200/80">
+        <DialogHeader className="px-6 py-5 border-b shrink-0 bg-slate-50/50">
+          <DialogTitle className="text-xl font-extrabold flex items-center gap-2.5 text-slate-800">
+            <FileText className="h-5.5 w-5.5 text-[#047857]" />
+            <span className="bg-gradient-to-r from-teal-800 to-emerald-700 bg-clip-text text-transparent">Create Prescription</span>
+          </DialogTitle>
+          <DialogDescription className="px-1 text-slate-500 font-medium">
+            Add prescription details for {appointment.patient?.name ?? "this patient"}. The patient will receive it via email once submitted.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3 text-sm">
-          <div className="flex items-center justify-between rounded-md border bg-muted/30 p-3">
+        <div className="px-6 pt-5 pb-0 text-sm">
+          <div className="flex items-center justify-between rounded-xl border border-slate-200/60 bg-slate-50/15 p-4">
             <div>
-              <p className="font-medium">{appointment.patient?.name ?? "-"}</p>
-              <p className="text-xs text-muted-foreground">{appointment.patient?.email ?? "-"}</p>
+              <p className="font-extrabold text-slate-800">{appointment.patient?.name ?? "-"}</p>
+              <p className="text-xs text-slate-500 font-semibold mt-0.5">{appointment.patient?.email ?? "-"}</p>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-slate-400 font-semibold">
               Appointment: {formatDateTime(appointment.schedule?.startDateTime)}
             </p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="px-6 py-5 space-y-4">
           <input type="hidden" {...register("appointmentId")} />
 
-          <div className="space-y-2">
-            <Label htmlFor="instructions">Instructions</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="instructions" className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Instructions</Label>
             <Textarea
               id="instructions"
               placeholder="Medication, dosage, advice, etc."
               rows={5}
               disabled={isPending}
+              className="rounded-xl border-slate-300 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-650"
               {...register("instructions")}
             />
             {errors.instructions && (
-              <p className="text-sm text-destructive">{errors.instructions.message}</p>
+              <p className="text-xs text-destructive font-semibold">{errors.instructions.message}</p>
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="followUpDate">Follow-up Date</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="followUpDate" className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Follow-up Date</Label>
             <Input
               id="followUpDate"
               type="date"
               disabled={isPending}
+              className="rounded-xl border-slate-300 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-650"
               {...register("followUpDate")}
             />
             {errors.followUpDate && (
-              <p className="text-sm text-destructive">{errors.followUpDate.message}</p>
+              <p className="text-xs text-destructive font-semibold">{errors.followUpDate.message}</p>
             )}
           </div>
 
-          <DialogFooter className="gap-2">
+          <DialogFooter className="border-t pt-4 flex flex-row items-center justify-end gap-2 shrink-0">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={isPending}
+              className="rounded-lg font-bold hover:bg-slate-100 hover:text-slate-800 transition-colors"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} className="bg-[#047857] hover:bg-[#035f43] text-white hover:text-white rounded-lg font-bold gap-2 transition-colors">
               {isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
