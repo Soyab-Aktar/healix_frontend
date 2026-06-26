@@ -1,126 +1,198 @@
-import { getDoctors } from '@/services/doctor.services';
-import { IDoctor } from '@/types/doctor.types';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Star, Briefcase, IndianRupee, ArrowRight } from 'lucide-react';
+"use client";
 
-export default async function FeaturedDoctors() {
-  let doctors: IDoctor[] = [];
+import { motion } from "framer-motion";
+import { Star, ShieldCheck, Clock, Calendar, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 
-  try {
-    const response = await getDoctors('limit=4&sortBy=averageRating&sortOrder=desc');
-    doctors = (response?.data as IDoctor[]) ?? [];
-  } catch {
-    // Silently fail — section just won't render
-  }
-
-  if (doctors.length === 0) return null;
-
-  return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
-          <div>
-            <p className="text-blue-600 font-semibold text-sm uppercase tracking-widest mb-3">Our doctors</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
-              Top-rated specialists
-            </h2>
-            <p className="text-slate-500 mt-3 max-w-md">
-              Every doctor on our platform is verified, credentialed, and reviewed by real patients.
-            </p>
-          </div>
-          <Link href="/consultation">
-            <Button variant="outline" className="shrink-0 border-slate-200 text-slate-700 hover:border-emerald-300 hover:text-emerald-600">
-              View all doctors
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {doctors.map((doctor) => (
-            <DoctorCard key={doctor.id} doctor={doctor} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+interface FeaturedDoctor {
+  id: string;
+  name: string;
+  specialty: string;
+  experience: number;
+  rating: number;
+  reviews: number;
+  fee: number;
+  initials: string;
+  license: string;
+  bgClass: string;
 }
 
-function DoctorCard({ doctor }: { doctor: IDoctor }) {
-  const specialties = doctor.specialties
-    ?.slice(0, 2)
-    .map((s) => s.specialty?.title)
-    .filter(Boolean);
+const mockDoctors: FeaturedDoctor[] = [
+  {
+    id: "doc-1",
+    name: "Dr. Ananya Sharma",
+    specialty: "Cardiology",
+    experience: 12,
+    rating: 4.9,
+    reviews: 186,
+    fee: 800,
+    initials: "AS",
+    license: "MCI-90518",
+    bgClass: "bg-rose-50 text-rose-700 border-rose-100",
+  },
+  {
+    id: "doc-2",
+    name: "Dr. Vivek Nair",
+    specialty: "General Medicine",
+    experience: 10,
+    rating: 4.8,
+    reviews: 142,
+    fee: 600,
+    initials: "VN",
+    license: "MCI-84271",
+    bgClass: "bg-emerald-50 text-emerald-700 border-emerald-100",
+  },
+  {
+    id: "doc-3",
+    name: "Dr. Priya Das",
+    specialty: "Pediatrics",
+    experience: 8,
+    rating: 4.7,
+    reviews: 98,
+    fee: 500,
+    initials: "PD",
+    license: "MCI-72109",
+    bgClass: "bg-blue-50 text-blue-700 border-blue-100",
+  },
+];
+
+export default function FeaturedDoctors() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 25 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring" as const, stiffness: 100, damping: 15 },
+    },
+  };
 
   return (
-    <Link href={`/consultation/doctor/${doctor.id}`}>
-      <div className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all duration-200 h-full flex flex-col">
-        {/* Top emerald band */}
-        <div className="h-14 bg-gradient-to-r from-emerald-500 to-emerald-700 shrink-0" />
+    <section className="py-24 bg-white relative overflow-hidden">
+      {/* Background radial visual */}
+      <div className="absolute right-0 bottom-1/3 -mr-32 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="px-4 pb-4 flex flex-col flex-1 -mt-7">
-          {/* Avatar */}
-          <div className="relative w-14 h-14 rounded-full overflow-hidden border-[3px] border-white bg-emerald-50 shadow mb-3 shrink-0">
-            {doctor.profilePhoto ? (
-              <Image src={doctor.profilePhoto} alt={doctor.name} fill className="object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-emerald-600 font-bold text-xl">
-                {doctor.name.charAt(0)}
-              </div>
-            )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
+          <div className="max-w-2xl space-y-4">
+            <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200/60 hover:bg-emerald-50 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+              Specialist Roster
+            </Badge>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+              Consult with verified, experienced doctors.
+            </h2>
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+              Every medical specialist has completed rigorous qualification screening and board certification verification before consulting on our network.
+            </p>
           </div>
 
-          {/* Name & designation */}
-          <h3 className="font-semibold text-slate-900 group-hover:text-emerald-700 transition-colors text-sm leading-tight mb-0.5 truncate">
-            {doctor.name}
-          </h3>
-          <p className="text-xs text-slate-500 mb-2 truncate">{doctor.designation}</p>
-
-          {/* Rating */}
-          <div className="flex items-center gap-1 mb-3">
-            <Star className="h-3.5 w-3.5 text-emerald-600 fill-emerald-600" />
-            <span className="text-xs font-semibold text-slate-700">{doctor.averageRating?.toFixed(1)}</span>
-            {doctor.experience !== undefined && (
-              <span className="text-xs text-slate-400 ml-1">· {doctor.experience}yr exp</span>
-            )}
-          </div>
-
-          {/* Specialties */}
-          {specialties && specialties.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-3">
-              {specialties.map((title) => (
-                <Badge
-                  key={title}
-                  variant="secondary"
-                  className="text-xs bg-emerald-50 text-emerald-700 border-0 px-2 py-0.5 font-medium"
-                >
-                  {title}
-                </Badge>
-              ))}
-            </div>
-          )}
-
-          {/* Workplace */}
-          {doctor.currentWorkingPlace && (
-            <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-3">
-              <Briefcase className="h-3 w-3 shrink-0" />
-              <span className="truncate">{doctor.currentWorkingPlace}</span>
-            </div>
-          )}
-
-          {/* Footer */}
-          <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-100">
-            <div className="flex items-center gap-0.5 font-semibold text-slate-900 text-sm">
-              <IndianRupee className="h-3.5 w-3.5" />
-              {doctor.appointmentFee}
-            </div>
-            <span className="text-xs text-emerald-600 font-medium group-hover:underline">Book →</span>
-          </div>
+          <Button 
+            variant="outline" 
+            className="border-slate-200 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold flex items-center gap-1.5 cursor-pointer"
+            asChild
+          >
+            <Link href="/consultation">
+              <span>View All Doctors</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
+
+        {/* Doctor Grid */}
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
+          {mockDoctors.map((doc) => (
+            <motion.div key={doc.id} variants={cardVariants}>
+              <Card className="bg-slate-50 border border-slate-200/80 rounded-3xl p-6 flex flex-col justify-between hover:shadow-lg hover:border-emerald-500/30 hover:bg-white transition-all duration-300 h-full relative group">
+                <div>
+                  
+                  {/* Doctor Profile Header */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-4">
+                      {/* Initials Avatar */}
+                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-lg border ${doc.bgClass} shadow-xs`}>
+                        {doc.initials}
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="font-bold text-slate-900 text-base sm:text-lg group-hover:text-emerald-700 transition-colors truncate">
+                          {doc.name}
+                        </h3>
+                        <p className="text-xs text-slate-500 font-medium mt-0.5">{doc.specialty}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Rating Block */}
+                  <div className="flex items-center gap-1 mt-4">
+                    <div className="flex items-center gap-0.5">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star key={s} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                    <span className="text-xs font-semibold text-slate-700 ml-1">
+                      {doc.rating}
+                    </span>
+                    <span className="text-xs text-slate-400">
+                      ({doc.reviews} reviews)
+                    </span>
+                  </div>
+
+                  {/* Verified License details */}
+                  <div className="mt-5 space-y-2.5">
+                    <div className="flex items-center gap-2 text-slate-600 text-xs">
+                      <ShieldCheck className="h-4.5 w-4.5 text-[#047857] shrink-0" />
+                      <span className="font-medium">License: {doc.license} (Verified)</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-600 text-xs">
+                      <Clock className="h-4.5 w-4.5 text-slate-400 shrink-0" />
+                      <span>{doc.experience} Years Experience</span>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Consultation details & Book */}
+                <div className="mt-6 pt-5 border-t border-slate-200/60 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-semibold block uppercase">Fee per consult</span>
+                    <span className="text-lg font-extrabold text-slate-900">₹{doc.fee}</span>
+                  </div>
+                  <Button 
+                    className="bg-[#047857] hover:bg-[#035f43] text-white text-xs font-semibold px-4 py-2 h-9 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-sm border-0"
+                    asChild
+                  >
+                    <Link href={`/consultation?searchTerm=${encodeURIComponent(doc.name)}`}>
+                      <Calendar className="h-3.5 w-3.5" />
+                      <span>Book Slot</span>
+                    </Link>
+                  </Button>
+                </div>
+
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+
       </div>
-    </Link>
+    </section>
   );
 }
