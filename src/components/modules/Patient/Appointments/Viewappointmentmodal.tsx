@@ -129,7 +129,7 @@ const ViewAppointmentModal = ({ appointment, open, onOpenChange }: ViewAppointme
             </p>
             <div className="flex justify-between items-center text-sm font-medium">
               <span className="text-slate-400">Appointment Time</span>
-              <span className="text-slate-800 font-bold">{formatDateTime(appointment.schedule?.startDateTime)}</span>
+              <span className="text-slate-800 font-bold">{formatDateTime(appointment.schedule?.startDateTime ?? appointment.appointmentStart ?? undefined)}</span>
             </div>
             <div className="flex justify-between items-center text-sm font-medium">
               <span className="text-slate-400">Appointment Status</span>

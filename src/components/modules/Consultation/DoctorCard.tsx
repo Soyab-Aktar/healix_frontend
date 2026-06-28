@@ -17,6 +17,8 @@ interface DoctorCardProps {
   isAuthenticated?: boolean;
 }
 
+
+
 export default function DoctorCard({ doctor, isAuthenticated }: DoctorCardProps) {
   const specialties = doctor.specialties
     ?.slice(0, 2)
@@ -26,6 +28,8 @@ export default function DoctorCard({ doctor, isAuthenticated }: DoctorCardProps)
   const href = isAuthenticated
     ? `/dashboard/book-appointments/doctor/${doctor.id}`
     : `/consultation/doctor/${doctor.id}`;
+
+  const hasAvailableSlots = (doctor.doctorSchedules?.length ?? 0) > 0;
 
   return (
     <div className="w-full h-full">
@@ -97,6 +101,15 @@ export default function DoctorCard({ doctor, isAuthenticated }: DoctorCardProps)
                   +{doctor.specialties!.length - 2} more
                 </span>
               )}
+            </div>
+          )}
+
+          {/* Next Available Slot */}
+          {hasAvailableSlots && (
+            <div className="flex flex-wrap mt-1.5">
+              <span className="inline-flex items-center text-xs bg-[#047857] text-white px-2 py-1 rounded-full font-bold">
+                Slots Available
+              </span>
             </div>
           )}
 

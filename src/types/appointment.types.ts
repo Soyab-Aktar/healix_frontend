@@ -51,6 +51,9 @@ export interface IAppointment {
   patient?: IAppointmentPatient | null
   schedule?: IAppointmentSchedule | null
   payment?: IAppointmentPayment | null
+  appointmentDate?: string | Date | null
+  appointmentStart?: string | Date | null
+  appointmentEnd?: string | Date | null
 }
 
 export interface IBookAppointmentPayload {

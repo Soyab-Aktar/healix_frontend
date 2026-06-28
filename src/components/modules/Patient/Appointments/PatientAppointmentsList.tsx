@@ -50,8 +50,8 @@ const PatientAppointmentsList = ({
 
   const sortedAppointments = useMemo(() => {
     return [...appointments].sort((left, right) => {
-      const leftValue = new Date(left.schedule?.startDateTime ?? left.createdAt ?? 0).getTime()
-      const rightValue = new Date(right.schedule?.startDateTime ?? right.createdAt ?? 0).getTime()
+      const leftValue = new Date(left.schedule?.startDateTime ?? left.appointmentStart ?? left.createdAt ?? 0).getTime()
+      const rightValue = new Date(right.schedule?.startDateTime ?? right.appointmentStart ?? right.createdAt ?? 0).getTime()
       return rightValue - leftValue
     })
   }, [appointments])
@@ -149,8 +149,8 @@ const PatientAppointmentsList = ({
                         <CalendarClock className="size-4" />
                         Schedule
                       </div>
-                      <p className="font-medium">{formatDateTime(appointment.schedule?.startDateTime)}</p>
-                      <p className="text-muted-foreground">Ends {formatDateTime(appointment.schedule?.endDateTime)}</p>
+                      <p className="font-medium">{formatDateTime(appointment.schedule?.startDateTime ?? appointment.appointmentStart)}</p>
+                      <p className="text-muted-foreground">Ends {formatDateTime(appointment.schedule?.endDateTime ?? appointment.appointmentEnd)}</p>
                     </div>
 
                     <div className="rounded-2xl border bg-muted/20 p-4 text-sm">

@@ -43,7 +43,8 @@ export interface IDoctor {
       title: string;
       icon: string;
     }
-  }>
+  }>;
+  doctorSchedules?: { scheduleId: string }[];
 }
 
 export interface ICreateDoctorPayload {
@@ -110,6 +111,7 @@ export interface IDoctorReview {
 export interface IDoctorScheduleItem {
   id?: string;
   isBooked?: boolean;
+  scheduleId: string;
   schedule?: {
     id?: string;
     startDateTime?: string | Date;

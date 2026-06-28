@@ -131,7 +131,7 @@ const ManageAppointmentModal = ({
 
             <div className="flex items-center justify-between">
               <span className="text-slate-400 font-semibold">Schedule</span>
-              <span className="font-semibold text-slate-750">{formatDateTime(appointment.schedule?.startDateTime)}</span>
+              <span className="font-semibold text-slate-750">{formatDateTime(appointment.schedule?.startDateTime ?? appointment.appointmentStart ?? undefined)}</span>
             </div>
 
             <div className="flex items-center justify-between">

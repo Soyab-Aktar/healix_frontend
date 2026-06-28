@@ -272,16 +272,16 @@ const ViewAppointmentDialog = ({
                     <span className="text-slate-400 block uppercase tracking-wider text-[9px] font-extrabold">
                       Start Time
                     </span>
-                    <span className="text-slate-805 font-bold block bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                      {formatDate(appointment.schedule?.startDateTime)}
+                    <span className="text-slate-850 font-bold block bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                      {formatDate(appointment.schedule?.startDateTime ?? appointment.appointmentStart ?? undefined)}
                     </span>
                   </div>
                   <div className="space-y-1">
                     <span className="text-slate-400 block uppercase tracking-wider text-[9px] font-extrabold">
                       End Time
                     </span>
-                    <span className="text-slate-805 font-bold block bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                      {formatDate(appointment.schedule?.endDateTime)}
+                    <span className="text-slate-850 font-bold block bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                      {formatDate(appointment.schedule?.endDateTime ?? appointment.appointmentEnd ?? undefined)}
                     </span>
                   </div>
                 </div>

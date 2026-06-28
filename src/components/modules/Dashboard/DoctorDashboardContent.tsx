@@ -76,8 +76,9 @@ const DoctorDashboardContent = ({ userInfo }: DoctorDashboardContentProps) => {
   // Derive metrics
   const todayAppointments = useMemo(() => {
     return appointments.filter((a) => {
-      if (!a.schedule?.startDateTime) return false;
-      return isToday(new Date(a.schedule.startDateTime));
+      const start = a.schedule?.startDateTime ?? a.appointmentStart;
+      if (!start) return false;
+      return isToday(new Date(start));
     });
   }, [appointments]);
 
@@ -106,21 +107,27 @@ const DoctorDashboardContent = ({ userInfo }: DoctorDashboardContentProps) => {
 
     const upcoming = [...appointments].filter((a) => {
       const isScheduled = a.status === "SCHEDULED" || a.status === "INPROGRESS";
-      const start = a.schedule?.startDateTime ? new Date(a.schedule.startDateTime).getTime() : 0;
-      return isScheduled && start > now;
+      const start = a.schedule?.startDateTime ?? a.appointmentStart;
+      const startTime = start ? new Date(start).getTime() : 0;
+      return isScheduled && startTime > now;
     }).sort((a, b) => {
-      const aTime = a.schedule?.startDateTime ? new Date(a.schedule.startDateTime).getTime() : 0;
-      const bTime = b.schedule?.startDateTime ? new Date(b.schedule.startDateTime).getTime() : 0;
+      const aStart = a.schedule?.startDateTime ?? a.appointmentStart;
+      const bStart = b.schedule?.startDateTime ?? b.appointmentStart;
+      const aTime = aStart ? new Date(aStart).getTime() : 0;
+      const bTime = bStart ? new Date(bStart).getTime() : 0;
       return aTime - bTime;
     });
 
     const past = [...appointments].filter((a) => {
       const isScheduled = a.status === "SCHEDULED" || a.status === "INPROGRESS";
-      const start = a.schedule?.startDateTime ? new Date(a.schedule.startDateTime).getTime() : 0;
-      return !isScheduled || start <= now;
+      const start = a.schedule?.startDateTime ?? a.appointmentStart;
+      const startTime = start ? new Date(start).getTime() : 0;
+      return !isScheduled || startTime <= now;
     }).sort((a, b) => {
-      const aTime = a.schedule?.startDateTime ? new Date(a.schedule.startDateTime).getTime() : 0;
-      const bTime = b.schedule?.startDateTime ? new Date(b.schedule.startDateTime).getTime() : 0;
+      const aStart = a.schedule?.startDateTime ?? a.appointmentStart;
+      const bStart = b.schedule?.startDateTime ?? b.appointmentStart;
+      const aTime = aStart ? new Date(aStart).getTime() : 0;
+      const bTime = bStart ? new Date(bStart).getTime() : 0;
       return bTime - aTime;
     });
 
@@ -260,7 +267,7 @@ const DoctorDashboardContent = ({ userInfo }: DoctorDashboardContentProps) => {
                       <div className="text-xs text-slate-400 font-semibold">{appointment.patient?.email}</div>
                       <div className="flex items-center gap-2 mt-1 text-xs text-slate-500 font-medium">
                         <Clock className="h-3.5 w-3.5 text-[#047857]" />
-                        <span>{formatDateTime(appointment.schedule?.startDateTime)}</span>
+                        <span>{formatDateTime(appointment.schedule?.startDateTime ?? appointment.appointmentStart)}</span>
                       </div>
                     </div>
                     

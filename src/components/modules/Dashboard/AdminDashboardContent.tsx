@@ -186,7 +186,7 @@ const AdminDashboardContent = () => {
                           <span className="block text-xs text-slate-400 font-semibold">{appointment.doctor?.designation}</span>
                         </td>
                         <td className="py-3.5 text-xs text-slate-500 font-medium">
-                          {formatDateTime(appointment.schedule?.startDateTime)}
+                          {formatDateTime(appointment.schedule?.startDateTime ?? appointment.appointmentStart ?? undefined)}
                         </td>
                         <td className="py-3.5">
                           <Badge 

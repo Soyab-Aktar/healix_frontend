@@ -129,7 +129,7 @@ const CreatePrescriptionModal = ({
               <p className="text-xs text-slate-500 font-semibold mt-0.5">{appointment.patient?.email ?? "-"}</p>
             </div>
             <p className="text-xs text-slate-400 font-semibold">
-              Appointment: {formatDateTime(appointment.schedule?.startDateTime)}
+              Appointment: {formatDateTime(appointment.schedule?.startDateTime ?? appointment.appointmentStart ?? undefined)}
             </p>
           </div>
         </div>

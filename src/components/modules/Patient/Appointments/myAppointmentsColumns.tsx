@@ -64,7 +64,8 @@ export const getMyAppointmentsColumns = (
     enableSorting: false,
     cell: ({ row }) => {
       const schedule = row.original.schedule;
-      return <span className="text-sm font-semibold text-slate-700">{formatDateTime(schedule?.startDateTime)}</span>;
+      const startDateTime = schedule?.startDateTime ?? row.original.appointmentStart ?? undefined;
+      return <span className="text-sm font-semibold text-slate-700">{formatDateTime(startDateTime)}</span>;
     },
   },
   {

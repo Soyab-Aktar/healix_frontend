@@ -49,7 +49,7 @@ export const appointmentColumns: ColumnDef<IAppointment>[] = [
     accessorKey: "schedule.startDateTime",
     header: "Schedule Date & Time",
     cell: ({ row }) => {
-      const date = row.original.schedule?.startDateTime;
+      const date = row.original.schedule?.startDateTime ?? row.original.appointmentStart;
       return date ? (
         <DateCell date={date} formatString="MMM dd, yyyy - hh:mm a" />
       ) : (

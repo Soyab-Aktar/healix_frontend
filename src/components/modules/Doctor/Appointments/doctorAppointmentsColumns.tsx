@@ -52,7 +52,7 @@ export const getDoctorAppointmentsColumns = (
     enableSorting: false,
     cell: ({ row }) => {
       const schedule = row.original.schedule;
-      return <span>{formatDateTime(schedule?.startDateTime)}</span>;
+      return <span>{formatDateTime(schedule?.startDateTime ?? row.original.appointmentStart ?? undefined)}</span>;
     },
   },
   {
